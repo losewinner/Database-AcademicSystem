@@ -1,0 +1,9 @@
+server:
+  port:8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://124.71.131.180:3306/school?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
+    username: root
+    password: Shu@sap
+    driver-class-name: com.mysql.cj.jdbc.Driver
