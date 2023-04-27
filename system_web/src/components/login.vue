@@ -1,12 +1,20 @@
 <template>
- <div>g</div>
+  <div>
+    ggg
+  </div>
 </template>
 
 <script>
 export default {
-    name: "login",
+    name: "Login",
+    data(){
+          return{
+          }
+    },
     methods:{
-
+        //登录
+        login(){
+        },
     }
 }
 </script>
