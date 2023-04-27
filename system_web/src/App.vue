@@ -1,17 +1,19 @@
 <template>
   <div id="app">
-    <Admin></Admin>
+  <Admin></Admin>
   </div>
 </template>
 
 <script>
 //import Login from "@/components/login.vue";
+
+
 import Admin from "@/components/Administrator/Admin.vue";
 
 export default {
   name: 'App',
   components: {
-      Admin,
+      Admin
   }
 }
 </script>
