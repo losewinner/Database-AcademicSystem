@@ -14,6 +14,15 @@ const routes = [
         name:'Login',
         component:()=>import('../components/login.vue')
     },
+    {
+        path:'/Teacher',name:'Teacher', component:()=>import('../components/Teacher/TeacherHome.vue'),
+        redirect: '/home',
+        children:[
+            {
+                path: 'home', name: 'TeacherHome', component: () => import('../components/Teacher/Teacher.vue')
+            }
+        ]
+    },
 
 ]
 
