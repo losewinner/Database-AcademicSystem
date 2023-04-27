@@ -1,13 +1,41 @@
 package com.example.academic_affairs_management_system.entity;
 
-import java.util.Date;
+import com.baomidou.mybatisplus.annotation.TableId;
+import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.TableField;
+import java.io.Serializable;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-public class Teacher {
-    private String staffId;
+/**
+ * <p>
+ * 
+ * </p>
+ *
+ * @author losewinner
+ * @since 2023-04-27
+ */
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class Teacher implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @TableId("staffId")
+    private String staffid;
+
     private String name;
+
     private String sex;
-    private Date birth;
+
+    private LocalDateTime birth;
+
     private String rank;
-    private String deptId;
+
+    @TableField("deptId")
+    private String deptid;
+
     private String password;
+
+
 }

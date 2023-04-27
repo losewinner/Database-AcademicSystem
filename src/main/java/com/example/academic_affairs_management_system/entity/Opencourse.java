@@ -1,6 +1,5 @@
 package com.example.academic_affairs_management_system.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import lombok.Data;
@@ -16,20 +15,24 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Dept implements Serializable {
+public class Opencourse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("deptId")
-    private String deptid;
+    private String semester;
 
-    @TableField("deptName")
-    private String deptname;
+    @TableField("courseId")
+    private String courseid;
 
-    private String address;
+    @TableField("staffId")
+    private String staffid;
 
-    @TableField("deptPhone")
-    private String deptphone;
+    @TableField("classTime")
+    private String classtime;
+
+    private Integer volume;
+
+    private Integer remnant;
 
 
 }

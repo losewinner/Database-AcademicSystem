@@ -1,16 +1,17 @@
 <template>
   <div id="app">
-    <login></login>
+    <Admin></Admin>
   </div>
 </template>
 
 <script>
-import Login from "@/components/login.vue";
+//import Login from "@/components/login.vue";
+import Admin from "@/components/Administrator/Admin.vue";
 
 export default {
   name: 'App',
   components: {
-      Login,
+      Admin,
   }
 }
 </script>
@@ -22,6 +23,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 </style>
