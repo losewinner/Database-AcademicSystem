@@ -30,6 +30,15 @@ const routes = [
         children:[
             {
                 path:'home',name:'AdminHome',component:()=>import('../components/Administrator/Admin.vue')
+            },
+            {
+                path:'Score',name:'AdminScore',component:()=>import('../components/Administrator/AdminMain/AdminScore.vue')
+            },
+            {
+                path:'Rank',name:'AdminRank',component:()=>import('../components/Administrator/AdminMain/AdminRank.vue')
+            },
+            {
+                path:'Unpass',name:'AdminUnpass',component:()=>import('../components/Administrator/AdminMain/AdminUnpass.vue')
             }
         ]
     }
