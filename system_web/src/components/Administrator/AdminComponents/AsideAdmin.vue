@@ -21,15 +21,15 @@
                 <i class="el-icon-info"  style="color:#e8ce3d;font-weight: bolder"></i>
                 <span  style="color:#e8ce3d;font-weight: bolder">事务</span>
             </template>
-            <el-menu-item>
+            <el-menu-item index="/Admin/Score">
                 <i class="el-icon-s-data" style="color:#e8ce3d;font-weight: bolder"></i>
                 <span style="color:#e8ce3d;font-weight: bolder">统计分数</span>
             </el-menu-item>
-            <el-menu-item >
+            <el-menu-item index="/Admin/Rank">
                 <i class="el-icon-s-order" style="color:#e8ce3d;font-weight: bolder"></i>
                 <span style="color:#e8ce3d;font-weight: bolder">统计排名</span>
             </el-menu-item>
-            <el-menu-item>
+            <el-menu-item index="/Admin/Unpass">
                 <i class="el-icon-data-analysis" style="color:#e8ce3d;font-weight: bolder"></i>
                 <span style="color:#e8ce3d;font-weight: bolder">统计挂科率</span>
             </el-menu-item>

@@ -1,10 +1,15 @@
 <template>
+<div>Score
 
+</div>
 </template>
 
 <script>
 export default {
-    name: "AdminScore"
+    name: "AdminScore",
+    data(){
+
+    }
 }
 </script>
 

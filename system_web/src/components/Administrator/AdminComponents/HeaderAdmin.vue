@@ -10,7 +10,9 @@
             </div>
             <el-dropdown-menu>
                 <span style="text-decoration: none"><el-dropdown-item>查看</el-dropdown-item></span>
-                <span style="text-decoration: none"><el-dropdown-item>登出</el-dropdown-item></span>
+                <span style="text-decoration: none" @click="logout">
+                    <el-dropdown-item>登出</el-dropdown-item>
+                </span>
             </el-dropdown-menu>
         </el-dropdown>
 
@@ -32,7 +34,11 @@ export default {
 
     },
     methods:{
-
+        logout(){
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+            this.$message.success("退出成功！");
+        }
     }
 }
 </script>
