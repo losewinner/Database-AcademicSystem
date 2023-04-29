@@ -1,14 +1,12 @@
 <template>
 <div>
-  TeacherInfo
+  SignIn
 </div>
 </template>
+
 <script>
 export default {
-  name: "Teacher",
-  components:{
-
-  }
+  name: "SignIn"
 }
 </script>
 

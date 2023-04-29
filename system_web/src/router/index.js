@@ -20,7 +20,14 @@ const routes = [
         children:[
             {
                 path: 'home', name: 'TeacherHome', component: () => import('../components/Teacher/Teacher.vue')
+            },
+            {
+                path: 'Results', name: 'Results', component: () => import('../components/Teacher/TeacherMain/ModifyResults.vue')
+            },
+            {
+                path: 'SignIn', name: 'SignIn', component: () => import('../components/Teacher/TeacherMain/SignIn.vue')
             }
+
         ]
     },
 

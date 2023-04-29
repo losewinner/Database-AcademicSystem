@@ -1,14 +1,12 @@
 <template>
-<div>
-  TeacherInfo
-</div>
+  <div>
+    ModifyResult
+  </div>
 </template>
+
 <script>
 export default {
-  name: "Teacher",
-  components:{
-
-  }
+  name: "ModifyResults"
 }
 </script>
 

@@ -2,7 +2,7 @@
   <div>
     <!--页签-->
     <el-breadcrumb separator-class="el-icon-arrow-right" >
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/Admin/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item v-show="!check(plate)">{{ plate }}</el-breadcrumb-item>
       <el-breadcrumb-item v-show="!check(func)">{{ func }}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -16,7 +16,7 @@ export default {
     plate:String,
     func:String
   },
-  methods: {
+  methods:{
     check(x) {
       if (x === undefined || x === '' || x === null) return true;
       return false;
