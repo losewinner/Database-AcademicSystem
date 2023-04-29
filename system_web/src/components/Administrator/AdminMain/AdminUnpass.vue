@@ -4,7 +4,8 @@
 
 <script>
 export default {
-    name: "AdminUnpass"
+    name: "AdminUnpass",
+
 }
 </script>
 

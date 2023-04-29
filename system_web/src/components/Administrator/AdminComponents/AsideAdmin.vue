@@ -13,10 +13,10 @@
                 <span style="color:#3fccfc;font-weight: bolder">教务管理系统【管理员】</span>
             </b>
         </div>
-        <el-menu-item index="/Admin/home">
+        <el-menu-item index="/Admin/home" v-show="!isCollapse">
             <i class="el-icon-s-home" style="color:#e8ce3d;font-weight: bolder"></i><span style="color:#e8ce3d;font-weight: bolder">主页</span>
         </el-menu-item>
-        <el-submenu>
+        <el-submenu v-show="!isCollapse">
             <template #title>
                 <i class="el-icon-info"  style="color:#e8ce3d;font-weight: bolder"></i>
                 <span  style="color:#e8ce3d;font-weight: bolder">事务</span>

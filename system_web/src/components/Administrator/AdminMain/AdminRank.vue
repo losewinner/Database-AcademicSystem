@@ -4,7 +4,8 @@
 
 <script>
 export default {
-    name: "AdminRank"
+    name: "AdminRank",
+
 }
 </script>
 
