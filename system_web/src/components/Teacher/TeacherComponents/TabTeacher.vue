@@ -2,7 +2,7 @@
   <div>
     <!--页签-->
     <el-breadcrumb separator-class="el-icon-arrow-right" >
-      <el-breadcrumb-item :to="{ path: '/Admin/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/Teacher/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item v-show="!check(plate)">{{ plate }}</el-breadcrumb-item>
       <el-breadcrumb-item v-show="!check(func)">{{ func }}</el-breadcrumb-item>
     </el-breadcrumb>
