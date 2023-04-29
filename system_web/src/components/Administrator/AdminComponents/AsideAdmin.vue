@@ -13,25 +13,26 @@
                 <span style="color:#3fccfc;font-weight: bolder">教务管理系统【管理员】</span>
             </b>
         </div>
-        <el-menu-item index="/Admin/home" v-show="!isCollapse">
+        <el-menu-item index="/Admin/home" v-show="!isCollapse" >
             <i class="el-icon-s-home" style="color:#e8ce3d;font-weight: bolder"></i><span style="color:#e8ce3d;font-weight: bolder">主页</span>
         </el-menu-item>
-        <el-submenu v-show="!isCollapse">
+        <el-submenu v-show="!isCollapse" text-color="#fff"
+                    active-text-color="#ffd04b">
             <template #title>
-                <i class="el-icon-info"  style="color:#e8ce3d;font-weight: bolder"></i>
-                <span  style="color:#e8ce3d;font-weight: bolder">事务</span>
+                <i class="el-icon-info"></i>
+                <span >事务</span>
             </template>
             <el-menu-item index="/Admin/Score">
-                <i class="el-icon-s-data" style="color:#e8ce3d;font-weight: bolder"></i>
-                <span style="color:#e8ce3d;font-weight: bolder">统计分数</span>
+                <i class="el-icon-s-data"></i>
+                <span>统计分数</span>
             </el-menu-item>
             <el-menu-item index="/Admin/Rank">
-                <i class="el-icon-s-order" style="color:#e8ce3d;font-weight: bolder"></i>
-                <span style="color:#e8ce3d;font-weight: bolder">统计排名</span>
+                <i class="el-icon-s-order"></i>
+                <span>统计排名</span>
             </el-menu-item>
             <el-menu-item index="/Admin/Unpass">
-                <i class="el-icon-data-analysis" style="color:#e8ce3d;font-weight: bolder"></i>
-                <span style="color:#e8ce3d;font-weight: bolder">统计挂科率</span>
+                <i class="el-icon-data-analysis"></i>
+                <span>统计挂科率</span>
             </el-menu-item>
 
         </el-submenu>
