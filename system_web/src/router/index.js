@@ -24,6 +24,16 @@ const routes = [
         ]
     },
 
+    {
+        path:'/Admin',name:'Admin',component:()=>import('../components/Administrator/AdminHome.vue'),
+        redirect: '/home',
+        children:[
+            {
+                path:'home',name:'AdminHome',component:()=>import('../components/Administrator/Admin.vue')
+            }
+        ]
+    }
+
 ]
 
 const router = new VueRouter({
