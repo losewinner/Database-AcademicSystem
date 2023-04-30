@@ -27,7 +27,6 @@ const routes = [
             {
                 path: 'SignIn', name: 'SignIn', component: () => import('../components/Teacher/TeacherMain/SignIn.vue')
             }
-
         ]
     },
 

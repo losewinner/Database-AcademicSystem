@@ -11,12 +11,18 @@
     <el-menu-item index="/Teacher/home" v-show="!isCollapse">
       <i class="el-icon-s-home"></i><span>主页</span>
     </el-menu-item>
-    <el-menu-item index="/Teacher/Results" v-show="!isCollapse">
-      <i class="el-icon-s-home"></i><span>成绩登记</span>
-    </el-menu-item>
-    <el-menu-item index="/Teacher/SignIn" v-show="!isCollapse">
-      <i class="el-icon-s-home"></i><span>班级签到</span>
-    </el-menu-item>
+    <el-submenu index="1">
+      <template slot="title">
+        <i class="el-icon-message"></i>
+        <span>班级管理</span>
+      </template>
+      <el-menu-item-group>
+        <el-menu-item index="/Teacher/Results" v-show="!isCollapse">成绩登记</el-menu-item>
+        <el-menu-item index="/Teacher/SignIn" v-show="!isCollapse">签到管理</el-menu-item>
+      </el-menu-item-group>
+    </el-submenu>
+
+
 
   </el-menu>
 </template>

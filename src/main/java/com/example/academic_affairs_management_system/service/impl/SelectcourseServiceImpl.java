@@ -6,6 +6,9 @@ import com.example.academic_affairs_management_system.service.ISelectcourseServi
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -17,4 +20,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Selectcourse> implements ISelectcourseService {
 
+    @Resource
+    private SelectcourseMapper selectcourseMapper;
+    public List<Selectcourse> getAllInfo(String semester,String courseId,String staffId,String classTime){
+        return selectcourseMapper.getAllInfo(semester,courseId,staffId,classTime);
+    }
 }

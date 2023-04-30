@@ -2,7 +2,10 @@ package com.example.academic_affairs_management_system.mapper;
 
 import com.example.academic_affairs_management_system.entity.Opencourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.academic_affairs_management_system.entity.Selectcourse;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <p>
