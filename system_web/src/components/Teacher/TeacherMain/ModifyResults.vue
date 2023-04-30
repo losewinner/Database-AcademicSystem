@@ -17,6 +17,7 @@
 <script>
 import axios from "axios";
 
+
 export default {
   name: "ModifyResults",
   data(){
@@ -36,25 +37,23 @@ export default {
       this.courseId=1
       this.staffId=1
       this.classTime=1
-      axios.get("http://localhost:8080//selectcourse/allstudent?semester="+this.semester+"&courseId="+this.courseId+"&staffId="+
-      this.staffId+"&classTime="+this.classTime).then(response=>{
-          const {
-            data,
-            status
-          }=response;
-          if(status === "200"){
-            this.tableData = data.total;
-            console.log(this.tableData)
-          }
-          else{
-            this.$message.error(status)
-          }
-      }).catch((error)=>{
-        console.log(error)
-
-      }).then(()=>{
-        console.log("all done")
+      axios.get("http://localhost:8080/selectcourse/list").then(res=>{
+        console.log(res)
       })
+      // axios.get("http://localhost:8080/selectcourse/allstudent?semester="+this.semester+"&courseId="+this.courseId+"&staffId="+
+      // this.staffId+"&classTime="+this.classTime).then(response=>{
+      //     const {
+      //       data,
+      //       status
+      //     }=response;
+      //     if(status === "200"){
+      //       this.tableData = data.total;
+      //       console.log(this.tableData)
+      //     }
+      //     else{
+      //       this.$message.error(status)
+      //     }
+      // })
     }
   }
 }
