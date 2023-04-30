@@ -22,7 +22,12 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
 
     @Resource
     private SelectcourseMapper selectcourseMapper;
+    @Override
     public List<Selectcourse> getAllInfo(String semester,String courseId,String staffId,String classTime){
         return selectcourseMapper.getAllInfo(semester,courseId,staffId,classTime);
+    }
+    @Override
+    public List<Selectcourse> selectAll(){
+        return selectcourseMapper.selectAll();
     }
 }

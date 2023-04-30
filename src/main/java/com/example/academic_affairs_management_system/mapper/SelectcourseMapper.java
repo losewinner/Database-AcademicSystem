@@ -17,8 +17,9 @@ import java.util.List;
  */
 @Mapper
 public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
-    @Select("select studentId,semester,courseId,staffId,classTime,textScore,signScore,homeworkScore,score " +
+    @Select("select semester,courseId,staffId,classTime,textScore,signScore,homeworkScore,score from selectcourse" +
             "where semester=#{semester} and courseId=#{courseId} and staffId=#{staffId} and classTime=#{classTime}")
     List<Selectcourse> getAllInfo(String semester,String courseId,String staffId,String classTime);
 
+    public List<Selectcourse> selectAll();
 }
