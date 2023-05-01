@@ -70,6 +70,22 @@
             </el-table-column>
         </el-table>
     </el-container>
+    <el-container class="统计分数结果（平均分，最高分，最低分）" style = "margin-top: 20px">
+        <el-descriptions :column="3" :size="medium" border>
+            <el-descriptions-item>
+                <template slot="label">平均分</template>
+                {{ScoreAnalysis.averageScore}}
+            </el-descriptions-item>
+            <el-descriptions-item>
+                <template slot="label">最高分</template>
+                {{ScoreAnalysis.highestScore}}
+            </el-descriptions-item>
+            <el-descriptions-item>
+                <template slot="label">最低分</template>
+                {{ScoreAnalysis.lowestScore}}
+            </el-descriptions-item>
+        </el-descriptions>
+    </el-container>
 </el-container>
 
 </template>
@@ -98,7 +114,12 @@ export default {
                 staffId: '123',
                 staffName:'lfy',
                 score: 2003
-            }]
+            }],
+            ScoreAnalysis:{
+                averageScore:50,
+                highestScore:100,
+                lowestScore:0.
+            }
         }
     },
     methods:{
