@@ -2,7 +2,12 @@ package com.example.academic_affairs_management_system.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.api.R;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.academic_affairs_management_system.common.QueryPageParam;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.example.academic_affairs_management_system.entity.Student;
@@ -12,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.PublicKey;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -46,17 +52,34 @@ public class SelectcourseController {
     }
 
     @GetMapping("/getstudent")
-    public Result select_stu(Selectcourse selectcourse){
+    public Result select_stu(@RequestBody QueryPageParam queryPageParam){
         /**
          * 查询某班级所有学生
          */
+        Page<Selectcourse> page = new Page<>();
+        page.setOptimizeCountSql(false);
+        page.setCurrent(queryPageParam.getPagenum());
+        page.setSize(queryPageParam.getPagesize());
+
+        HashMap param= queryPageParam.getParam();
+
         LambdaQueryWrapper<Selectcourse> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Selectcourse::getSemester,selectcourse.getSemester())
-                .eq(Selectcourse::getCourseid,selectcourse.getCourseid())
-                .eq(Selectcourse::getStaffid,selectcourse.getStaffid())
-                .eq(Selectcourse::getClasstime,selectcourse.getClasstime());
-       return Result.success(iSelectcourseService.list(lambdaQueryWrapper));
+        lambdaQueryWrapper.eq(Selectcourse::getSemester,param.get("semester"))
+                .eq(Selectcourse::getCourseid,param.get("courseid"))
+                .eq(Selectcourse::getStaffid,param.get("staffid"))
+                .eq(Selectcourse::getClasstime,param.get("classtime"));
+
+//        QueryWrapper<Selectcourse> queryWrapper = new QueryWrapper();
+//        queryWrapper.eq("semester",param.get("semester"))
+//                .eq("courseid",param.get("courseid"))
+//                .eq("staffid",param.get("staffid"))
+//                .eq("classtime",param.get("classtime"));
+
+        IPage result = iSelectcourseService.page(page,lambdaQueryWrapper);
+        return Result.success(result.getRecords(),result.getTotal());
     }
+
+
 
 
 

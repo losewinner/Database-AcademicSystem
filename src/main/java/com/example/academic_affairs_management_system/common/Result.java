@@ -13,20 +13,27 @@ import lombok.NoArgsConstructor;
 public class Result {
     private String code;
     private String msg;
+    private Long total;
     private Object data;
 
+
+    private static Result result(String code,String msg,Long total,Object data){
+        return new Result(code,msg,total,data);
+    }
     public static Result success(){
-        return new Result(Constants.CODE_200,"",null);
+        return result(Constants.CODE_200,"",0L,null);
     }
     public static Result success(Object data){
-        return new Result(Constants.CODE_200,"",data);
+        return result(Constants.CODE_200,"成功",0L,data);
+
+    }
+    public static Result success(Object data,Long total){
+        return result(Constants.CODE_200,"成功",total,data);
     }
 
-    public static Result error(){
-        return new Result(Constants.CODE_500,"系统错误",null);
+    public static Result fail(String msg,Long total,Object data){
+        return result(Constants.CODE_400,msg,total,data);
     }
 
-    public static Result error(String code,String msg){
-        return new Result(code,msg,null);
-    }
+
 }
