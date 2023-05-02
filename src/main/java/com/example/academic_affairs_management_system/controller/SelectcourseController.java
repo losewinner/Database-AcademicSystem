@@ -1,17 +1,17 @@
 package com.example.academic_affairs_management_system.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
+import com.example.academic_affairs_management_system.entity.Student;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import java.security.PublicKey;
 import java.util.List;
 
 /**
@@ -37,8 +37,30 @@ public class SelectcourseController {
         return Result.success(iSelectcourseService.getAllInfo(semester,courseId,staffId,classTime));
     }
     @GetMapping("/list")
-    public List<Selectcourse> selelctAll(){
+    public List<Selectcourse> selectAll(){
         return iSelectcourseService.selectAll();
     }
+    @PostMapping("/modifyscore")
+    public Result modify_sorce(Selectcourse selectcourse){
+        return Result.success(iSelectcourseService.saveOrUpdate(selectcourse));
+    }
+
+    @GetMapping("/getstudent")
+    public Result select_stu(Selectcourse selectcourse){
+        /**
+         * 查询某班级所有学生
+         */
+        LambdaQueryWrapper<Selectcourse> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Selectcourse::getSemester,selectcourse.getSemester())
+                .eq(Selectcourse::getCourseid,selectcourse.getCourseid())
+                .eq(Selectcourse::getStaffid,selectcourse.getStaffid())
+                .eq(Selectcourse::getClasstime,selectcourse.getClasstime());
+       return Result.success(iSelectcourseService.list(lambdaQueryWrapper));
+    }
+
+
+
+
+
 
 }

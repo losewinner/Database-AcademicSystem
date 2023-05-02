@@ -2,9 +2,12 @@ package com.example.academic_affairs_management_system.service.impl;
 
 import com.example.academic_affairs_management_system.entity.Opencourse;
 import com.example.academic_affairs_management_system.mapper.OpencourseMapper;
+import com.example.academic_affairs_management_system.mapper.SelectcourseMapper;
 import com.example.academic_affairs_management_system.service.IOpencourseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -16,5 +19,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OpencourseServiceImpl extends ServiceImpl<OpencourseMapper, Opencourse> implements IOpencourseService {
-
+    @Resource
+    private SelectcourseMapper selectcourseMapper;
 }
