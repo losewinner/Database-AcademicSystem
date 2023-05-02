@@ -22,4 +22,20 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     List<Selectcourse> getAllInfo(String semester,String courseId,String staffId,String classTime);
 
     public List<Selectcourse> selectAll();
+
+    //统计分数
+    @Select("SELECT" +
+            "selectcourse.semester," +
+            "selectcourse.studentId,student.name," +
+            "selectcourse.staffId,teacher.name," +
+            "selectcourse.courseId,course.name," +
+            "testScore" +
+            "FROM selectcourse,course,student,teacher" +
+            "WHERE" +
+            "selectcourse.courseId = course.courseId" +
+            "AND student.studentId = selectcourse.studentId" +
+            "AND teacher.staffId = selectcourse.staffId")
+    List<Selectcourse> getScore(String semester,String studentId,String studentName,
+                                String staffId,String staffName,
+                                String courseId,String courseName);
 }

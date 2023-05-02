@@ -100,6 +100,7 @@ export default {
         //如果data里面什么都不写，页签跳转会出问题！
         return{
             optionSemester:[{value:'选项1',label:'2023春季'}], //后端导入学期表，获得学期
+            maxOptionValue:1,
             input:{        //前端输入，通过前端此字典绑定，然后去后端查找
             courseId:'',
             courseName:'',
@@ -147,17 +148,38 @@ export default {
                     }
                 });
             }
+
             //先获取input的东西（v-model双向绑定自动获取了
             console.log(this.input);
-            //向数据库请求数据，涉及：学期表，学生表，选课表，教师表
-            //先尝试只获取学期表，
-            axios.get("http://127.0.0.1:8080/semestatus/list").then(res=>{
-                console.log(res)
-            })
+
         },
         loadData(){
+            //向数据库请求数据，涉及：学期表，学生表，选课表，教师表
             console.log("w");
+            //获取学期信息，放进optionSemester中
+            //先尝试只获取学期表，
+            axios.get("http://127.0.0.1:8080/semestatus/list").then(res=>{
+                console.log("yeyeye",res.data);    //获取成功
+                for(const item of res.data)
+                {
+                    if(item.status===0)       //未能结课的学期不放进列表中
+                    {
+                        continue;
+                    }
+                    let newDict={};
+                    newDict['value'] = '选项'+(this.maxOptionValue+1);
+                    newDict['label'] = item.semester;
+                    this.optionSemester.push(newDict);
+                    this.maxOptionValue+=1;
+                }
+                console.log('wwwwwww',this.optionSemester);
+            })
+
+
         }
+    },
+    created(){
+        this.loadData();
     }
 }
 </script>
