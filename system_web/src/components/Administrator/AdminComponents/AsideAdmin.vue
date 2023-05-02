@@ -14,7 +14,7 @@
             </b>
         </div>
         <el-menu-item index="/Admin/home" v-show="!isCollapse" >
-            <i class="el-icon-s-home" style="color:#e8ce3d;font-weight: bolder"></i><span style="color:#e8ce3d;font-weight: bolder">主页</span>
+            <i class="el-icon-s-home"></i><span>主页</span>
         </el-menu-item>
         <el-submenu v-show="!isCollapse" text-color="#fff"
                     active-text-color="#ffd04b">
