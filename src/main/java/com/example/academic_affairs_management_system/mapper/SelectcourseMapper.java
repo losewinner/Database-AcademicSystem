@@ -23,19 +23,32 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     public List<Selectcourse> selectAll();
 
-    //统计分数
+    //统计分数,按照课程来统计，不需要搜学生和老师，但是学生的姓名和学号还是要查的
     @Select("SELECT" +
             "selectcourse.semester," +
             "selectcourse.studentId,student.name," +
-            "selectcourse.staffId,teacher.name," +
             "selectcourse.courseId,course.name," +
             "testScore" +
-            "FROM selectcourse,course,student,teacher" +
+            "FROM selectcourse,course,student" +
             "WHERE" +
             "selectcourse.courseId = course.courseId" +
             "AND student.studentId = selectcourse.studentId" +
-            "AND teacher.staffId = selectcourse.staffId")
-    List<Selectcourse> getScore(String semester,String studentId,String studentName,
-                                String staffId,String staffName,
-                                String courseId,String courseName);
+            "AND semester = #{semester} " +
+            "AND selectcourse.courseId = #{courseId} " +
+            "AND course.name = #{courseName}")
+    List<Selectcourse> getCourseScore(String semester,String courseId,String courseName);
+    //统计分数，按照学生来统计，展示的是一个学生（或者同名学生）的所有一个学期的课程总成绩
+    @Select("SELECT" +
+            "selectcourse.semester," +
+            "selectcourse.studentId,student.name," +
+            "selectcourse.courseId,course.name," +
+            "testScore" +
+            "FROM selectcourse,course,student" +
+            "WHERE" +
+            "selectcourse.courseId = course.courseId" +
+            "AND student.studentId = selectcourse.studentId" +
+            "AND semester = #{semester} " +
+            "AND selectcourse.studentId = #{studentId} " +
+            "AND student.name = #{studentName} ")
+    List<Selectcourse> getStudentScore(String semester, String studentId,String studentName);
 }
