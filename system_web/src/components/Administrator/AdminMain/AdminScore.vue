@@ -3,7 +3,7 @@
     <el-container class="上半部分" style="display: flex;flex-direction: row">
         <el-container class="查找框集合" style="display: flex;flex-direction: column">
             <el-container class="学期，课程号，课程名字" style="margin-top: 20px">
-                <el-select v-model="selectSemester" placeholder="请选择学期" style="margin-right:5px">
+                <el-select v-model="input.selectSemester" placeholder="请选择学期" style="margin-right:5px">
                     <el-option v-for="item in optionSemester"
                                :key="item.value"
                                :label="item.label"
@@ -13,16 +13,9 @@
                 <el-input placeholder="请输入课程号" suffix-icon="el-icon-s-management" v-model="input.courseId" style="width:30% ;margin-right: 5px"></el-input>
                 <el-input placeholder="请输入课程名字" suffix-icon="el-icon-s-management" v-model="input.courseName" style="width:30% ;margin-right: 5px"></el-input>
             </el-container>
-            <el-container class="学生号，学生姓名，院系" style="margin-top: 10px">
+            <el-container class="学生号，学生姓名" style="margin-top: 10px">
                 <el-input placeholder="请输入学生号" suffix-icon="el-icon-user" v-model="input.studentId" style="width:30%;margin-right: 5px"></el-input>
                 <el-input placeholder="请输入学生姓名" suffix-icon="el-icon-user" v-model="input.studentName" style="width:30% ;margin-right: 5px"></el-input>
-                <el-select v-model="selectDept" placeholder="请选择院系" style="margin-right:5px">
-                    <el-option v-for="item in optionDept"
-                               :key="item.value"
-                               :label="item.label"
-                               :value="item.value">
-                    </el-option>
-                </el-select>
             </el-container>
             <el-container class="教师号，教师姓名" style="margin-top:10px">
                 <el-input placeholder="请输入教师号" suffix-icon="el-icon-s-custom" v-model="input.staffId" style="width:30%;margin-right: 5px"></el-input>
@@ -71,9 +64,6 @@
                 prop="staffName" label="老师姓名" width="120">
             </el-table-column>
             <el-table-column
-                prop="deptName" label="计算机工程与科学学院" width="200">
-            </el-table-column>
-            <el-table-column
                 prop="courseId" label="课程号" width="150">
             </el-table-column>
             <el-table-column
@@ -101,23 +91,23 @@
 
 </template>
 
+
 <script>
+import axios from "axios"
 export default {
     name: "AdminScore",
     data(){
         //如果data里面什么都不写，页签跳转会出问题！
         return{
             optionSemester:[{value:'选项1',label:'2023春季'}], //后端导入学期表，获得学期
-            selectSemester:'',
-            optionDept:[{value:'选项1',label:'计算机工程与科学学院'}], //后端导入院系表，获得院系名字
-            selectDept:'',
             input:{        //前端输入，通过前端此字典绑定，然后去后端查找
             courseId:'',
             courseName:'',
             studentId:'',
             studentName:'',
             staffId:'',
-            staffName:''
+            staffName:'',
+            selectSemester:'',
             },
             FromDbInfo:[{         //后端通过前端的输入查找到的信息放在这个字典数组中，
                 semester: '2023春季',
@@ -127,7 +117,6 @@ export default {
                 courseName:'BB88',
                 staffId: '123',
                 staffName:'lfy',
-                deptName:'计算机工程与科学学院',
                 score: 2003
             }],
             ScoreAnalysis:{      //后端数据库制作三种分的视图，将三分记下来，放进这个字典中。
@@ -158,6 +147,16 @@ export default {
                     }
                 });
             }
+            //先获取input的东西（v-model双向绑定自动获取了
+            console.log(this.input);
+            //向数据库请求数据，涉及：学期表，学生表，选课表，教师表
+            //先尝试只获取学期表，
+            axios.get("http://127.0.0.1:8080/semestatus/list").then(res=>{
+                console.log(res)
+            })
+        },
+        loadData(){
+            console.log("w");
         }
     }
 }
