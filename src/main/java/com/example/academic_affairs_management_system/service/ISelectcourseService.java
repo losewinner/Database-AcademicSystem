@@ -17,4 +17,6 @@ public interface ISelectcourseService extends IService<Selectcourse> {
     public List<Selectcourse> getAllInfo(String semester, String courseId, String staffId, String classTime) ;
 
     public List<Selectcourse> selectAll();
+
+    public List<Selectcourse> getCourseScore(String semester, String courseId, String courseName);
 }

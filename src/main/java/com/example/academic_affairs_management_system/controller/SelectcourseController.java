@@ -79,6 +79,13 @@ public class SelectcourseController {
         return Result.success(result.getRecords(),result.getTotal());
     }
 
+    @GetMapping("/getcoursescore")
+    public List<Selectcourse>getCourseScore(@RequestParam String semester,
+                                            @RequestParam String courseId,
+                                            @RequestParam String courseName){
+        return iSelectcourseService.getCourseScore(semester,courseId,courseName);
+    }
+
 
 
 

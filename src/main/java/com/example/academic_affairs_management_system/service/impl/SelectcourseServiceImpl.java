@@ -30,4 +30,9 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     public List<Selectcourse> selectAll(){
         return selectcourseMapper.selectAll();
     }
+
+    @Override
+    public List<Selectcourse> getCourseScore(String semester,String courseId,String courseName){
+        return selectcourseMapper.getCourseScore(semester,courseId,courseName);
+    }
 }

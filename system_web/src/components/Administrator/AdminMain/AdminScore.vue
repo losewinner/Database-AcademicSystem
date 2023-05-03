@@ -101,15 +101,15 @@ export default {
     data(){
         //如果data里面什么都不写，页签跳转会出问题！
         return{
-            optionSemester:[{value:'选项1',label:'2023春季'}], //后端导入学期表，获得学期
-            selectionOfSearch:'',
+            optionSemester:[], //后端导入学期表，获得学期
+            selectionOfSearch:"",
             maxOptionValue:1,
             input:{        //前端输入，通过前端此字典绑定，然后去后端查找
-            courseId:'',
-            courseName:'',
-            studentId:'',
-            studentName:'',
-            selectSemester:'',
+                courseId:"",
+                courseName:"",
+                studentId:"",
+                studentName:"",
+                selectSemester:"",
             },
             FromDbInfo:[{         //后端通过前端的输入查找到的信息放在这个字典数组中，
                 semester: '2023春季',
@@ -135,8 +135,8 @@ export default {
         },
         searchClick(){
             //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
-            console.log("wtf")
-            if(this.selectSemester===''){
+            console.log("wtf",this.input.selectSemester)
+            if(this.input.selectSemester===''){
                 this.$alert('请选择学期！', '提示', {
                     confirmButtonText: '确定',
                     callback: action => {
@@ -150,28 +150,42 @@ export default {
 
             //先获取input的东西（v-model双向绑定自动获取了
             console.log(this.input);
+            //然后获取对应的数据
+            //解析所选的学期
+            var semester = this.optionSemester.find(x=>x.value===this.input.selectSemester);
+            console.log(semester.label);
+            //如果按照课程选择
+            if(this.input.courseId!== "" && this.input.courseName !=="")
+            {
+                var that = this;
+                axios.get("http://127.0.0.1:8080/selectcourse/getcoursescore?semester="+semester.label
+                    +"&courseId="+that.input.courseId+"&courseName="+that.input.courseName).then(res=>{
+                        console.log("getCourseScore",res.data);
 
+                })
+            }
         },
         loadData(){
             //向数据库请求数据，涉及：学期表，学生表，选课表，教师表
             console.log("w");
             //获取学期信息，放进optionSemester中
             //先尝试只获取学期表，
+            var that = this;
             axios.get("http://127.0.0.1:8080/semestatus/list").then(res=>{
                 console.log("yeyeye",res.data);    //获取成功
                 for(const item of res.data)
                 {
                     if(item.status===0)       //未能结课的学期不放进列表中
                     {
-                        continue;
+                        //continue;
                     }
                     let newDict={};
-                    newDict['value'] = '选项'+(this.maxOptionValue+1);
+                    newDict['value'] = '选项'+that.maxOptionValue;
                     newDict['label'] = item.semester;
-                    this.optionSemester.push(newDict);
-                    this.maxOptionValue+=1;
+                    that.optionSemester.push(newDict);
+                    that.maxOptionValue+=1;
                 }
-                console.log('wwwwwww',this.optionSemester);
+                console.log('wwwwwww',that.optionSemester);
             })
 
 
