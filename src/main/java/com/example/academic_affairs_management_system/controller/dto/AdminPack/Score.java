@@ -9,5 +9,9 @@ public class Score {
     private String studentName;
     private String courseId;
     private String courseName;
-    private String testScore;
+    private Integer testScore;
+    private Integer score;
+    private Integer ratio;
+    private Double finalScore;
+    private Double scorePoint;
 }

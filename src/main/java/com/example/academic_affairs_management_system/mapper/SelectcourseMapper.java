@@ -59,4 +59,7 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
             "AND selectcourse.studentId = #{studentId} " +
             "AND student.name = #{studentName}")
     List<Score> getStudentScore(String semester, String studentId,String studentName);
+
+    public List<Score> getScore(Integer pageCurrent,Integer pageSize,String semester, String studentId, String studentName, String courseId, String courseName);
+
 }

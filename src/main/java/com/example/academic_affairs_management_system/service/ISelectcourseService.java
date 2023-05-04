@@ -27,5 +27,6 @@ public interface ISelectcourseService extends IService<Selectcourse> {
 
     List<Student> select_stu(int pagenum, int pagesize, String semester, String courseid, String staffid, String classtime);
 
+    public List<Score> getScore(Integer pageNum,Integer pageSize, String semester, String studentId, String studentName, String courseId, String courseName);
 
 }

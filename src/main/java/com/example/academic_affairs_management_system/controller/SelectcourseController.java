@@ -104,7 +104,19 @@ public class SelectcourseController {
         return iSelectcourseService.getStudentScore(semester, studentId, studentName);
     }
 
+    @GetMapping("/getScore")
+    public List<Score> getScore(@RequestParam Integer pageNum,
+                                @RequestParam Integer pageSize,
+                                @RequestParam String semester,
+                                @RequestParam String studentId,
+                                @RequestParam String studentName,
+                                @RequestParam String courseId,
+                                @RequestParam String courseName){
+        //Integer pageNum = page.get("pageNum");
+        //Integer pageSize = page.get("pageSize");
+        return iSelectcourseService.getScore(pageNum,pageSize,semester,studentId,studentName,courseId,courseName);
 
+    }
 
 
 
