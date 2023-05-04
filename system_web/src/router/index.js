@@ -31,6 +31,25 @@ const routes = [
     },
 
     {
+        path:'/Student',name:'Student',component:()=>import('../components/Student/StudentHome.vue'),
+        redirect: '/home',
+        children:[
+            {
+                path:'home',name:'StudentHome',component:()=>import('../components/Student/Student.vue')
+            },
+            {
+                path:'SelectCourse',name:'SelectCourse',component:()=>import('../components/Student/StudentMain/SelectCourse.vue')
+            },
+            {
+                path:'CheckScore',name:'CheckScore',component:()=>import('../components/Student/StudentMain/CheckScore.vue')
+            },
+            {
+                path:'CheckTimetable',name:'CheckTimetable',component:()=>import('../components/Student/StudentMain/CheckTimetable.vue')
+            }
+        ]
+    },
+
+    {
         path:'/Admin',name:'Admin',component:()=>import('../components/Administrator/AdminHome.vue'),
         redirect: '/home',
         children:[
