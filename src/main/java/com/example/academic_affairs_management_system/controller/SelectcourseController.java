@@ -88,7 +88,7 @@ public class SelectcourseController {
     }
 
     @GetMapping("/getstudentscore")
-    public List<Score>getStudentSocore(@RequestParam String semester,
+    public List<Score>getStudentScore(@RequestParam String semester,
                                        @RequestParam String studentId,
                                        @RequestParam String studentName){
         return iSelectcourseService.getStudentScore(semester, studentId, studentName);
