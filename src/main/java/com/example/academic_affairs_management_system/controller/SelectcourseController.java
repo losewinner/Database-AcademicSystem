@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.academic_affairs_management_system.common.QueryPageParam;
 import com.example.academic_affairs_management_system.common.Result;
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.example.academic_affairs_management_system.entity.Student;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
@@ -80,10 +81,17 @@ public class SelectcourseController {
     }
 
     @GetMapping("/getcoursescore")
-    public List<Selectcourse>getCourseScore(@RequestParam String semester,
-                                            @RequestParam String courseId,
-                                            @RequestParam String courseName){
+    public List<Score>getCourseScore(@RequestParam String semester,
+                                     @RequestParam String courseId,
+                                     @RequestParam String courseName){
         return iSelectcourseService.getCourseScore(semester,courseId,courseName);
+    }
+
+    @GetMapping("/getstudentscore")
+    public List<Score>getStudentSocore(@RequestParam String semester,
+                                       @RequestParam String studentId,
+                                       @RequestParam String studentName){
+        return iSelectcourseService.getStudentScore(semester, studentId, studentName);
     }
 
 

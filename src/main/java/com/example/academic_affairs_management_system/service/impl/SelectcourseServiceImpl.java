@@ -1,5 +1,6 @@
 package com.example.academic_affairs_management_system.service.impl;
 
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.example.academic_affairs_management_system.mapper.SelectcourseMapper;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
@@ -32,7 +33,12 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     }
 
     @Override
-    public List<Selectcourse> getCourseScore(String semester,String courseId,String courseName){
+    public List<Score> getCourseScore(String semester, String courseId, String courseName){
         return selectcourseMapper.getCourseScore(semester,courseId,courseName);
+    }
+
+    @Override
+    public List<Score> getStudentScore(String semester, String studentId,String studentName){
+        return selectcourseMapper.getStudentScore(semester,studentId,studentName);
     }
 }

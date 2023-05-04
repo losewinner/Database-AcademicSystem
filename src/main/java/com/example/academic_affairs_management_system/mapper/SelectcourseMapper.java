@@ -1,5 +1,6 @@
 package com.example.academic_affairs_management_system.mapper;
 
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -25,7 +26,7 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     //统计分数,按照课程来统计，不需要搜学生和老师，但是学生的姓名和学号还是要查的
     @Select("SELECT " +
-            "selectcourse.semester,selectcourse.studentId,student.name,selectcourse.courseId,course.name,testScore " +
+            "selectcourse.semester,selectcourse.studentId,student.name as studentName,selectcourse.courseId,course.name as courseName,testScore " +
             "FROM selectcourse,course,student " +
             "WHERE " +
             "selectcourse.courseId = course.courseId " +
@@ -33,13 +34,13 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
             "AND semester = #{semester} " +
             "AND selectcourse.courseId = #{courseId} " +
             "AND course.name = #{courseName}")
-    List<Selectcourse> getCourseScore(String semester,String courseId,String courseName);
+    List<Score> getCourseScore(String semester, String courseId, String courseName);
 
     //统计分数，按照学生来统计，展示的是一个学生（或者同名学生）的所有一个学期的课程总成绩
     @Select("SELECT" +
             "selectcourse.semester," +
-            "selectcourse.studentId,student.name," +
-            "selectcourse.courseId,course.name," +
+            "selectcourse.studentId,student.name as studentName," +
+            "selectcourse.courseId,course.name as courseName," +
             "testScore" +
             "FROM selectcourse,course,student" +
             "WHERE" +
@@ -48,5 +49,5 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
             "AND semester = #{semester} " +
             "AND selectcourse.studentId = #{studentId} " +
             "AND student.name = #{studentName} ")
-    List<Selectcourse> getStudentScore(String semester, String studentId,String studentName);
+    List<Score> getStudentScore(String semester, String studentId,String studentName);
 }
