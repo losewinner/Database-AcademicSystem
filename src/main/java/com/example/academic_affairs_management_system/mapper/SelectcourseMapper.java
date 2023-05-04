@@ -37,17 +37,14 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     List<Score> getCourseScore(String semester, String courseId, String courseName);
 
     //统计分数，按照学生来统计，展示的是一个学生（或者同名学生）的所有一个学期的课程总成绩
-    @Select("SELECT" +
-            "selectcourse.semester," +
-            "selectcourse.studentId,student.name as studentName," +
-            "selectcourse.courseId,course.name as courseName," +
-            "testScore" +
-            "FROM selectcourse,course,student" +
-            "WHERE" +
-            "selectcourse.courseId = course.courseId" +
-            "AND student.studentId = selectcourse.studentId" +
+    @Select("SELECT " +
+            "selectcourse.semester,selectcourse.studentId,student.name as studentName,selectcourse.courseId,course.name as courseName,testScore " +
+            "FROM selectcourse,course,student " +
+            "WHERE " +
+            "selectcourse.courseId = course.courseId " +
+            "AND student.studentId = selectcourse.studentId " +
             "AND semester = #{semester} " +
             "AND selectcourse.studentId = #{studentId} " +
-            "AND student.name = #{studentName} ")
+            "AND student.name = #{studentName}")
     List<Score> getStudentScore(String semester, String studentId,String studentName);
 }
