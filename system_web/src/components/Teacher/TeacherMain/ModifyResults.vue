@@ -1,15 +1,13 @@
 <template>
   <div>
     ModifyResult
-
-    <el-table :data="tableData"
-              style="width: 100%"
-              >
-      <el-table-column prop="studentId" label="学号" width="120">
-        <template v-slot="scope">
-          <div v-html="scope.row.studentId"></div>
-        </template>
-      </el-table-column>
+    <el-table :data="data"
+              style="width: 100%">
+        <el-table-column prop="studentid" label="学号" width="120"></el-table-column>
+        <el-table-column prop="studentid" label="姓名" width="120"></el-table-column>
+        <el-table-column prop="signscore" label="平时成绩" width="120"></el-table-column>
+        <el-table-column prop="testscore" label="考试成绩" width="120"></el-table-column>
+        <el-table-column prop="score" label="总成绩" width="120"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -22,7 +20,8 @@ export default {
   name: "ModifyResults",
   data(){
     return{
-      tableData:[],
+      data:[],
+      dataLen:0,
 
     }
   },
@@ -37,8 +36,19 @@ export default {
       this.courseId=1
       this.staffId=1
       this.classTime=1
-      axios.get("http://localhost:8080/selectcourse/list").then(res=>{
-        console.log(res)
+      axios.post("http://localhost:8080/selectcourse/getstudent" , {
+        pagesize:3,
+        pagenum:1,
+        param:{
+          "semester":1,
+          "courseid":1,
+          "staffid":1,
+          "classtime":1
+        }
+      }).then(res=>{
+        this.data=res.data.data
+        this.dataLen = res.data.total
+        console.log(this.data)
       })
       // axios.get("http://localhost:8080/selectcourse/allstudent?semester="+this.semester+"&courseId="+this.courseId+"&staffId="+
       // this.staffId+"&classTime="+this.classTime).then(response=>{

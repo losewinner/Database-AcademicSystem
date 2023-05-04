@@ -1,6 +1,7 @@
 package com.example.academic_affairs_management_system.mapper;
 
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
+import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -23,6 +24,17 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     List<Selectcourse> getAllInfo(String semester,String courseId,String staffId,String classTime);
 
     public List<Selectcourse> selectAll();
+
+    @Select("select student.studentid,student.name,score,testscore,signscore,homeworkscore " +
+            "from selectcourse,student "+
+            "where selectcourse.studentid = student.studentid and " +
+            "semester = #{semester} and " +
+            "courseid = #{courseid} and " +
+            "staffid = #{staffid} and " +
+            "classtime = #{classtime} " +
+            "limit #{pagenum},#{pagesize}"
+    )
+    List<Student> select_stu(int pagenum, int pagesize, String semester, String courseid, String staffid, String classtime);
 
     //统计分数,按照课程来统计，不需要搜学生和老师，但是学生的姓名和学号还是要查的
     @Select("SELECT " +
