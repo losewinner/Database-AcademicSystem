@@ -31,8 +31,8 @@ public class Result {
         return result(Constants.CODE_200,"成功",total,data);
     }
 
-    public static Result fail(String msg,int total,Object data){
-        return result(Constants.CODE_400,msg,total,data);
+    public static Result fail(String msg){
+        return result(Constants.CODE_400,msg,0,null);
     }
 
 

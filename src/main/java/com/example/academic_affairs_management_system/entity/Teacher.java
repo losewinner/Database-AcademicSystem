@@ -21,21 +21,19 @@ public class Teacher implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("staffId")
+    @TableId("staffid")
     private String staffid;
 
-    private String name;
+    private String teachername;
 
     private String sex;
 
     private LocalDateTime birth;
 
-    private String rank;
+    private String title;
 
-    @TableField("deptId")
+    @TableField("deptid")
     private String deptid;
-
-    private String password;
 
 
 }
