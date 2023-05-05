@@ -1,6 +1,5 @@
 <template>
-<el-container class="基本信息" style="margin-top: 20px">
-    <el-descriptions class="margin-top" title="个人信息" :column="3" :size="'medium'" border>
+    <el-descriptions class="margin-top" title="个人信息" :column="3" :size="'medium'" border style="margin-top: 20px">
         <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-user"></i>
@@ -37,7 +36,6 @@
             {{ Admininfo.birth }}
         </el-descriptions-item>
     </el-descriptions>
-</el-container>
 </template>
 
 <script>

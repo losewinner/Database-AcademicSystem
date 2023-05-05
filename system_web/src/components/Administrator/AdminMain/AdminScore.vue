@@ -9,24 +9,15 @@
                            :value="item.value">
                 </el-option>
             </el-select>
-            <el-radio-group v-model="selectionOfSearch" style="margin-top: 10px">
-                <el-radio-button label="student">按照学生</el-radio-button>
-                <el-radio-button label="course">按照课程</el-radio-button>
-            </el-radio-group>
-            <el-container class="二选一" style="margin-top: 10px">
-                <el-form v-if="selectionOfSearch === 'student'">
-                    <el-form-item label ="搜索学生">
-                        <el-input placeholder="请输入学生号" suffix-icon="el-icon-user" v-model="input.studentId" style="width:40%;margin-right: 5px"></el-input>
-                        <el-input placeholder="请输入学生姓名" suffix-icon="el-icon-user" v-model="input.studentName" style="width:40% ;margin-right: 5px"></el-input>
-                    </el-form-item>
-                </el-form>
-                <el-form v-else-if="selectionOfSearch === 'course'">
-                    <el-form-item label="搜索课程">
-                        <el-input placeholder="请输入课程号" suffix-icon="el-icon-s-management" v-model="input.courseId" style="width:40% ;margin-right: 5px"></el-input>
-                        <el-input placeholder="请输入课程名字" suffix-icon="el-icon-s-management" v-model="input.courseName" style="width:40% ;margin-right: 5px"></el-input>
-                    </el-form-item>
-                </el-form>
+            <el-container class="课程，课程号" style="margin-top: 20px;display: flex;flex-direction: row">
+                <el-input placeholder="请输入课程号" suffix-icon="el-icon-s-management" v-model="input.courseId" style="width:40% ;margin-right: 5px"></el-input>
+                <el-input placeholder="请输入课程名字" suffix-icon="el-icon-s-management" v-model="input.courseName" style="width:40% ;margin-right: 5px"></el-input>
             </el-container>
+            <el-container class="学号，学生名" style="margin-top: 20px;display: flex;flex-direction: row">
+                <el-input placeholder="请输入学生号" suffix-icon="el-icon-user" v-model="input.studentId" style="width:40%;margin-right: 5px"></el-input>
+                <el-input placeholder="请输入学生姓名" suffix-icon="el-icon-user" v-model="input.studentName" style="width:40% ;margin-right: 5px"></el-input>
+            </el-container>
+
             <el-container class="查找按钮" style="margin-top: 5px">
                 <el-button @click="searchClick()" type="primary" icon="el-icon-search">搜索</el-button>
             </el-container>
@@ -72,7 +63,16 @@
                 prop="courseName" label="课程名字" width="150">
             </el-table-column>
             <el-table-column
-                prop="score" label="绩点" width="100">
+                prop="score" label="平时成绩" width="150">
+            </el-table-column>
+            <el-table-column
+                prop="testScore" label="考试成绩" width="150">
+            </el-table-column>
+            <el-table-column
+                prop="finalScore" label="综合成绩" width="150">
+            </el-table-column>
+            <el-table-column
+                prop="scorePoint" label="绩点" width="150">
             </el-table-column>
             <el-table-column
                 fixed="right" label="操作" width="170">
@@ -111,14 +111,7 @@ export default {
                 studentName:"",
                 selectSemester:"",
             },
-            FromDbInfo:[{         //后端通过前端的输入查找到的信息放在这个字典数组中，
-                semester: '2023春季',
-                studentId: '12345',
-                studentName:'陆靖宇',
-                courseId: '12345',
-                courseName:'BB88',
-                score: 2003
-            }],
+            FromDbInfo:[], //后端通过前端的输入查找到的信息放在这个字典数组中，
             ScoreAnalysis:{      //后端数据库制作三种分的视图，将三分记下来，放进这个字典中。
                 averageScore:50,
                 highestScore:100,
@@ -147,31 +140,50 @@ export default {
                     }
                 });
             }
-
             //先获取input的东西（v-model双向绑定自动获取了
             console.log(this.input);
             //然后获取对应的数据
             //解析所选的学期
-            var semester = this.optionSemester.find(x=>x.value===this.input.selectSemester);
-            console.log(semester.label);
-            //如果按照课程选择
-            if(this.input.courseId!== "" && this.input.courseName !=="")
-            {
-                var that = this;
-                axios.get("http://127.0.0.1:8080/selectcourse/getcoursescore?semester="+semester.label
-                    +"&courseId="+that.input.courseId+"&courseName="+that.input.courseName).then(res=>{
-                        console.log("getCourseScore",res.data);
+            var semester_dict = this.optionSemester.find(x=>x.value===this.input.selectSemester);
+            var semester = semester_dict.label;
+            //按照学生和课程的输入来选择
+            axios.post("/selectcourse/getScore",{
+                pagesize:100,
+                pagenum:1,
+                param:{
+                    semester:semester,
+                    studentId:this.input.studentId,
+                    studentName: this.input.studentName,
+                    courseId :this.input.courseId,
+                    courseName: this.input.courseName
+                }
+            }).then(res=>res.data).then(res=>{
+                if(res.code=="200"){
+                    console.log(res.data);
+                    this.FromDbInfo = res.data;
+                    if(this.FromDbInfo.length===0) {
+                        this.$message({
+                            type: 'info',
+                            message: `暂无数据！`,
 
-                })
-            }
+                        });
+                    }
+                    else {
+                        this.$message({
+                            type: 'success',
+                            message: `查找成功！`,
+
+                        });
+                    }
+                }
+            })
         },
         loadData(){
-            //向数据库请求数据，涉及：学期表，学生表，选课表，教师表
+            //向数据库请求数据，涉及：学期表
             console.log("w");
             //获取学期信息，放进optionSemester中
-            //先尝试只获取学期表，
             var that = this;
-            axios.get("http://127.0.0.1:8080/semestatus/list").then(res=>{
+            axios.get("/semestatus/list").then(res=>{
                 console.log("yeyeye",res.data);    //获取成功
                 for(const item of res.data)
                 {

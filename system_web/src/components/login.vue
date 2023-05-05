@@ -46,7 +46,7 @@ export default {
         login(){
           this.$refs["userForm"].validate((valide)=>{
             if(valide){
-              this.$axios.get("http://localhost:8080/login",{
+              this.$axios.get("/login",{
                 params:this.user
               }).then(res=>res.data).then(res=> {
                 console.log(res)

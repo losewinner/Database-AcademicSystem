@@ -27,16 +27,16 @@
             selectcourse.courseId = course.courseId
             and selectcourse.studentId = student.studentId
             and semester = #{semester}
-            <if test="studentId!=null">
+            <if test="studentId!=null and studentId!=''">
                 and selectcourse.studentId = #{studentId}
             </if>
-            <if test="studentName!=null">
+            <if test="studentName!=null and studentName!=''">
                 and student.name = #{studentName}
             </if>
-            <if test="courseId!=null">
+            <if test="courseId!=null and courseId!=''">
                 and selectcourse.courseId = #{courseId}
             </if>
-            <if test="courseName!=null">
+            <if test="courseName!=null and courseName!=''">
                 and course.name = #{courseName}
             </if>
         </where>
