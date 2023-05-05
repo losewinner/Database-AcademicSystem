@@ -1,5 +1,10 @@
 <template>
+
+
   <div class="wrapper">
+    <div>
+      456
+    </div>
     <div style="opacity:0.98;margin: 200px auto;background-color: #fff;width: 390px;height: 350px;padding: 20px;border-radius: 10px;
     box-shadow: gray 4px 4px 10px">
       <div style="margin: 20px 0;text-align: center;font-size: 24px;color: #153b7f"><b>SHU 选课系统</b></div>
@@ -12,7 +17,7 @@
         </el-form-item>
         <div style="margin: 10px 0;display: flex;justify-content: space-around;">
           <el-button type="primary" size="small" autocomplete="off" style="width: 170px" @click="login">登录</el-button>
-          <el-button type="warning" size="small" autocomplete="off" style="width: 170px" @click="reg">注册</el-button>
+          <el-button type="warning" size="small" autocomplete="off" style="width: 170px" @click="reg">忘记密码</el-button>
         </div>
       </el-form>
     </div>
@@ -23,7 +28,10 @@ export default {
     name: "Login",
     data(){
           return{
-            user:{},
+            user:{
+              username:"",
+              password:""
+            },
             rules: {
               username: [
                 {required: true, message: '请输入学工号', trigger: 'blur'},
@@ -39,8 +47,22 @@ export default {
     methods:{
         //登录
         login(){
-          this.$router.push("/Teacher/home");
-          this.$message.success("登录成功！")
+
+          this.$refs["userForm"].validate((valide)=>{
+            if(valide){
+              this.$axios.post("http://localhost:8080/teacher/login",this.user).then(res=>res.data).then(res=> {
+                if(res.status==200){
+                  sessionStorage.setItem("curuser",JSON.stringify(res.data))
+                  this.$router.push("/Teacher/home")
+                  this.$message.success("登录成功！");
+                }
+                else{
+                  this.$message.error("学工号或者密码错误！")
+                  return false
+                }
+              })
+            }
+          })
         },
     }
 }
@@ -49,7 +71,7 @@ export default {
 <style scoped>
 .wrapper{
   height: 100vh;
-  background: url("https://www.shu.edu.cn/2022banner/20230226-2.jpg");
+  //background: url("https://www.shu.edu.cn/2022banner/20230226-2.jpg");
   background-size: 100% 100%;
   overflow: hidden;
 }

@@ -1,21 +1,20 @@
 <template>
   <div>
-    ModifyResult
     <el-table :data="data"
               style="width: 100%">
-        <el-table-column prop="studentid" label="学号" width="120"></el-table-column>
-        <el-table-column prop="studentid" label="姓名" width="120"></el-table-column>
-        <el-table-column prop="signscore" label="平时成绩" width="120"></el-table-column>
-        <el-table-column prop="testscore" label="考试成绩" width="120"></el-table-column>
-        <el-table-column prop="score" label="总成绩" width="120"></el-table-column>
+        <el-table-column prop="studentid" label="学号" width="120" sortable></el-table-column>
+        <el-table-column prop="name" label="姓名" width="120" ></el-table-column>
+        <el-table-column prop="signscore" label="平时成绩" width="120" sortable>
+
+        </el-table-column>
+
+        <el-table-column prop="testscore" label="考试成绩" width="120" sortable></el-table-column>
+        <el-table-column prop="score" label="总成绩" width="120" sortable></el-table-column>
     </el-table>
   </div>
 </template>
-
 <script>
 import axios from "axios";
-
-
 export default {
   name: "ModifyResults",
   data(){
@@ -27,14 +26,17 @@ export default {
   },
   created() {
     this.load()
-
   },
   methods:{
     load(){
       console.log("loading")
+      this.staffId=1
+
+
+
       this.semester=1
       this.courseId=1
-      this.staffId=1
+
       this.classTime=1
       axios.post("http://localhost:8080/selectcourse/getstudent" , {
         pagesize:3,
