@@ -6,35 +6,35 @@
                 <i class="el-icon-user"></i>
                 职工号
             </template>
-            {{ teainfo.staffid }}
+            {{ Admininfo.staffid }}
         </el-descriptions-item>
         <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-user"></i>
                 姓名
             </template>
-            {{ teainfo.teachername }}
+            {{ Admininfo.teachername }}
         </el-descriptions-item>
         <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-user"></i>
-                职称
+                身份
             </template>
-            {{ teainfo.title }}
+            {{ Admininfo.title }}
         </el-descriptions-item>
         <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-user"></i>
                 性别
             </template>
-            {{ teainfo.sex }}
+            {{ Admininfo.sex }}
         </el-descriptions-item>
         <el-descriptions-item>
             <template slot="label">
                 <i class="el-icon-user"></i>
                 生日
             </template>
-            {{ teainfo.birth }}
+            {{ Admininfo.birth }}
         </el-descriptions-item>
     </el-descriptions>
 </el-container>
