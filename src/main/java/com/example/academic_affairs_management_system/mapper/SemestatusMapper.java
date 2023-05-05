@@ -3,6 +3,7 @@ package com.example.academic_affairs_management_system.mapper;
 import com.example.academic_affairs_management_system.entity.Semestatus;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * <p>
@@ -15,4 +16,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SemestatusMapper extends BaseMapper<Semestatus> {
 
+    @Select("select max(semester) from semestatus where status = 1 or status = 2")
+    public String getnowsemester();
 }

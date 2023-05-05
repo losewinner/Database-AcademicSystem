@@ -31,7 +31,8 @@ export default {
       isCollapse:false,
       sideWidth:'200',
       plate:"",
-      func:""
+      func:"",
+      teainfo:[],
     }
   },
   components: {

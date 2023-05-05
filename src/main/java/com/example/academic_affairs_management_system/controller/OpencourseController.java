@@ -7,11 +7,13 @@ import com.example.academic_affairs_management_system.entity.Opencourse;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.example.academic_affairs_management_system.service.IOpencourseService;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
+import com.example.academic_affairs_management_system.service.ISemestatusService;
 import com.example.academic_affairs_management_system.service.impl.OpencourseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -28,14 +30,15 @@ public class OpencourseController {
 
     @Autowired
     private IOpencourseService iOpencourseService;
+    @Autowired
+    private ISemestatusService isemestatusService;
     @GetMapping("/getclass")
-    public Result select_class(Opencourse opencourse){
+    public Result select_class(@RequestParam String staffid){
         /**
          * 查询某老师所有班
          */
-        LambdaQueryWrapper<Opencourse> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Opencourse::getSemester,opencourse.getSemester())
-                .eq(Opencourse::getStaffid,opencourse.getStaffid());
-        return Result.success(iOpencourseService.list(lambdaQueryWrapper));
+        String semester = isemestatusService.getnowsemester();
+        
+        return Result.success(iOpencourseService.select_class(staffid,semester));
     }
 }

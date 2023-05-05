@@ -1,9 +1,11 @@
 package com.example.academic_affairs_management_system.mapper;
 
+import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Course;
 import com.example.academic_affairs_management_system.entity.Opencourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -17,5 +19,9 @@ import java.util.List;
  */
 @Mapper
 public interface OpencourseMapper extends BaseMapper<Opencourse> {
+    @Select("select classtime,course.name as coursename from course,opencourse " +
+            "where course.courseId=opencourse.courseId and " +
+            "semester = #{semester} and staffid = #{staffid}")
+    public List<Course> select_class(String staffid, String semester);
 
 }

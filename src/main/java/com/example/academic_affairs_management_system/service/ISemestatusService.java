@@ -12,5 +12,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-04-27
  */
 public interface ISemestatusService extends IService<Semestatus> {
+    public String getnowsemester();
 
 }

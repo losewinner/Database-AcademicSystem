@@ -51,7 +51,7 @@ export default {
               }).then(res=>res.data).then(res=> {
                 console.log(res)
                 if(res.code==200){
-                  sessionStorage.setItem("curuser",JSON.stringify(res.data))
+                  sessionStorage.setItem("curuser",JSON.stringify(res.data.data))
                   this.$router.push("/Teacher/home")
                   this.$message.success("登录成功！");
                 }
