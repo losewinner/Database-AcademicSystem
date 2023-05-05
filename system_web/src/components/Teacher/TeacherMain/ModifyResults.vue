@@ -4,7 +4,7 @@
       <el-option
           v-for="item in cou_options"
           :key="item.key"
-          :label="item.value"
+          :label="item.label"
           :value="item.value"
       >
       </el-option>
@@ -50,7 +50,8 @@ export default {
       ],
       couoption:"",
       cla_options:new Map(),
-      claoption:""
+      claoption:"",
+      cla_id:new Map()
     }
   },
   created() {
@@ -68,42 +69,48 @@ export default {
       }).then(res=>res.data).then(res=>{
         if(res.code=="200"){
           this.cou_options=[]
-          let set= new Set()
+          this.cla_id =new Map()
           for(let i=0;i<res.data.length;++i){
-            set.add(res.data[i].coursename)
+            if(!this.cla_id.has(res.data[i].coursename)){
+              this.cla_id.set(res.data[i].coursename,res.data[i].courseid)
+            }
             if(!this.cla_options.has(res.data[i].coursename)){
               this.cla_options.set(res.data[i].coursename,[res.data[i].classtime])
             }
             else{
               let mget=this.cla_options.get(res.data[i].coursename)
+              mget.push(res.data[i].classtime)
               this.cla_options.set(res.data[i].coursename, mget)
             }
           }
-          let list=Array.from(set)
+          let list=Array.from(this.cla_id.keys())
           for (const listKey in list) {
             this.cou_options.push({
-              value: list[listKey]
+              value:list[listKey] ,
+              lable:this.cla_id.get(list[listKey])
             })
           }
-
         }
       })
     },
     select(){
       console.log("请求数据")
+      console.log(this.cla_id.get(this.couoption))
+      console.log(this.staffid)
+      console.log(this.claoption)
       axios.post("http://localhost:8080/selectcourse/getstudent",{
-        params:{
-          "pagesize":100,
-          "pagenum":1,
-          "param":{
-            "courseid":this.cou_options,
-            "staffid":this.staffid,
-            "classtime":this.claoption
+          pagesize:100,
+          pagenum:1,
+          param:{
+            courseid:this.cla_id.get(this.couoption),
+            staffid:this.staffid,
+            classtime:this.claoption
           }
-        }
       }).then(res=>res.data).then(res=>{
         if(res.code=="200"){
           console.log(res)
+          this.data=res.data
+
         }
       })
     }

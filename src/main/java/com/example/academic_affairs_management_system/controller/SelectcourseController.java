@@ -8,6 +8,7 @@ import com.example.academic_affairs_management_system.controller.dto.TeacherPack
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
 
+import com.example.academic_affairs_management_system.service.ISemestatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,9 @@ import java.util.List;
 public class SelectcourseController {
     @Autowired
     private ISelectcourseService iSelectcourseService;
+
+    @Autowired
+    private ISemestatusService iSemestatusService;
 
     @GetMapping("/allstudent")
     public Result findPage(@RequestParam String semester,
@@ -52,8 +56,16 @@ public class SelectcourseController {
          */
         int pagenum = queryPageParam.getPagenum(),pagesize=queryPageParam.getPagesize();
         HashMap param= queryPageParam.getParam();
+        String semester =  iSemestatusService.getnowsemester();
+        System.out.println(param);
+        System.out.println(pagenum);
+        System.out.println(pagesize);
+        param.get("courseid").toString();
+        param.get("staffid").toString();
+        param.get("classtime").toString();
+
         List<Student> data = iSelectcourseService.select_stu(pagenum,pagesize,
-                param.get("semester").toString(),param.get("courseid").toString(),
+                semester,param.get("courseid").toString(),
                 param.get("staffid").toString(),param.get("classtime").toString());
 
         return Result.success(data,data.size());

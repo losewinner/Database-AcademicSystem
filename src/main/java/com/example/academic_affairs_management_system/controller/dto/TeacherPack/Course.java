@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class Course {
     private String coursename;
+    private String courseid;
     private String classtime;
 }
