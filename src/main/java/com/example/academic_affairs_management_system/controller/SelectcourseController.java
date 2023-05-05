@@ -99,7 +99,6 @@ public class SelectcourseController {
         String studentName = param.get("studentName").toString();
         String courseId = param.get("courseId").toString();
         String courseName = param.get("courseName").toString();
-
         List<Score> data = iSelectcourseService.getScore(pagenum,pagesize,
                 semester,studentId,studentName,courseId,courseName);
         return Result.success(data,data.size());
