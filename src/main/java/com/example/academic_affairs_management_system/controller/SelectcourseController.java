@@ -86,18 +86,34 @@ public class SelectcourseController {
         return iSelectcourseService.getStudentScore(semester, studentId, studentName);
     }
 
-    @GetMapping("/getScore")
-    public List<Score> getScore(@RequestParam Integer pageNum,
-                                @RequestParam Integer pageSize,
-                                @RequestParam String semester,
-                                @RequestParam String studentId,
-                                @RequestParam String studentName,
-                                @RequestParam String courseId,
-                                @RequestParam String courseName){
-        //Integer pageNum = page.get("pageNum");
-        //Integer pageSize = page.get("pageSize");
-        return iSelectcourseService.getScore(pageNum,pageSize,semester,studentId,studentName,courseId,courseName);
+    @PostMapping("/getScore")
+    public Result getScore(@RequestBody QueryPageParam queryPageParam){
+        /*
+         * 自由搜索【学期（必须），学号，学生姓名，课号，课程名字】，得到成绩列表
+         */
 
+        int pagenum = queryPageParam.getPagenum(),pagesize = queryPageParam.getPagesize();
+        HashMap param = queryPageParam.getParam();
+        String semester = param.get("semester").toString();
+        String studentId = param.get("studentId").toString();
+        String studentName = param.get("studentName").toString();
+        String courseId = param.get("courseId").toString();
+        String courseName = param.get("courseName").toString();
+
+        List<Score> data = iSelectcourseService.getScore(pagenum,pagesize,
+                semester,studentId,studentName,courseId,courseName);
+        return Result.success(data,data.size());
+
+        //return iSelectcourseService.getScore(pageNum,pageSize,semester,studentId,studentName,courseId,courseName);
+        /*
+        * @RequestParam Integer pageNum,
+        @RequestParam Integer pageSize,
+        @RequestParam String semester,
+        @RequestParam String studentId,
+        @RequestParam String studentName,
+        @RequestParam String courseId,
+        @RequestParam String courseName
+        * */
     }
 
 

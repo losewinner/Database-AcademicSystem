@@ -52,7 +52,7 @@ public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements
     public Login getlogin(String username, String password){
         QueryWrapper<Login> queryWrapper = new QueryWrapper<Login>();
         queryWrapper.eq("id",username);
-        if(!password.isBlank()){
+        if(!password.isEmpty()){
             queryWrapper.eq("password",password);
         }
         try{
