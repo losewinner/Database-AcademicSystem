@@ -115,6 +115,14 @@ public class SelectcourseController {
         * */
     }
 
+    @DeleteMapping("/deleteScore")
+    public Result delScore(@RequestBody QueryPageParam queryPageParam){
+        /*
+        * 批量，单选删除学生成绩*/
+
+        return Result.success();
+    }
+
 
 
 

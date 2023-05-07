@@ -18,8 +18,17 @@
                 <el-input placeholder="请输入学生姓名" suffix-icon="el-icon-user" v-model="input.studentName" style="width:40% ;margin-right: 5px"></el-input>
             </el-container>
 
-            <el-container class="查找按钮" style="margin-top: 5px">
-                <el-button @click="searchClick()" type="primary" icon="el-icon-search">搜索</el-button>
+            <el-container class="查找，删除按钮" style="margin-top: 5px;display: flex;flex-direction: row">
+                <el-button @click="searchClick()" type="primary" icon="el-icon-search" style="margin-right: 10px">搜索</el-button>
+                <el-popconfirm
+                    confirm-button-text='确认'
+                    cancel-button-text='取消'
+                    icon="el-icon-info"
+                    icon-color="red"
+                    title="是否删除选中数据？"
+                    @confirm="deleteSelect()">
+                    <el-button slot="reference" icon = "el-icon-delete" type="danger">删除</el-button>
+                </el-popconfirm>
             </el-container>
         </el-container>
         <el-container class="统计分数结果（平均分，最高分，最低分）" style = "margin-top: 20px">
@@ -44,46 +53,46 @@
 
     <el-container class="查找结果表格" style="margin-top: 20px">
         <el-table
+            ref = "ScoreInfo"
             :data="FromDbInfo"
             style="width: 70%"
-            max-height="250">
+            max-height="250"
+            @selection-change="handleSelectionChange">
+            <el-table-column
+                type="selection"
+                width="55">
+            </el-table-column>
             <el-table-column fixed="left"
-                             prop="semester" label="学期" width="150">
+                             prop="semester" label="学期" width="150" sortable>
             </el-table-column>
             <el-table-column
-                prop="studentId" label="学号" width="130">
+                prop="studentId" label="学号" width="130" sortable>
             </el-table-column>
             <el-table-column
                 prop="studentName" label="学生姓名" width="120">
             </el-table-column>
             <el-table-column
-                prop="courseId" label="课程号" width="150">
+                prop="courseId" label="课程号" width="150" sortable>
             </el-table-column>
             <el-table-column
                 prop="courseName" label="课程名字" width="150">
             </el-table-column>
             <el-table-column
-                prop="score" label="平时成绩" width="150">
+                prop="score" label="平时成绩" width="150" sortable>
             </el-table-column>
             <el-table-column
-                prop="testScore" label="考试成绩" width="150">
+                prop="testScore" label="考试成绩" width="150" sortable>
             </el-table-column>
             <el-table-column
-                prop="finalScore" label="综合成绩" width="150">
+                prop="finalScore" label="综合成绩" width="150" sortable>
             </el-table-column>
             <el-table-column
-                prop="scorePoint" label="绩点" width="150">
+                prop="scorePoint" label="绩点" width="150" sortable>
             </el-table-column>
             <el-table-column
                 fixed="right" label="操作" width="170">
                 <template slot-scope="scope">
                     <el-button  @click="editClick(scope.row)" type="text" size="medium">编辑</el-button>
-                    <el-button
-                        @click.native.prevent="deleteRow(scope.$index, FromDbInfo)"
-                        type="text"
-                        size="medium" style="color:red">
-                        删除
-                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -116,12 +125,26 @@ export default {
                 averageScore:50,
                 highestScore:100,
                 lowestScore:0.
-            }
+            },
+            ToDbInfo:[]
         }
     },
     methods:{
-        deleteRow(index,rows){     //不仅前端移除，且数据库选课表中也要把这个学生的元组删去。
-            rows.splice(index,1);
+        deleteSelect(){     //不仅前端移除，且数据库选课表中也要把这个学生的元组删去。
+            //通过勾选框的数据来进行删除
+            console.log("删除操作",this.ToDbInfo);
+            //删除前端页面上的数据，不需要刷新，但建议此操作在数据库操作后进行
+            //因为数据库可能删除不成功
+            //rows.splice(index,1);
+            axios.delete("/selectcourse/deleteScore",{
+                data:{
+                    ToDb:this.ToDbInfo
+                }})
+
+        },
+        handleSelectionChange(val){
+            this.ToDbInfo = val;
+            console.log("选择框",this.ToDbInfo);
         },
         editClick(row){
             console.log(row)

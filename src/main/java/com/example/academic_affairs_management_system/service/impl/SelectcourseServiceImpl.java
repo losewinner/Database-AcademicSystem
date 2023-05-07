@@ -57,4 +57,5 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
         Integer pageCurrent = (pageNum-1)*pageSize;
         return selectcourseMapper.getScore(pageCurrent,pageSize,semester, studentId, studentName, courseId, courseName);
     }
+
 }
