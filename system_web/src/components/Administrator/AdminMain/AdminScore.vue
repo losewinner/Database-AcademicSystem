@@ -126,7 +126,8 @@ export default {
                 highestScore:100,
                 lowestScore:0.
             },
-            ToDbInfo:[]
+            ToDbInfo:[],
+            selectedRowIndexes:[]
         }
     },
     methods:{
@@ -137,6 +138,7 @@ export default {
             //因为数据库可能删除不成功
             //rows.splice(index,1);
             //删除成功了，但是前端该怎么实时删除呢。
+            //
             axios.post("/selectcourse/deleteScore",{
                 param: {
                     DeleteList: this.ToDbInfo
@@ -144,6 +146,10 @@ export default {
             }).then(res=>res.data).then(res=>{
                 if(res.code == "200"){
                     console.log("成功删除");
+
+                    this.selectedRowIndexes.forEach(index => {
+                        this.FromDbInfo.splice(index, 1); // 根据排序后的索引删除数组中的元素
+                    });
                 }
             });
 
@@ -151,6 +157,9 @@ export default {
         handleSelectionChange(val){
             this.ToDbInfo = val;
             console.log("选择框",this.ToDbInfo);
+            this.selectedRowIndexes = val.map(item => this.FromDbInfo.indexOf(item));
+            this.selectedRowIndexes.sort((a,b)=>b-a)
+            console.log(this.selectedRowIndexes);
         },
         editClick(row){
             console.log(row)
