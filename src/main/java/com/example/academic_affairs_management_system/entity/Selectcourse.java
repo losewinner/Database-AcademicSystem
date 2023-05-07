@@ -45,5 +45,6 @@ public class Selectcourse implements Serializable {
     @TableField("homeworkScore")
     private Integer homeworkscore;
 
-
+    @TableField("finalScore")
+    private Integer finalscore;
 }

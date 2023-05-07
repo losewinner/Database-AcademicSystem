@@ -10,19 +10,7 @@
         selectcourse.staffId,
         selectcourse.courseId,course.name as courseName,
         testScore,score,ratio,
-        finalScore,
-        CASE
-        WHEN finalScore>=90 THEN 4.0
-        WHEN finalScore>=85 THEN 3.7
-        WHEN finalScore>=82 THEN 3.3
-        WHEN finalScore>=78 THEN 3.0
-        WHEN finalScore>=75 THEN 2.7
-        WHEN finalScore>=72 THEN 2.3
-        WHEN finalScore>=68 THEN 2.0
-        WHEN finalScore>=64 THEN 1.5
-        WHEN finalScore>=60 THEN 1.0
-        ELSE 0
-        END as scorePoint
+        finalScore,scorePoint
         From selectcourse,course,student
         <where>
             selectcourse.courseId = course.courseId
@@ -50,19 +38,7 @@
         selectcourse.staffId,
         selectcourse.courseId,course.name as courseName,selectcourse.classtime,
         testScore,score,ratio,
-        finalScore,
-        CASE
-        WHEN finalScore>=90 THEN 4.0
-        WHEN finalScore>=85 THEN 3.7
-        WHEN finalScore>=82 THEN 3.3
-        WHEN finalScore>=78 THEN 3.0
-        WHEN finalScore>=75 THEN 2.7
-        WHEN finalScore>=72 THEN 2.3
-        WHEN finalScore>=68 THEN 2.0
-        WHEN finalScore>=64 THEN 1.5
-        WHEN finalScore>=60 THEN 1.0
-        ELSE 0
-        END as scorePoint
+        finalScore,scorePoint
         From selectcourse,course,student
         <where>
             selectcourse.courseId = course.courseId
