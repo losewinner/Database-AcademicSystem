@@ -1,12 +1,14 @@
 package com.example.academic_affairs_management_system.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.academic_affairs_management_system.common.QueryPageParam;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
+import com.example.academic_affairs_management_system.mapper.SelectcourseMapper;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
 
 import com.example.academic_affairs_management_system.service.ISemestatusService;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -35,6 +38,9 @@ public class SelectcourseController {
 
     @Autowired
     private ISemestatusService iSemestatusService;
+
+    @Resource
+    private SelectcourseMapper selectcourseMapper;
 
     @GetMapping("/allstudent")
     public Result findPage(@RequestParam String semester,
@@ -89,6 +95,15 @@ public class SelectcourseController {
         return iSelectcourseService.getStudentScore(semester, studentId, studentName);
     }
 
+    @GetMapping("/getAllScore")
+    public Result getAllScore(@RequestParam int pagenum,@RequestParam int pagesize){
+        /*
+        * 获取所有成绩信息
+        * */
+        List<Score> allScore = iSelectcourseService.getAllScore(pagenum,pagesize);
+        return Result.success(allScore,allScore.size());
+    }
+
     @PostMapping("/getScore")
     public Result getScore(@RequestBody QueryPageParam queryPageParam){
         /*
@@ -138,6 +153,27 @@ public class SelectcourseController {
         }
         System.out.println(delList);
         return iSelectcourseService.AdminDelScore(delList);
+    }
+
+    @PostMapping("/editScore")
+    public Result editScore(@RequestBody Score score){
+        /*
+        * 管理员修改成绩*/
+
+        System.out.println(score);
+        UpdateWrapper<Selectcourse> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("studentid",score.getStudentId())
+                .eq("semester",score.getSemester())
+                .eq("courseid",score.getCourseId())
+                .eq("staffid",score.getStaffId())
+                .eq("classtime",score.getClassTime())
+                .set("score",score.getScore())
+                .set("testScore",score.getTestScore());
+        boolean success = iSelectcourseService.update(updateWrapper);
+        if(success) {
+            return Result.success();
+        }
+        return Result.fail("更新失败");
     }
 
 

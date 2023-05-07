@@ -23,6 +23,7 @@ public interface ISelectcourseService extends IService<Selectcourse> {
 
     public List<Selectcourse> selectAll();
 
+    public List<Score> getAllScore(int pagenum,int pagesize);
     public List<Score> getCourseScore(String semester, String courseId, String courseName);
 
     public List<Score> getStudentScore(String semester,String studentId,String studentName);

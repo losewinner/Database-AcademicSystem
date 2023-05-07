@@ -50,13 +50,23 @@
             </el-form>
         </el-container>
     </el-container>
+    <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pagenum"
+        :page-sizes="[10, 15, 25, 30]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalpage" style="margin-top: 10px;margin-bottom: 10px">
+    </el-pagination>
 
     <el-container class="查找结果表格" style="margin-top: 20px">
+
         <el-table
             ref = "ScoreInfo"
             :data="FromDbInfo"
             style="width: 70%"
-            max-height="250"
+            max-height="auto"
             @selection-change="handleSelectionChange">
             <el-table-column
                 type="selection"
@@ -93,11 +103,25 @@
                 fixed="right" label="操作" width="170">
                 <template slot-scope="scope">
                     <el-button  @click="editClick(scope.row)" type="text" size="medium">编辑</el-button>
+
                 </template>
             </el-table-column>
         </el-table>
     </el-container>
-
+    <el-dialog title="修改成绩" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+            <el-form-item label="平时成绩" :label-width="formLabelWidth">
+                <el-input v-model="form.score" ></el-input>
+            </el-form-item>
+            <el-form-item label="考试成绩" :label-width="formLabelWidth">
+                <el-input v-model="form.testScore"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="confirmEdit">确 定</el-button>
+        </div>
+    </el-dialog>
 </el-container>
 
 </template>
@@ -127,18 +151,47 @@ export default {
                 lowestScore:0.
             },
             ToDbInfo:[],
-            selectedRowIndexes:[]
+            selectedRowIndexes:[],
+            pagesize:10,
+            pagenum:1,
+            totalpage:0,
+            dialogFormVisible: false,
+            formLabelWidth: '120px',
+            form:{
+                score:null,
+                testScore:null,
+            },
+            currentRow:null
         }
     },
     methods:{
+        handleCurrentChange(currentPage) {
+            // 修改当前页码，并重新查询数据
+            this.pagenum = currentPage;
+            if(this.input.selectSemester==='')
+            {
+                this.loadData();
+            }
+            else{
+                this.searchClick();
+            }
+
+        },
+        handleSizeChange(pageSize){
+            this.pagesize = pageSize;
+            if(this.input.selectSemester==='')
+            {
+                this.loadData();
+            }
+            else{
+                this.searchClick();
+            }
+        },
         deleteSelect(){     //不仅前端移除，且数据库选课表中也要把这个学生的元组删去。
             //通过勾选框的数据来进行删除
             console.log("删除操作",this.ToDbInfo);
             //删除前端页面上的数据，不需要刷新，但建议此操作在数据库操作后进行
             //因为数据库可能删除不成功
-            //rows.splice(index,1);
-            //删除成功了，但是前端该怎么实时删除呢。
-            //
             axios.post("/selectcourse/deleteScore",{
                 param: {
                     DeleteList: this.ToDbInfo
@@ -146,13 +199,11 @@ export default {
             }).then(res=>res.data).then(res=>{
                 if(res.code == "200"){
                     console.log("成功删除");
-
                     this.selectedRowIndexes.forEach(index => {
                         this.FromDbInfo.splice(index, 1); // 根据排序后的索引删除数组中的元素
                     });
                 }
             });
-
         },
         handleSelectionChange(val){
             this.ToDbInfo = val;
@@ -162,7 +213,47 @@ export default {
             console.log(this.selectedRowIndexes);
         },
         editClick(row){
-            console.log(row)
+            //编辑成绩，只能编辑四个成绩
+            console.log("修改成绩",row);
+            this.dialogFormVisible = true;
+            this.currentRow = row;
+        },
+        confirmEdit(){
+            console.log(this.form.testScore,this.form.score);
+            this.dialogFormVisible = false;
+            console.log(this.currentRow.semester);
+            //得到了成绩，把对应的学期学号工号课程号一起传回后端，让后端数据库重新算一遍
+            axios.post("/selectcourse/editScore",{
+                studentId:this.currentRow.studentId,
+                semester:this.currentRow.semester,
+                courseId:this.currentRow.courseId,
+                staffId:this.currentRow.staffId,
+                classTime:this.currentRow.classTime,
+                score:this.form.score,
+                testScore:this.form.testScore,
+            }).then(res=>res.data).then(res=>{
+                console.log(res);
+                if(res.code == "200"){
+                    this.$message({
+                        type: 'success',
+                        message: `更新成功！`,
+                    });
+                    //更新成功后需要刷新一下
+                    if(this.input.selectSemester===''){
+                        this.loadData();
+                    }else{
+                        this.searchClick();
+                    }
+                }
+                else{
+                    this.$message({
+                        type: 'danger',
+                        message: `更新失败！`,
+
+                    });
+                }
+            })
+
         },
         searchClick(){
             //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
@@ -186,8 +277,8 @@ export default {
             var semester = semester_dict.label;
             //按照学生和课程的输入来选择
             axios.post("/selectcourse/getScore",{
-                pagesize:100,
-                pagenum:1,
+                pagesize:this.pagesize,
+                pagenum:this.pagenum,
                 param:{
                     semester:semester,
                     studentId:this.input.studentId,
@@ -199,6 +290,7 @@ export default {
                 if(res.code=="200"){
                     console.log(res.data);
                     this.FromDbInfo = res.data;
+                    this.totalpage = this.FromDbInfo.length;
                     if(this.FromDbInfo.length===0) {
                         this.$message({
                             type: 'info',
@@ -236,6 +328,20 @@ export default {
                     that.maxOptionValue+=1;
                 }
                 console.log('wwwwwww',that.optionSemester);
+            })
+            axios.get("/selectcourse/getAllScore?pagenum="+this.pagenum+"&pagesize="+this.pagesize).then(res=>res.data).then(res=>{
+                if(res.code=="200"){
+                    console.log(res.data);
+                    this.FromDbInfo = res.data;
+                    this.totalpage = this.FromDbInfo.length;
+                    if(this.FromDbInfo.length===0) {
+                        this.$message({
+                            type: 'info',
+                            message: `暂无数据！`,
+
+                        });
+                    }
+                }
             })
 
 

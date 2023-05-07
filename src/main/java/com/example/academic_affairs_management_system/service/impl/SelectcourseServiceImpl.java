@@ -37,6 +37,11 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
         return selectcourseMapper.selectAll();
     }
 
+    @Override
+    public List<Score> getAllScore(int pagenum,int pagesize){
+        pagenum = (pagenum-1)*pagesize;
+        return selectcourseMapper.getAllScore(pagenum,pagesize);
+    }
 
     @Override
     public List<Score> getCourseScore(String semester, String courseId, String courseName){

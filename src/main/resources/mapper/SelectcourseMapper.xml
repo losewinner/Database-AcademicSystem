@@ -44,6 +44,33 @@
         limit #{pageCurrent},#{pageSize}
     </select>
 
+    <select id="getAllScore" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Score">
+        select semester,
+        selectcourse.studentId,student.name as studentName,
+        selectcourse.staffId,
+        selectcourse.courseId,course.name as courseName,selectcourse.classtime,
+        testScore,score,ratio,
+        (score*ratio/10+testScore*(10-ratio)/10) as finalScore,
+        CASE
+        WHEN (score*ratio/10+testScore*(10-ratio)/10)>=90 THEN 4.0
+        WHEN (score*ratio/10+testScore*(10-ratio)/10)>=85 THEN 3.7
+        WHEN (score*ratio/10+testScore*(10-ratio)/10)>=82 THEN 3.3
+        WHEN (score*ratio/10+testScore*(10-ratio)/10)>=78 THEN 3.0
+        WHEN (score*ratio/10+testScore*(10-ratio)/10)>=75 THEN 2.7
+        WHEN (score*ratio/10+testScore*(10-ratio)/10)>=72 THEN 2.3
+        WHEN (score*ratio/10+testScore*(10-ratio)/10)>=68 THEN 2.0
+        WHEN (score*ratio/10+testScore*(10-ratio)/10)>=64 THEN 1.5
+        WHEN (score*ratio/10+testScore*(10-ratio)/10)>=60 THEN 1.0
+        ELSE 0
+        END as scorePoint
+        From selectcourse,course,student
+        <where>
+            selectcourse.courseId = course.courseId
+            and selectcourse.studentId = student.studentId
+        </where>
+        limit #{pageCurrent},#{pageSize}
+    </select>
+
     <delete id="AdminDelScore">
             delete
             from selectcourse

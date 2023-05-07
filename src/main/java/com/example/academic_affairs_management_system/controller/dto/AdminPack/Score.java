@@ -10,6 +10,7 @@ public class Score {
     private String staffId;
     private String courseId;
     private String courseName;
+    private String classTime;
     private Integer testScore;
     private Integer score;
     private Integer ratio;

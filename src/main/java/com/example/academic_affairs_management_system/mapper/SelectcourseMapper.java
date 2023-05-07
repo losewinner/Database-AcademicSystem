@@ -27,6 +27,8 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     public List<Selectcourse> selectAll();
 
+    public List<Score> getAllScore(int pageCurrent,int pageSize);
+
     @Select("select student.studentid,student.name,score,testscore,signscore,homeworkscore " +
             "from selectcourse,student "+
             "where selectcourse.studentid = student.studentid and " +
