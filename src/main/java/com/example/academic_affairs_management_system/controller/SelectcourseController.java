@@ -39,9 +39,6 @@ public class SelectcourseController {
     @Autowired
     private ISemestatusService iSemestatusService;
 
-    @Resource
-    private SelectcourseMapper selectcourseMapper;
-
     @GetMapping("/allstudent")
     public Result findPage(@RequestParam String semester,
                            @RequestParam String courseId,
