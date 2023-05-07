@@ -136,10 +136,16 @@ export default {
             //删除前端页面上的数据，不需要刷新，但建议此操作在数据库操作后进行
             //因为数据库可能删除不成功
             //rows.splice(index,1);
-            axios.delete("/selectcourse/deleteScore",{
-                data:{
-                    ToDb:this.ToDbInfo
-                }})
+            //删除成功了，但是前端该怎么实时删除呢。
+            axios.post("/selectcourse/deleteScore",{
+                param: {
+                    DeleteList: this.ToDbInfo
+                }
+            }).then(res=>res.data).then(res=>{
+                if(res.code == "200"){
+                    console.log("成功删除");
+                }
+            });
 
         },
         handleSelectionChange(val){

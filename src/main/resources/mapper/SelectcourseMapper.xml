@@ -7,6 +7,7 @@
     <select id="getScore" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Score">
         select semester,
         selectcourse.studentId,student.name as studentName,
+        selectcourse.staffId,
         selectcourse.courseId,course.name as courseName,
         testScore,score,ratio,
         (score*ratio/10+testScore*(10-ratio)/10) as finalScore,
@@ -42,4 +43,15 @@
         </where>
         limit #{pageCurrent},#{pageSize}
     </select>
+
+    <delete id="AdminDelScore">
+            delete
+            from selectcourse
+            <where>
+                selectcourse.semester = #{semester}
+                AND selectcourse.studentId = #{studentId}
+                AND selectcourse.staffId = #{staffId}
+                AND selectcourse.courseId = #{courseId}
+            </where>
+    </delete>
 </mapper>

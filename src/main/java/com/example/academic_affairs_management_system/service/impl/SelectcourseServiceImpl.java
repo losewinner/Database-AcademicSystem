@@ -1,6 +1,8 @@
 package com.example.academic_affairs_management_system.service.impl;
 
+import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.example.academic_affairs_management_system.mapper.SelectcourseMapper;
@@ -58,4 +60,18 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
         return selectcourseMapper.getScore(pageCurrent,pageSize,semester, studentId, studentName, courseId, courseName);
     }
 
+    @Override
+    public Result AdminDelScore(List<delScore> delList){
+        System.out.println("Impl"+ delList);
+        //boolean success = true;
+        for(delScore del:delList) {
+            boolean success = selectcourseMapper.AdminDelScore(del.getSemester(),del.getStudentId(),del.getCourseId(),del.getStaffId());
+            if (success) {
+                continue;
+            } else {
+                return Result.fail("删除失败");
+            }
+        }
+        return Result.success();
+    }
 }

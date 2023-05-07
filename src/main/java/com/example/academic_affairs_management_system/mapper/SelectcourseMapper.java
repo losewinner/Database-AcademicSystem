@@ -1,10 +1,12 @@
 package com.example.academic_affairs_management_system.mapper;
 
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -62,4 +64,6 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     public List<Score> getScore(Integer pageCurrent,Integer pageSize,String semester, String studentId, String studentName, String courseId, String courseName);
 
+
+    boolean AdminDelScore(String semester,String studentId,String courseId,String staffId);
 }

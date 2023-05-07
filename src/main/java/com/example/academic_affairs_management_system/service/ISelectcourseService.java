@@ -1,6 +1,8 @@
 package com.example.academic_affairs_management_system.service;
 
+import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -29,4 +31,5 @@ public interface ISelectcourseService extends IService<Selectcourse> {
 
     public List<Score> getScore(Integer pageNum,Integer pageSize, String semester, String studentId, String studentName, String courseId, String courseName);
 
+    public Result AdminDelScore(List<delScore> delList);
 }

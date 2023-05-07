@@ -7,6 +7,7 @@ public class Score {
     private String semester;
     private String studentId;
     private String studentName;
+    private String staffId;
     private String courseId;
     private String courseName;
     private Integer testScore;

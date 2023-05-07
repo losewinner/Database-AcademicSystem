@@ -4,6 +4,7 @@ package com.example.academic_affairs_management_system.controller;
 import com.example.academic_affairs_management_system.common.QueryPageParam;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
@@ -13,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -115,12 +118,26 @@ public class SelectcourseController {
         * */
     }
 
-    @DeleteMapping("/deleteScore")
+    @PostMapping("/deleteScore")
     public Result delScore(@RequestBody QueryPageParam queryPageParam){
         /*
-        * 批量，单选删除学生成绩*/
-
-        return Result.success();
+        * 批量，单选删除学生成绩
+        * */
+        HashMap param = queryPageParam.getParam();
+        System.out.println(param.get("DeleteList").getClass());
+        //把前端传回来的param里面的delList类型的数据转换成为List<Score>类型的
+        List<LinkedHashMap<String, Object>> deleteList = (List<LinkedHashMap<String, Object>>) param.get("DeleteList");
+        List<delScore> delList = new ArrayList<>();
+        for(LinkedHashMap<String,Object>map:deleteList) {
+            delScore scoreEle = new delScore();
+            scoreEle.setSemester(map.get("semester").toString());
+            scoreEle.setStudentId(map.get("studentId").toString());
+            scoreEle.setCourseId(map.get("courseId").toString());
+            scoreEle.setStaffId(map.get("staffId").toString());
+            delList.add(scoreEle);
+        }
+        System.out.println(delList);
+        return iSelectcourseService.AdminDelScore(delList);
     }
 
 
