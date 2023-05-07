@@ -32,22 +32,24 @@
             </el-container>
         </el-container>
         <el-container class="统计分数结果（平均分，最高分，最低分）" style = "margin-top: 20px">
-            <el-form v-if="selectionOfSearch ==='course'">
-                <el-descriptions :column="3" :size="medium" border>
-                    <el-descriptions-item>
-                        <template slot="label">平均分</template>
-                        {{ScoreAnalysis.averageScore}}
-                    </el-descriptions-item>
-                    <el-descriptions-item>
-                        <template slot="label">最高分</template>
-                        {{ScoreAnalysis.highestScore}}
-                    </el-descriptions-item>
-                    <el-descriptions-item>
-                        <template slot="label">最低分</template>
-                        {{ScoreAnalysis.lowestScore}}
-                    </el-descriptions-item>
-                </el-descriptions>
-            </el-form>
+            <el-descriptions :column="4" :size="medium" border>
+                <el-descriptions-item>
+                    <template slot="label">课程</template>
+                    {{ScoreAnalysis.courseName}}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">平均分</template>
+                    {{ScoreAnalysis.averageScore}}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">最高分</template>
+                    {{ScoreAnalysis.highestScore}}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">最低分</template>
+                    {{ScoreAnalysis.lowestScore}}
+                </el-descriptions-item>
+            </el-descriptions>
         </el-container>
     </el-container>
     <el-pagination
@@ -135,7 +137,6 @@ export default {
         //如果data里面什么都不写，页签跳转会出问题！
         return{
             optionSemester:[], //后端导入学期表，获得学期
-            selectionOfSearch:"",
             maxOptionValue:1,
             input:{        //前端输入，通过前端此字典绑定，然后去后端查找
                 courseId:"",
@@ -146,9 +147,10 @@ export default {
             },
             FromDbInfo:[], //后端通过前端的输入查找到的信息放在这个字典数组中，
             ScoreAnalysis:{      //后端数据库制作三种分的视图，将三分记下来，放进这个字典中。
-                averageScore:50,
-                highestScore:100,
-                lowestScore:0.
+                courseName:"xxx",
+                averageScore:"xxx",
+                highestScore:"xxx",
+                lowestScore:"xxx",
             },
             ToDbInfo:[],
             selectedRowIndexes:[],
@@ -295,15 +297,32 @@ export default {
                         this.$message({
                             type: 'info',
                             message: `暂无数据！`,
-
                         });
                     }
                     else {
                         this.$message({
                             type: 'success',
                             message: `查找成功！`,
-
                         });
+                        if((this.input.courseId!==''||this.input.courseName!=='')
+                            &&(this.input.studentId===''&&this.input.studentName==='')){
+                            console.log("只搜索了课程");
+                            const sum = this.FromDbInfo.reduce((acc, cur) => acc + cur.finalScore, 0);
+                            this.ScoreAnalysis.courseName = this.FromDbInfo[0].courseName;
+                            this.ScoreAnalysis.averageScore = sum / this.FromDbInfo.length;
+
+                            this.ScoreAnalysis.highestScore = this.FromDbInfo.reduce((max, dict) => dict.finalScore > max ? dict.finalScore : max, this.FromDbInfo[0].finalScore);
+
+                            this.ScoreAnalysis.lowestScore = this.FromDbInfo.reduce((min, dict) => dict.finalScore < min ? dict.finalScore : min, this.FromDbInfo[0].finalScore);
+                            console.log("分数分析",this.ScoreAnalysis);
+                        }
+                        else if(this.input.studentId!==''||this.input.studentName!==''||((this.input.courseId===''&&this.input.courseName==='')))
+                        {
+                            this.ScoreAnalysis.courseName = "xxx";
+                            this.ScoreAnalysis.lowestScore = "xxx";
+                            this.ScoreAnalysis.averageScore = "xxx";
+                            this.ScoreAnalysis.highestScore = "xxx";
+                        }
                     }
                 }
             })
