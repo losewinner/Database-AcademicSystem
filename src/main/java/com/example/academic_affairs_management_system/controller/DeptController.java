@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
 /**
  * <p>
  *  前端控制器
@@ -22,5 +21,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/dept")
 public class DeptController {
+
+    @Autowired
+    private IDeptService iDeptService;
+    @GetMapping("/list")
+    public Result list(){
+        List<Dept> list = iDeptService.list();
+        return Result.success(list,list.size());
+    }
 
 }

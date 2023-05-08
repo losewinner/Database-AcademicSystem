@@ -1,7 +1,7 @@
 package com.example.academic_affairs_management_system.controller;
 
 
-import com.baomidou.mybatisplus.extension.api.R;
+
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.entity.Course;
 import com.example.academic_affairs_management_system.service.ICourseService;
