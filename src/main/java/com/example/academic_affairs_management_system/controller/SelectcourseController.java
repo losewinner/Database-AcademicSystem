@@ -85,11 +85,18 @@ public class SelectcourseController {
         return iSelectcourseService.getCourseScore(semester,courseId,courseName);
     }
 
-    @GetMapping("/getstudentscore")
-    public List<Score>getStudentScore(@RequestParam String semester,
-                                       @RequestParam String studentId,
-                                       @RequestParam String studentName){
-        return iSelectcourseService.getStudentScore(semester, studentId, studentName);
+    @PostMapping("/getPage")
+    public Result getPage(@RequestBody QueryPageParam queryPageParam){
+        /*
+        * 返回只查学生的时候数据总数*/
+        HashMap param = queryPageParam.getParam();
+        String semester = param.get("semester").toString();
+        String studentId = param.get("studentId").toString();
+        String studentName = param.get("studentName").toString();
+        String courseId = param.get("courseId").toString();
+        String courseName = param.get("courseName").toString();
+        int studentCount =  iSelectcourseService.getPage(semester, studentId, studentName,courseId,courseName);
+        return Result.success(null,studentCount);
     }
 
     @GetMapping("/getAllScore")
@@ -171,7 +178,10 @@ public class SelectcourseController {
         return Result.fail("更新失败");
     }
 
-
+    @PostMapping("/getCourseRank")
+    public Result getCourseRank(@RequestBody QueryPageParam queryPageParam){
+        return Result.success();
+    }
 
 
 

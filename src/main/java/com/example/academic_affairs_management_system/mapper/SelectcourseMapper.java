@@ -29,7 +29,9 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     public List<Score> getAllScore(int pageCurrent,int pageSize);
 
-    @Select("select student.studentid,student.name,score,testscore,finalscore " +
+    public Integer getPage(String semester, String studentId, String studentName, String courseId, String courseName);
+
+    @Select("select student.studentid,student.name,score,testscore,signscore,homeworkscore " +
             "from selectcourse,student "+
             "where selectcourse.studentid = student.studentid and " +
             "semester = #{semester} and " +
@@ -68,4 +70,6 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
 
     boolean AdminDelScore(String semester,String studentId,String courseId,String staffId);
+
+    boolean getCourseRank(String semester,String courseId,String courseName);
 }
