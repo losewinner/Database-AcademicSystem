@@ -15,7 +15,7 @@
             <el-container class="二选一" style="margin-top: 10px;width:30%">
                 <el-form v-if="selectionOfSearch === 'dept'">
                     <el-form-item label="选择院系">
-                        <el-select v-model="optionDept" placeholder="请选择">
+                        <el-select v-model="selectDept" placeholder="请选择">
                             <el-option v-for="item in optionDept"
                                        :key="item.value"
                                        :label="item.label"
@@ -26,6 +26,7 @@
                 </el-form>
                 <el-form v-else-if="selectionOfSearch === 'course'">
                     <el-form-item label="搜索课程">
+                        <el-input v-model="input.courseId" placeholder="请输入课程号"></el-input>
                         <el-input v-model="input.courseName" placeholder="请输入课程名称"></el-input>
                     </el-form-item>
                 </el-form>
@@ -91,6 +92,7 @@ export default {
           selectDept:'',
           selectionOfSearch:'',
           input:{
+              courseId:'',
               courseName:'',
           },
           courseShow : false,
@@ -126,7 +128,7 @@ export default {
             })
             //获取学院信息
             axios.get("/dept/list").then(res=>{
-                console.log("",res.data);    //获取成功
+                console.log("院系",res.data);    //获取成功
                 for(const item of res.data)
                 {
                     let newDict={};
@@ -136,8 +138,6 @@ export default {
                     this.maxOptionDept+=1;
                 }
                 console.log("院系选择框",this.optionDept);
-
-
             })
         },
         handleCurrentChange(val){
@@ -146,6 +146,7 @@ export default {
         },
         searchClick(){
             console.log("搜索");
+
         }
     },
     created() {

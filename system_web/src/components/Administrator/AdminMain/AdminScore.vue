@@ -56,7 +56,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pagenum"
-        :page-sizes="[10, 15, 25, 30]"
+        :page-sizes="[1, 15, 25, 30]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalpage" style="margin-top: 10px;margin-bottom: 10px">
@@ -168,6 +168,8 @@ export default {
     },
     methods:{
         handleCurrentChange(currentPage) {
+            //分页有问题：为什么有问题呢？
+            //是因为数据库也分页，然后它传来前端的时候，总数据只有一页的长度，所以totalpage会出问题
             // 修改当前页码，并重新查询数据
             this.pagenum = currentPage;
             if(this.input.selectSemester==='')
@@ -278,53 +280,63 @@ export default {
             var semester_dict = this.optionSemester.find(x=>x.value===this.input.selectSemester);
             var semester = semester_dict.label;
             //按照学生和课程的输入来选择
-            axios.post("/selectcourse/getScore",{
-                pagesize:this.pagesize,
-                pagenum:this.pagenum,
+            axios.post("/selectcourse/getPage",{
                 param:{
                     semester:semester,
                     studentId:this.input.studentId,
-                    studentName: this.input.studentName,
-                    courseId :this.input.courseId,
-                    courseName: this.input.courseName
+                    studentName:this.input.studentName,
+                    courseId:this.input.courseId,
+                    courseName:this.input.courseName
                 }
             }).then(res=>res.data).then(res=>{
-                if(res.code=="200"){
-                    console.log(res.data);
-                    this.FromDbInfo = res.data;
-                    this.totalpage = this.FromDbInfo.length;
-                    if(this.FromDbInfo.length===0) {
-                        this.$message({
-                            type: 'info',
-                            message: `暂无数据！`,
-                        });
+                this.totalpage = parseInt(res.total/this.pagesize+1);
+                axios.post("/selectcourse/getScore",{
+                    pagesize:this.pagesize,
+                    pagenum:this.pagenum,
+                    param:{
+                        semester:semester,
+                        studentId:this.input.studentId,
+                        studentName: this.input.studentName,
+                        courseId :this.input.courseId,
+                        courseName: this.input.courseName
                     }
-                    else {
-                        this.$message({
-                            type: 'success',
-                            message: `查找成功！`,
-                        });
-                        if((this.input.courseId!==''||this.input.courseName!=='')
-                            &&(this.input.studentId===''&&this.input.studentName==='')){
-                            console.log("只搜索了课程");
-                            const sum = this.FromDbInfo.reduce((acc, cur) => acc + cur.finalScore, 0);
-                            this.ScoreAnalysis.courseName = this.FromDbInfo[0].courseName;
-                            this.ScoreAnalysis.averageScore = sum / this.FromDbInfo.length;
-
-                            this.ScoreAnalysis.highestScore = this.FromDbInfo.reduce((max, dict) => dict.finalScore > max ? dict.finalScore : max, this.FromDbInfo[0].finalScore);
-
-                            this.ScoreAnalysis.lowestScore = this.FromDbInfo.reduce((min, dict) => dict.finalScore < min ? dict.finalScore : min, this.FromDbInfo[0].finalScore);
-                            console.log("分数分析",this.ScoreAnalysis);
+                }).then(res=>res.data).then(res=>{
+                    if(res.code=="200"){
+                        console.log(res.data);
+                        this.FromDbInfo = res.data;
+                        if(this.FromDbInfo.length===0) {
+                            this.$message({
+                                type: 'info',
+                                message: `暂无数据！`,
+                            });
                         }
-                        else if(this.input.studentId!==''||this.input.studentName!==''||((this.input.courseId===''&&this.input.courseName==='')))
-                        {
-                            this.ScoreAnalysis.courseName = "xxx";
-                            this.ScoreAnalysis.lowestScore = "xxx";
-                            this.ScoreAnalysis.averageScore = "xxx";
-                            this.ScoreAnalysis.highestScore = "xxx";
+                        else {
+                            this.$message({
+                                type: 'success',
+                                message: `查找成功！`,
+                            });
+                            if((this.input.courseId!==''||this.input.courseName!=='')
+                                &&(this.input.studentId===''&&this.input.studentName==='')){
+                                console.log("只搜索了课程");
+                                const sum = this.FromDbInfo.reduce((acc, cur) => acc + cur.finalScore, 0);
+                                this.ScoreAnalysis.courseName = this.FromDbInfo[0].courseName;
+                                this.ScoreAnalysis.averageScore = sum / this.FromDbInfo.length;
+
+                                this.ScoreAnalysis.highestScore = this.FromDbInfo.reduce((max, dict) => dict.finalScore > max ? dict.finalScore : max, this.FromDbInfo[0].finalScore);
+
+                                this.ScoreAnalysis.lowestScore = this.FromDbInfo.reduce((min, dict) => dict.finalScore < min ? dict.finalScore : min, this.FromDbInfo[0].finalScore);
+                                console.log("分数分析",this.ScoreAnalysis);
+                            }
+                            else if(this.input.studentId!==''||this.input.studentName!==''||((this.input.courseId===''&&this.input.courseName==='')))
+                            {
+                                this.ScoreAnalysis.courseName = "xxx";
+                                this.ScoreAnalysis.lowestScore = "xxx";
+                                this.ScoreAnalysis.averageScore = "xxx";
+                                this.ScoreAnalysis.highestScore = "xxx";
+                            }
                         }
                     }
-                }
+                })
             })
         },
         loadData(){
@@ -348,19 +360,30 @@ export default {
                 }
                 console.log('wwwwwww',that.optionSemester);
             })
-            axios.get("/selectcourse/getAllScore?pagenum="+this.pagenum+"&pagesize="+this.pagesize).then(res=>res.data).then(res=>{
-                if(res.code=="200"){
-                    console.log(res.data);
-                    this.FromDbInfo = res.data;
-                    this.totalpage = this.FromDbInfo.length;
-                    if(this.FromDbInfo.length===0) {
-                        this.$message({
-                            type: 'info',
-                            message: `暂无数据！`,
-
-                        });
-                    }
+            axios.post("/selectcourse/getPage",{
+                param:{
+                    semester: '',
+                    studentId:'',
+                    studentName:'',
+                    courseId:'',
+                    courseName:''
                 }
+            }).then(res=>res.data).then(res=>{
+                console.log("页面大小",res.total);
+                this.totalpage = parseInt(res.total/this.pagesize+1);
+                axios.get("/selectcourse/getAllScore?pagenum="+this.pagenum+"&pagesize="+this.pagesize).then(res=>res.data).then(res=>{
+                    if(res.code=="200"){
+                        console.log(res.data);
+                        this.FromDbInfo = res.data;
+                        if(this.FromDbInfo.length===0) {
+                            this.$message({
+                                type: 'info',
+                                message: `暂无数据！`,
+
+                            });
+                        }
+                    }
+                })
             })
 
 

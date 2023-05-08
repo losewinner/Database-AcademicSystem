@@ -1,5 +1,6 @@
 package com.example.academic_affairs_management_system.service.impl;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
@@ -49,8 +50,9 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     }
 
     @Override
-    public List<Score> getStudentScore(String semester, String studentId,String studentName){
-        return selectcourseMapper.getStudentScore(semester,studentId,studentName);
+    public Integer getPage(String semester, String studentId,String studentName,String courseId, String courseName){
+        //获得想要的对应的数据的总数
+        return selectcourseMapper.getPage(semester,studentId,studentName,courseId,courseName);
     }
 
     @Override
@@ -67,7 +69,7 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
 
     @Override
     public Result AdminDelScore(List<delScore> delList){
-        System.out.println("Impl"+ delList);
+        System.out.println("删除成绩"+ delList);
         //boolean success = true;
         for(delScore del:delList) {
             boolean success = selectcourseMapper.AdminDelScore(del.getSemester(),del.getStudentId(),del.getCourseId(),del.getStaffId());
@@ -79,4 +81,11 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
         }
         return Result.success();
     }
+
+    @Override
+    public Result getCourseRank(Integer pageNum,Integer pageSize,String semester,String courseId,String courseName){
+        System.out.println("得到课程排名"+semester+courseId+courseName);
+        return Result.success();
+    }
+
 }

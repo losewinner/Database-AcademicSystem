@@ -60,5 +60,31 @@
             </where>
     </delete>
 
+    <select id="getCourseRank" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Score">
+        select semester,
+    </select>
 
+    <select id="getPage" resultType="java.lang.Integer">
+        select count(*)
+        from selectcourse,student,course
+        <where>
+            selectcourse.courseId = course.courseId
+            and selectcourse.studentId = student.studentId
+            <if test="semester!=null and semester!=''">
+                and selectcourse.semester = #{semester}
+            </if>
+            <if test="studentId!=null and studentId!=''">
+                and selectcourse.studentId = #{studentId}
+            </if>
+            <if test="studentName!=null and studentName!=''">
+                and student.name = #{studentName}
+            </if>
+            <if test="courseId!=null and courseId!=''">
+                and selectcourse.courseId = #{courseId}
+            </if>
+            <if test="courseName!=null and courseName!=''">
+                and course.name = #{courseName}
+            </if>
+        </where>
+    </select>
 </mapper>

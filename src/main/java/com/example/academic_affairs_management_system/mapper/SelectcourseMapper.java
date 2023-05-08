@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -28,6 +29,8 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     public List<Selectcourse> selectAll();
 
     public List<Score> getAllScore(int pageCurrent,int pageSize);
+
+    public Integer getPage(String semester, String studentId, String studentName, String courseId, String courseName);
 
     @Select("select student.studentid,student.name,score,testscore,signscore,homeworkscore " +
             "from selectcourse,student "+
@@ -68,4 +71,6 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
 
     boolean AdminDelScore(String semester,String studentId,String courseId,String staffId);
+
+    boolean getCourseRank(String semester,String courseId,String courseName);
 }

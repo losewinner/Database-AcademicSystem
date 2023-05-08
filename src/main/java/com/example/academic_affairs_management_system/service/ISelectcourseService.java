@@ -24,13 +24,16 @@ public interface ISelectcourseService extends IService<Selectcourse> {
     public List<Selectcourse> selectAll();
 
     public List<Score> getAllScore(int pagenum,int pagesize);
+
     public List<Score> getCourseScore(String semester, String courseId, String courseName);
 
-    public List<Score> getStudentScore(String semester,String studentId,String studentName);
+    public Integer getPage(String semester,String studentId,String studentName,String courseId, String courseName);
 
     List<Student> select_stu(int pagenum, int pagesize, String semester, String courseid, String staffid, String classtime);
 
     public List<Score> getScore(Integer pageNum,Integer pageSize, String semester, String studentId, String studentName, String courseId, String courseName);
 
     public Result AdminDelScore(List<delScore> delList);
+
+    public Result getCourseRank(Integer pageNum,Integer pageSize,String semester,String courseId,String courseName);
 }
