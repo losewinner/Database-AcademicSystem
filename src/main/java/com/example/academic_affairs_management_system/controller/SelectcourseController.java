@@ -106,7 +106,6 @@ public class SelectcourseController {
         /*
          * 自由搜索【学期（必须），学号，学生姓名，课号，课程名字】，得到成绩列表
          */
-
         int pagenum = queryPageParam.getPagenum(),pagesize = queryPageParam.getPagesize();
         HashMap param = queryPageParam.getParam();
         String semester = param.get("semester").toString();
@@ -156,7 +155,6 @@ public class SelectcourseController {
     public Result editScore(@RequestBody Score score){
         /*
         * 管理员修改成绩*/
-
         System.out.println(score);
         UpdateWrapper<Selectcourse> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("studentid",score.getStudentId())

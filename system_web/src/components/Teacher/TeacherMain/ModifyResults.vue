@@ -22,9 +22,26 @@
               style="width: 100%">
         <el-table-column prop="studentid" label="学号" width="120" sortable></el-table-column>
         <el-table-column prop="name" label="姓名" width="120" ></el-table-column>
-        <el-table-column prop="signscore" label="平时成绩" width="120" sortable></el-table-column>
-        <el-table-column prop="testscore" label="考试成绩" width="120" sortable></el-table-column>
-        <el-table-column prop="score" label="总成绩" width="120" sortable></el-table-column>
+        <el-table-column prop="signscore" label="平时成绩" width="120" sortable>
+          <template v-slot="scope">
+            <el-input v-model="data[scope.$index].score" placeholder="请输入内容"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="testscore" label="考试成绩" width="120" sortable>
+          <template v-slot="scope">
+            <el-input v-model="data[scope.$index].testscore" placeholder="请输入内容"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="finalscore" label="总成绩" width="120" sortable>
+          <template v-slot="scope">
+            <el-input v-model="data[scope.$index].finalscore" placeholder="请输入内容"></el-input>
+          </template>
+        </el-table-column>
+      <el-table-column label="操作" >
+        <template v-slot="scope" >
+          <el-button type="success" @click.native.prevent="modifyScores(scope.$index)">编辑 <i class="el-icon-edit"></i></el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -113,6 +130,11 @@ export default {
 
         }
       })
+    },
+    modifyScores(idx){
+
+
+      console.log(this.data[idx])
     }
 
   }

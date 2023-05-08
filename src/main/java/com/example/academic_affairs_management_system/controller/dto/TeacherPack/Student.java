@@ -1,5 +1,6 @@
 package com.example.academic_affairs_management_system.controller.dto.TeacherPack;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 @Data
@@ -8,6 +9,6 @@ public class Student {
     private String name;
     private Integer score;
     private Integer testscore;
-    private Integer signscore;
-    private Integer homeworkscore;
+    @TableField("finalScore")
+    private Integer finalscore;
 }
