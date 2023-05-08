@@ -131,11 +131,13 @@ export default {
                 {
                     let newDict={};
                     newDict['value'] = '选项'+this.maxOptionDept;
-                    newDict['label'] = item.semester;
+                    newDict['label'] = item.deptname;
                     this.optionDept.push(newDict);
                     this.maxOptionDept+=1;
                 }
-                console.log('wwwwwww',this.optionDept);
+                console.log("院系选择框",this.optionDept);
+
+
             })
         },
         handleCurrentChange(val){

@@ -25,9 +25,8 @@ public class DeptController {
     @Autowired
     private IDeptService iDeptService;
     @GetMapping("/list")
-    public Result list(){
-        List<Dept> list = iDeptService.list();
-        return Result.success(list,list.size());
+    public List<Dept> list(){
+        return iDeptService.list();
     }
 
 }
