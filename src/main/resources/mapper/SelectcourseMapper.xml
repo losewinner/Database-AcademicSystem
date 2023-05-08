@@ -7,14 +7,15 @@
     <select id="getScore" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Score">
         select semester,
         selectcourse.studentId,student.name as studentName,
-        selectcourse.staffId,
+        selectcourse.staffId,student.deptId as deptId,deptName,
         selectcourse.courseId,course.name as courseName,
         testScore,score,ratio,
         finalScore,scorePoint
-        From selectcourse,course,student
+        From selectcourse,course,student,dept
         <where>
             selectcourse.courseId = course.courseId
             and selectcourse.studentId = student.studentId
+            and student.deptId = dept.deptId
             and semester = #{semester}
             <if test="studentId!=null and studentId!=''">
                 and selectcourse.studentId = #{studentId}
@@ -35,14 +36,15 @@
     <select id="getAllScore" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Score">
         select semester,
         selectcourse.studentId,student.name as studentName,
-        selectcourse.staffId,
+        selectcourse.staffId,student.deptId as deptId,deptName,
         selectcourse.courseId,course.name as courseName,selectcourse.classtime,
         testScore,score,ratio,
         finalScore,scorePoint
-        From selectcourse,course,student
+        From selectcourse,course,student,dept
         <where>
             selectcourse.courseId = course.courseId
             and selectcourse.studentId = student.studentId
+            and student.deptId = dept.deptId
         </where>
         limit #{pageCurrent},#{pageSize}
     </select>
@@ -57,4 +59,6 @@
                 AND selectcourse.courseId = #{courseId}
             </where>
     </delete>
+
+
 </mapper>

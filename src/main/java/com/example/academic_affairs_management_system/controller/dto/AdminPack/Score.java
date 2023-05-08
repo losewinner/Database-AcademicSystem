@@ -8,6 +8,8 @@ public class Score {
     private String studentId;
     private String studentName;
     private String staffId;
+    private String deptId;
+    private String deptName;
     private String courseId;
     private String courseName;
     private String classTime;
