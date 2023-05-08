@@ -50,7 +50,7 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     }
 
     @Override
-    public Integer getPage(String semester, String studentId,String studentName,String courseId, String courseName){
+    public List<Score> getPage(String semester, String studentId,String studentName,String courseId, String courseName){
         //获得想要的对应的数据的总数
         return selectcourseMapper.getPage(semester,studentId,studentName,courseId,courseName);
     }

@@ -78,7 +78,7 @@ public class SelectcourseController {
     }
 
 
-    @GetMapping("/getcoursescore")
+    @GetMapping("/getcoursescore")  //这个请求前端也没有用到
     public List<Score>getCourseScore(@RequestParam String semester,
                                      @RequestParam String courseId,
                                      @RequestParam String courseName){
@@ -88,15 +88,15 @@ public class SelectcourseController {
     @PostMapping("/getPage")
     public Result getPage(@RequestBody QueryPageParam queryPageParam){
         /*
-        * 返回只查学生的时候数据总数*/
+        * 返回记录总数和综合成绩与绩点*/
         HashMap param = queryPageParam.getParam();
         String semester = param.get("semester").toString();
         String studentId = param.get("studentId").toString();
         String studentName = param.get("studentName").toString();
         String courseId = param.get("courseId").toString();
         String courseName = param.get("courseName").toString();
-        int studentCount =  iSelectcourseService.getPage(semester, studentId, studentName,courseId,courseName);
-        return Result.success(null,studentCount);
+        List<Score> page =  iSelectcourseService.getPage(semester, studentId, studentName,courseId,courseName);
+        return Result.success(page,page.size());
     }
 
     @GetMapping("/getAllScore")

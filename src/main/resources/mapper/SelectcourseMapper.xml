@@ -10,7 +10,7 @@
         selectcourse.staffId,student.deptId as deptId,deptName,
         selectcourse.courseId,course.name as courseName,
         testScore,score,ratio,
-        finalScore,scorePoint
+        finalScore
         From selectcourse,course,student,dept
         <where>
             selectcourse.courseId = course.courseId
@@ -39,7 +39,7 @@
         selectcourse.staffId,student.deptId as deptId,deptName,
         selectcourse.courseId,course.name as courseName,selectcourse.classtime,
         testScore,score,ratio,
-        finalScore,scorePoint
+        finalScore
         From selectcourse,course,student,dept
         <where>
             selectcourse.courseId = course.courseId
@@ -65,7 +65,7 @@
     </select>
 
     <select id="getPage" resultType="java.lang.Integer">
-        select count(*)
+        select finalScore
         from selectcourse,student,course
         <where>
             selectcourse.courseId = course.courseId

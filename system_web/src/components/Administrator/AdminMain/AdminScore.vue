@@ -32,7 +32,7 @@
             </el-container>
         </el-container>
         <el-container class="统计分数结果（平均分，最高分，最低分）" style = "margin-top: 20px">
-            <el-descriptions :column="4" :size="medium" border>
+            <el-descriptions :column="4"  border>
                 <el-descriptions-item>
                     <template slot="label">课程</template>
                     {{ScoreAnalysis.courseName}}
@@ -56,7 +56,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pagenum"
-        :page-sizes="[1, 15, 25, 30]"
+        :page-sizes="[10, 15, 25, 30]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalpage" style="margin-top: 10px;margin-bottom: 10px">
@@ -152,6 +152,7 @@ export default {
                 highestScore:"xxx",
                 lowestScore:"xxx",
             },
+            AllScore:[],    //当只选了课程的时候，存放一下此课程的所有最终成绩之和
             ToDbInfo:[],
             selectedRowIndexes:[],
             pagesize:10,
@@ -289,7 +290,9 @@ export default {
                     courseName:this.input.courseName
                 }
             }).then(res=>res.data).then(res=>{
-                this.totalpage = parseInt(res.total/this.pagesize+1);
+                this.totalpage = Math.ceil(res.total/this.pagesize);
+                this.AllScore = res.data;
+                console.log("所有成绩",this.AllScore);
                 axios.post("/selectcourse/getScore",{
                     pagesize:this.pagesize,
                     pagenum:this.pagenum,
@@ -318,13 +321,12 @@ export default {
                             if((this.input.courseId!==''||this.input.courseName!=='')
                                 &&(this.input.studentId===''&&this.input.studentName==='')){
                                 console.log("只搜索了课程");
-                                const sum = this.FromDbInfo.reduce((acc, cur) => acc + cur.finalScore, 0);
                                 this.ScoreAnalysis.courseName = this.FromDbInfo[0].courseName;
-                                this.ScoreAnalysis.averageScore = sum / this.FromDbInfo.length;
+                                this.ScoreAnalysis.averageScore = this.AllScore.reduce((acc, val) => acc + val, 0) / this.AllScore.length;
 
-                                this.ScoreAnalysis.highestScore = this.FromDbInfo.reduce((max, dict) => dict.finalScore > max ? dict.finalScore : max, this.FromDbInfo[0].finalScore);
+                                this.ScoreAnalysis.highestScore = Math.max(...this.AllScore);
 
-                                this.ScoreAnalysis.lowestScore = this.FromDbInfo.reduce((min, dict) => dict.finalScore < min ? dict.finalScore : min, this.FromDbInfo[0].finalScore);
+                                this.ScoreAnalysis.lowestScore = Math.min(...this.AllScore);
                                 console.log("分数分析",this.ScoreAnalysis);
                             }
                             else if(this.input.studentId!==''||this.input.studentName!==''||((this.input.courseId===''&&this.input.courseName==='')))
@@ -341,6 +343,8 @@ export default {
         },
         loadData(){
             //向数据库请求数据，涉及：学期表
+            this.maxOptionValue = 1;
+            this.optionSemester = [];
             console.log("w");
             //获取学期信息，放进optionSemester中
             var that = this;
@@ -370,7 +374,7 @@ export default {
                 }
             }).then(res=>res.data).then(res=>{
                 console.log("页面大小",res.total);
-                this.totalpage = parseInt(res.total/this.pagesize+1);
+                this.totalpage = Math.ceil(res.total/this.pagesize);
                 axios.get("/selectcourse/getAllScore?pagenum="+this.pagenum+"&pagesize="+this.pagesize).then(res=>res.data).then(res=>{
                     if(res.code=="200"){
                         console.log(res.data);

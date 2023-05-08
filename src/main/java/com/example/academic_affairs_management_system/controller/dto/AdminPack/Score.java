@@ -16,6 +16,7 @@ public class Score {
     private Integer testScore;
     private Integer score;
     private Integer ratio;
-    private Double finalScore;
+    private int finalScore;
     private Double scorePoint;
+
 }

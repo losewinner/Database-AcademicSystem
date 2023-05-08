@@ -39,16 +39,7 @@ public class Selectcourse implements Serializable {
     @TableField("testScore")
     private Integer testscore;
 
-    @TableField("signScore")
-    private Integer signscore;
-
-    @TableField("homeworkScore")
-    private Integer homeworkscore;
-
     @TableField("finalScore")
     private float finalscore;
-
-    @TableField("scorePoint")
-    private float scorepoint;
 
 }

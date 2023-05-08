@@ -29,7 +29,7 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     public List<Score> getAllScore(int pageCurrent,int pageSize);
 
-    public Integer getPage(String semester, String studentId, String studentName, String courseId, String courseName);
+    public List<Score> getPage(String semester, String studentId, String studentName, String courseId, String courseName);
 
     @Select("select student.studentid,student.name,score,testscore,signscore,homeworkscore " +
             "from selectcourse,student "+
@@ -42,7 +42,7 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     )
     List<Student> select_stu(int pagenum, int pagesize, String semester, String courseid, String staffid, String classtime);
 
-    //统计分数,按照课程来统计，不需要搜学生和老师，但是学生的姓名和学号还是要查的
+    //统计分数,按照课程来统计，不需要搜学生和老师，但是学生的姓名和学号还是要查的 （不需要此函数了）
     @Select("SELECT " +
             "selectcourse.semester,selectcourse.studentId,student.name as studentName,selectcourse.courseId,course.name as courseName,testScore " +
             "FROM selectcourse,course,student " +
@@ -54,7 +54,7 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
             "AND course.name = #{courseName}")
     List<Score> getCourseScore(String semester, String courseId, String courseName);
 
-    //统计分数，按照学生来统计，展示的是一个学生（或者同名学生）的所有一个学期的课程总成绩
+    //统计分数，按照学生来统计，展示的是一个学生（或者同名学生）的所有一个学期的课程总成绩 （不需要此函数了）
     @Select("SELECT " +
             "selectcourse.semester,selectcourse.studentId,student.name as studentName,selectcourse.courseId,course.name as courseName,testScore " +
             "FROM selectcourse,course,student " +
