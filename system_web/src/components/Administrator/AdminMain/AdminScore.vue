@@ -412,6 +412,10 @@ export default {
                 axios.get("/selectcourse/getAllScore?pagenum="+this.pagenum+"&pagesize="+this.pagesize).then(res=>res.data).then(res=>{
                     if(res.code=="200"){
                         console.log(res.data);
+                        //换算成绩为绩点
+                        for(const item of res.data){
+                            item.scorePoint = this.ScoreTrans(item.finalScore);
+                        }
                         this.FromDbInfo = res.data;
                         if(this.FromDbInfo.length===0) {
                             this.$message({
