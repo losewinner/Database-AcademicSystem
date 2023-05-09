@@ -168,6 +168,33 @@ export default {
         }
     },
     methods:{
+        ScoreTrans(finalScore){
+            switch (true) {
+                case finalScore>= 90:
+                    return 4.0
+                case finalScore>= 86:
+                    return 3.7
+                case finalScore>= 83:
+                    return 3.3
+                case finalScore>= 80:
+                    return 3.0
+                case finalScore>=76:
+                    return 2.7
+                case finalScore>=73:
+                    return 2.3
+                case finalScore>=70:
+                    return 2.0
+                case finalScore>=66:
+                    return 1.7
+                case finalScore>=63:
+                    return 1.3
+                case finalScore>=60:
+                    return 1.0
+                default:
+                    return 0.0
+            }
+        },
+
         handleCurrentChange(currentPage) {
             //分页有问题：为什么有问题呢？
             //是因为数据库也分页，然后它传来前端的时候，总数据只有一页的长度，所以totalpage会出问题
@@ -207,8 +234,10 @@ export default {
                     this.selectedRowIndexes.forEach(index => {
                         this.FromDbInfo.splice(index, 1); // 根据排序后的索引删除数组中的元素
                     });
+                    this.searchClick();
                 }
             });
+
         },
         handleSelectionChange(val){
             this.ToDbInfo = val;
@@ -305,8 +334,12 @@ export default {
                     }
                 }).then(res=>res.data).then(res=>{
                     if(res.code=="200"){
-                        console.log(res.data);
+                    //换算成绩为绩点
+                        for(const item of res.data){
+                            item.scorePoint = this.ScoreTrans(item.finalScore);
+                        }
                         this.FromDbInfo = res.data;
+                        console.log("查找成绩",this.FromDbInfo);
                         if(this.FromDbInfo.length===0) {
                             this.$message({
                                 type: 'info',
@@ -314,6 +347,7 @@ export default {
                             });
                         }
                         else {
+
                             this.$message({
                                 type: 'success',
                                 message: `查找成功！`,

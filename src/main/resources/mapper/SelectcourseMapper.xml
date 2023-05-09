@@ -8,7 +8,7 @@
         select semester,
         selectcourse.studentId,student.name as studentName,
         selectcourse.staffId,student.deptId as deptId,deptName,
-        selectcourse.courseId,course.name as courseName,
+        selectcourse.courseId,course.name as courseName,selectcourse.classtime as classTime,
         testScore,score,ratio,
         finalScore
         From selectcourse,course,student,dept
@@ -37,7 +37,7 @@
         select semester,
         selectcourse.studentId,student.name as studentName,
         selectcourse.staffId,student.deptId as deptId,deptName,
-        selectcourse.courseId,course.name as courseName,selectcourse.classtime,
+        selectcourse.courseId,course.name as courseName,selectcourse.classtime as classTime,
         testScore,score,ratio,
         finalScore
         From selectcourse,course,student,dept
