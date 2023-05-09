@@ -1,6 +1,7 @@
 package com.example.academic_affairs_management_system.service.impl;
 
 import com.example.academic_affairs_management_system.common.Result;
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
@@ -84,9 +85,10 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     }
 
     @Override
-    public Result getCourseRank(Integer pageNum,Integer pageSize,String semester,String courseId,String courseName){
-        System.out.println("得到课程排名"+semester+courseId+courseName);
-        return Result.success();
+    public List<Rank> getCourseRank(Integer pageNum, Integer pageSize, String semester, String courseId, String courseName){
+
+        Integer pageCurrent = (pageNum-1)*pageSize;
+        return selectcourseMapper.getCourseRank(pageCurrent,pageSize,semester, courseId, courseName);
     }
 
     @Override

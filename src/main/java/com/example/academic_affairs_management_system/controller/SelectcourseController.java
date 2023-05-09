@@ -4,6 +4,7 @@ package com.example.academic_affairs_management_system.controller;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.academic_affairs_management_system.common.QueryPageParam;
 import com.example.academic_affairs_management_system.common.Result;
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
@@ -88,6 +89,7 @@ public class SelectcourseController {
         /*
         * 返回记录总数和综合成绩与绩点*/
         HashMap param = queryPageParam.getParam();
+        System.out.println(param);
         String semester = param.get("semester").toString();
         String studentId = param.get("studentId").toString();
         String studentName = param.get("studentName").toString();
@@ -176,9 +178,26 @@ public class SelectcourseController {
         return Result.fail("更新失败");
     }
 
-    @PostMapping("/getCourseRank")
-    public Result getCourseRank(@RequestBody QueryPageParam queryPageParam){
-        return Result.success();
+    @PostMapping("/getRank")
+    public Result getRank(@RequestBody QueryPageParam queryPageParam){
+        //按照课程排名和 按照院系来排名
+//        int pagesize = queryPageParam.getPagesize();
+//        int pagenum = queryPageParam.getPagenum();
+        int pagesize = 10;
+        int pagenum = 1;
+        HashMap param = queryPageParam.getParam();
+        System.out.println(param);
+        String semester = param.get("semester").toString();
+        String courseId = param.get("courseId").toString();
+        String courseName = param.get("courseName").toString();
+        //String deptName = param.get("deptName").toString();
+        if(courseId!=null ||courseName!=null) {
+            System.out.println("按照课程搜索");
+            System.out.println("得到课程排名"+semester+courseId+courseName);
+            List<Rank> courseRank = iSelectcourseService.getCourseRank(pagenum, pagesize, semester, courseId, courseName);
+            return Result.success(courseRank,courseRank.size());
+        }
+        return Result.fail("获取失败");
     }
 
     @PostMapping("/updateScore")

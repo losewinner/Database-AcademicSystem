@@ -1,6 +1,7 @@
 package com.example.academic_affairs_management_system.service;
 
 import com.example.academic_affairs_management_system.common.Result;
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
@@ -34,7 +35,7 @@ public interface ISelectcourseService extends IService<Selectcourse> {
 
     public Result AdminDelScore(List<delScore> delList);
 
-    public Result getCourseRank(Integer pageNum,Integer pageSize,String semester,String courseId,String courseName);
+    public List<Rank> getCourseRank(Integer pageNum, Integer pageSize, String semester, String courseId, String courseName);
 
     public Result updateScore(List<Student> LS);
 }

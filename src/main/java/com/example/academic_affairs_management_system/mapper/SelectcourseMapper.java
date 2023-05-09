@@ -1,5 +1,6 @@
 package com.example.academic_affairs_management_system.mapper;
 
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
@@ -70,7 +71,7 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     boolean AdminDelScore(String semester,String studentId,String courseId,String staffId);
 
-    boolean getCourseRank(String semester,String courseId,String courseName);
+    List<Rank> getCourseRank(Integer pageCurrent,Integer pageSize,String semester, String courseId, String courseName);
 
     @Update("Update selectcourse " +
             "set score=#{S.score},testScore=#{S.testscore} " +

@@ -227,7 +227,8 @@ export default {
                 this.searchClick();
             }
         },
-        deleteSelect(){     //不仅前端移除，且数据库选课表中也要把这个学生的元组删去。
+        deleteSelect(){
+            //不仅前端移除，且数据库选课表中也要把这个学生的元组删去。
             //通过勾选框的数据来进行删除
             console.log("删除操作",this.ToDbInfo);
             //删除前端页面上的数据，不需要刷新，但建议此操作在数据库操作后进行
@@ -368,11 +369,12 @@ export default {
                                 &&(this.input.studentId===''&&this.input.studentName==='')){
                                 console.log("只搜索了课程");
                                 this.ScoreAnalysis.courseName = this.FromDbInfo[0].courseName;
-                                this.ScoreAnalysis.averageScore = this.AllScore.reduce((acc, val) => acc + val, 0) / this.AllScore.length;
+                                const sum = this.AllScore.reduce((acc, cur) => acc + cur.finalScore, 0);
+                                this.ScoreAnalysis.averageScore = sum / this.AllScore.length;
 
-                                this.ScoreAnalysis.highestScore = Math.max(...this.AllScore);
+                                this.ScoreAnalysis.highestScore = this.AllScore.reduce((max, dict) => dict.finalScore > max ? dict.finalScore : max, this.AllScore[0].finalScore);
 
-                                this.ScoreAnalysis.lowestScore = Math.min(...this.AllScore);
+                                this.ScoreAnalysis.lowestScore = this.AllScore.reduce((min, dict) => dict.finalScore < min ? dict.finalScore : min, this.AllScore[0].finalScore);
                                 console.log("分数分析",this.ScoreAnalysis);
                             }
                             else if(this.input.studentId!==''||this.input.studentName!==''||((this.input.courseId===''&&this.input.courseName==='')))
