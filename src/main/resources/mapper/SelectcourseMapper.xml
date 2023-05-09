@@ -78,6 +78,7 @@
             </if>
             ORDER BY finalScore DESC
         </where>
+        limit #{pageCurrent},#{pageSize}
     </select>
 
     <select id="getPage" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Score">

@@ -69,6 +69,7 @@
         </el-container>
         <el-pagination
             @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
             :current-page="pagination.pagenum"
             :page-sizes="[10, 20, 30, 40]"
             :page-size="pagination.pagesize"
@@ -92,10 +93,12 @@ export default {
           optionDept:[], //后端导入院系表，获得院系名字
           selectionOfSearch:'',
           input:{
-              selectSemester:'',
-              courseId:'',
-              courseName:'',
-              selectDept:'',
+              selectSemester:"",
+              courseId:"",
+              courseName:"",
+              studentId: "",
+              studentName: "",
+              selectDept:"",
           },
           courseShow : false,
           deptShow:false,
@@ -184,6 +187,7 @@ export default {
         },
         handleSizeChange(pageSize){
             this.pagination.pagesize = pageSize;
+            console.log("换页面大小",this.input.selectSemester)
             if(this.input.selectSemester==='')
             {
                 this.loadData();
@@ -210,17 +214,21 @@ export default {
             //解析所选的学期
             var semester_dict = this.optionSemester.find(x=>x.value===this.input.selectSemester);
             var semester = semester_dict.label;
-            if(this.selectionOfSearch ==='dept'){
-               // var dept_dict = this.optionDept.find(x=>x.value===this.input.selectDept);
-                //var deptName = dept_dict.label;
-            }
+            // if(this.selectionOfSearch ==='dept'){
+            //    // var dept_dict = this.optionDept.find(x=>x.value===this.input.selectDept);
+            //     //var deptName = dept_dict.label;
+            // }
+            console.log("查看getPagebug",this.input.courseId,this.input.courseName)
             axios.post("/selectcourse/getPage",{
                 param:{
                     semester:semester,
                     courseId:this.input.courseId,
                     courseName:this.input.courseName,
+                    studentId:this.input.studentId,
+                    studentName:this.input.studentName
                 }
             }).then(res=>res.data).then(res=>{
+                console.log("getPage是否成功",res.total);
                 this.pagination.total = Math.ceil(res.total/this.pagination.pagesize);
                 axios.post("/selectcourse/getRank",{
                     pagesize:this.pagination.pagesize,
@@ -256,7 +264,7 @@ export default {
 
                 })
             })
-        }
+        },
     },
     created() {
       this.loadData();

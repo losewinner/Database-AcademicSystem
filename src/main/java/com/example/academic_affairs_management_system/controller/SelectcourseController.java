@@ -89,13 +89,16 @@ public class SelectcourseController {
         /*
         * 返回记录总数和综合成绩与绩点*/
         HashMap param = queryPageParam.getParam();
-        System.out.println(param);
         String semester = param.get("semester").toString();
         String studentId = param.get("studentId").toString();
         String studentName = param.get("studentName").toString();
         String courseId = param.get("courseId").toString();
         String courseName = param.get("courseName").toString();
+        System.out.println(semester);
+        System.out.println(courseId);
+        System.out.println(courseName);
         List<Score> page =  iSelectcourseService.getPage(semester, studentId, studentName,courseId,courseName);
+        System.out.println("搜索记录后"+page);
         return Result.success(page,page.size());
     }
 
@@ -181,12 +184,10 @@ public class SelectcourseController {
     @PostMapping("/getRank")
     public Result getRank(@RequestBody QueryPageParam queryPageParam){
         //按照课程排名和 按照院系来排名
-//        int pagesize = queryPageParam.getPagesize();
-//        int pagenum = queryPageParam.getPagenum();
-        int pagesize = 10;
-        int pagenum = 1;
+        int pagesize = queryPageParam.getPagesize();
+        int pagenum = queryPageParam.getPagenum();
         HashMap param = queryPageParam.getParam();
-        System.out.println(param);
+        System.out.println("前端传来排名所需数据"+param);
         String semester = param.get("semester").toString();
         String courseId = param.get("courseId").toString();
         String courseName = param.get("courseName").toString();
