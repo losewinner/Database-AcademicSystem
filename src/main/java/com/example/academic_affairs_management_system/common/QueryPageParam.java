@@ -3,6 +3,7 @@ package com.example.academic_affairs_management_system.common;
 import lombok.Data;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Data
 public class QueryPageParam {

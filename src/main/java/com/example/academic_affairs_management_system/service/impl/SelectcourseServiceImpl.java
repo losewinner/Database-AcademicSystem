@@ -1,6 +1,5 @@
 package com.example.academic_affairs_management_system.service.impl;
 
-import com.baomidou.mybatisplus.extension.api.R;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
@@ -9,12 +8,12 @@ import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.example.academic_affairs_management_system.mapper.SelectcourseMapper;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.academic_affairs_management_system.service.ISemestatusService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -29,6 +28,8 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
 
     @Resource
     private SelectcourseMapper selectcourseMapper;
+    @Autowired
+    private ISemestatusService iSemestatusService;
     @Override
     public List<Selectcourse> getAllInfo(String semester,String courseId,String staffId,String classTime){
         return selectcourseMapper.getAllInfo(semester,courseId,staffId,classTime);
@@ -88,4 +89,13 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
         return Result.success();
     }
 
+    @Override
+    public Result updateScore(List<Student> LS) {
+        String semester =  iSemestatusService.getnowsemester();
+        for (Student S: LS) {
+            System.out.println(S);
+            if(!selectcourseMapper.updateScore(S,semester)) return Result.fail("更新失败");
+        }
+        return Result.success();
+    }
 }

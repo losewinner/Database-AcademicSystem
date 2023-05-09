@@ -9,6 +9,8 @@ public class Student {
     private String name;
     private Integer score;
     private Integer testscore;
-    @TableField("finalScore")
-    private Integer finalscore;
+    private String staffid;
+    private String classtime;
+    private String courseid;
+
 }

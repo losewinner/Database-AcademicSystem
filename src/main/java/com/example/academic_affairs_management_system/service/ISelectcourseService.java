@@ -8,7 +8,6 @@ import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -36,4 +35,6 @@ public interface ISelectcourseService extends IService<Selectcourse> {
     public Result AdminDelScore(List<delScore> delList);
 
     public Result getCourseRank(Integer pageNum,Integer pageSize,String semester,String courseId,String courseName);
+
+    public Result updateScore(List<Student> LS);
 }

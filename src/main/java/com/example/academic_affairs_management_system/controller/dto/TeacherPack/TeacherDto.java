@@ -7,14 +7,9 @@ import java.time.LocalDateTime;
 public class TeacherDto {
     private String staffid;
     private String teachername;
-
     private String sex;
-
     private LocalDateTime birth;
-
     private String title;
-
     private String deptid;
-
     private String token;
 }

@@ -8,7 +8,6 @@ import com.example.academic_affairs_management_system.controller.dto.AdminPack.S
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
-import com.example.academic_affairs_management_system.mapper.SelectcourseMapper;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
 
 import com.example.academic_affairs_management_system.service.ISemestatusService;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -181,6 +179,12 @@ public class SelectcourseController {
     @PostMapping("/getCourseRank")
     public Result getCourseRank(@RequestBody QueryPageParam queryPageParam){
         return Result.success();
+    }
+
+    @PostMapping("/updateScore")
+    public Result updateScore(@RequestBody List<Student> LS){
+
+        return Result.success(iSelectcourseService.updateScore(LS));
     }
 
 

@@ -1,13 +1,12 @@
 package com.example.academic_affairs_management_system.mapper;
 
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
-import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ import java.util.List;
  */
 @Mapper
 public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
-    @Select("select studentId,semester,courseId,staffId,classTime,testScore,signScore,homeworkScore,score from selectcourse " +
+    @Select("select studentId,semester,courseId,staffId,classTime,testScore,score from selectcourse " +
             "where semester=#{semester} and courseId=#{courseId} and staffId=#{staffId} and classTime=#{classTime}")
     List<Selectcourse> getAllInfo(String semester,String courseId,String staffId,String classTime);
 
@@ -31,7 +30,7 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     public List<Score> getPage(String semester, String studentId, String studentName, String courseId, String courseName);
 
-    @Select("select student.studentid,student.name,score,testscore,signscore,homeworkscore " +
+    @Select("select student.studentid,student.name,score,testscore,classtime,courseid,staffid " +
             "from selectcourse,student "+
             "where selectcourse.studentid = student.studentid and " +
             "semester = #{semester} and " +
@@ -72,4 +71,10 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     boolean AdminDelScore(String semester,String studentId,String courseId,String staffId);
 
     boolean getCourseRank(String semester,String courseId,String courseName);
+
+    @Update("Update selectcourse " +
+            "set score=#{S.score},testScore=#{S.testscore} " +
+            "where semester=#{semester} and studentId=#{S.studentid} " +
+            "and courseId=#{S.courseid} and staffId=#{S.staffid} and classTime=#{S.classtime}" )
+    boolean updateScore(Student S,String semester);
 }

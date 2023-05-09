@@ -22,27 +22,23 @@
               style="width: 100%">
         <el-table-column prop="studentid" label="学号" width="120" sortable></el-table-column>
         <el-table-column prop="name" label="姓名" width="120" ></el-table-column>
-        <el-table-column prop="signscore" label="平时成绩" width="120" sortable>
+        <el-table-column prop="signscore" label="平时成绩" width="120" sortable >
           <template v-slot="scope">
-            <el-input v-model="data[scope.$index].score" placeholder="请输入内容"></el-input>
+            <el-input v-model="data[scope.$index].score" placeholder="请输入内容" min="0" max="100"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="testscore" label="考试成绩" width="120" sortable>
           <template v-slot="scope">
-            <el-input v-model="data[scope.$index].testscore" placeholder="请输入内容"></el-input>
+            <el-input v-model="data[scope.$index].testscore" placeholder="请输入内容" min="0" max="100"></el-input>
           </template>
         </el-table-column>
-        <el-table-column prop="finalscore" label="总成绩" width="120" sortable>
+        <el-table-column label="总成绩" width="120" sortable v-text="ratio">
           <template v-slot="scope">
-            <el-input v-model="data[scope.$index].finalscore" placeholder="请输入内容"></el-input>
+            {{ Math.round(data[scope.$index].testscore*(1-ratio/10)+data[scope.$index].score*ratio/10)}}
           </template>
         </el-table-column>
-      <el-table-column label="操作" >
-        <template v-slot="scope" >
-          <el-button type="success" @click.native.prevent="modifyScores(scope.$index)">编辑 <i class="el-icon-edit"></i></el-button>
-        </template>
-      </el-table-column>
     </el-table>
+    <el-button type="success" @click.native.prevent="modifyScores">提交成绩<i class="el-icon-edit"></i></el-button>
   </div>
 </template>
 <script>
@@ -53,7 +49,6 @@ export default {
     return{
       data:[],
       dataLen:0,
-      staffid:"",
       cou_options:[
         {
           value:1
@@ -68,7 +63,8 @@ export default {
       couoption:"",
       cla_options:new Map(),
       claoption:"",
-      cla_id:new Map()
+      cla_id:new Map(),
+      ratio:0
     }
   },
   created() {
@@ -77,11 +73,10 @@ export default {
   methods:{
     load(){
       console.log("loading")
-      this.staffid = JSON.parse(sessionStorage.getItem("curuser")).staffid
       //请求课程_上课时间
       axios.get("http://localhost:8080/opencourse/getclass",{
         params:{
-          staffid:this.staffid
+          staffid:JSON.parse(sessionStorage.getItem("curuser")).staffid
         }
       }).then(res=>res.data).then(res=>{
         if(res.code=="200"){
@@ -111,30 +106,45 @@ export default {
       })
     },
     select(){
-      console.log("请求数据")
-      console.log(this.cla_id.get(this.couoption))
-      console.log(this.staffid)
-      console.log(this.claoption)
+      axios.get("http://localhost:8080/course/getratio?courseid="
+          +this.cla_id.get(this.couoption)).then(res=>res.data).then(res=>{
+        if(res.code=="200"){
+          this.ratio = res.data
+          console.log("success"+this.ratio)
+        }
+        else{
+          console.log("failed")
+        }
+      })
       axios.post("http://localhost:8080/selectcourse/getstudent",{
           pagesize:100,
           pagenum:1,
           param:{
             courseid:this.cla_id.get(this.couoption),
-            staffid:this.staffid,
+            staffid:JSON.parse(sessionStorage.getItem("curuser")).staffid,
             classtime:this.claoption
           }
       }).then(res=>res.data).then(res=>{
+        console.log(res)
         if(res.code=="200"){
-          console.log(res)
           this.data=res.data
-
         }
       })
+
     },
-    modifyScores(idx){
+    modifyScores(){
+      console.log(this.data)
+      console.log("更新数据...")
+      axios.post("http://localhost:8080/selectcourse/updateScore",this.data).then(res=>res.data).then(res=>{
+        if(res.code=="200"){
+          console.log(res.msg);
+          this.select()
+        }
+        else{
+          this.$alert(res.msg);
+        }
+      })
 
-
-      console.log(this.data[idx])
     }
 
   }
