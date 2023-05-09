@@ -73,6 +73,8 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     List<Rank> getCourseRank(Integer pageCurrent,Integer pageSize,String semester, String courseId, String courseName);
 
+    List<Rank> getDeptRank(Integer pageCurrent, Integer pageSize,String semester,String deptName,String isPage);
+
     @Update("Update selectcourse " +
             "set score=#{S.score},testScore=#{S.testscore} " +
             "where semester=#{semester} and studentId=#{S.studentid} " +

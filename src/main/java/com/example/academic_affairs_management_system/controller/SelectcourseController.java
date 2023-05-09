@@ -2,6 +2,7 @@ package com.example.academic_affairs_management_system.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.example.academic_affairs_management_system.common.QueryPageParam;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
@@ -191,12 +192,21 @@ public class SelectcourseController {
         String semester = param.get("semester").toString();
         String courseId = param.get("courseId").toString();
         String courseName = param.get("courseName").toString();
-        //String deptName = param.get("deptName").toString();
-        if(courseId!=null ||courseName!=null) {
+        String deptName = param.get("deptName").toString();
+        String isPage = param.get("isPage").toString();
+        System.out.println("wwwwwwwwwwwwwwww"+isPage);
+        if((courseId!=null ||courseName!=null)&&(courseId!="" || courseName!="")) {
             System.out.println("按照课程搜索");
             System.out.println("得到课程排名"+semester+courseId+courseName);
             List<Rank> courseRank = iSelectcourseService.getCourseRank(pagenum, pagesize, semester, courseId, courseName);
             return Result.success(courseRank,courseRank.size());
+        }
+        else if (deptName!=null) {
+            System.out.println("按照学院进行排名");
+            System.out.println("得到学院"+semester+deptName);
+            List<Rank> deptRank = iSelectcourseService.getDeptRank(pagenum,pagesize,semester,deptName,isPage);
+            System.out.println("得到学院"+deptRank);
+            return Result.success(deptRank,deptRank.size());
         }
         return Result.fail("获取失败");
     }

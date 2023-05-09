@@ -79,6 +79,7 @@
             ORDER BY finalScore DESC
         </where>
         limit #{pageCurrent},#{pageSize}
+
     </select>
 
     <select id="getPage" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Score">
@@ -103,5 +104,27 @@
                 and course.name = #{courseName}
             </if>
         </where>
+    </select>
+
+    <select id = "getDeptRank" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank">
+        select semester,selectcourse.studentId,student.name as studentName,
+               sum(course.credit * selectcourse.finalScore)/sum(course.credit) as semeFinalScore, deptName
+        from selectcourse,course,student,dept
+        <where>
+            selectcourse.courseId = course.courseId
+            and selectcourse.studentId = student.studentId
+            and student.deptId = dept.deptId
+            <if test="semester !=null and semester!=''">
+                and semester = #{semester}
+            </if>
+            <if test="deptName!=null and deptName!=''">
+                and deptName = #{deptName}
+            </if>
+            </where>
+            GROUP BY selectcourse.studentId
+            ORDER BY semeFinalScore DESC
+            <if test="isPage=='需要'">
+                limit #{pageCurrent},#{pageSize}
+            </if>
     </select>
 </mapper>

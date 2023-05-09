@@ -41,7 +41,7 @@
                                  prop = "rank" label = "排名" width = "150">
                 </el-table-column>
                 <el-table-column
-                    prop="studentId" label="学号" width="130" sortable>
+                    prop="studentId" label="学号" width="130">
                 </el-table-column>
                 <el-table-column
                     prop="studentName" label="学生姓名" width="120">
@@ -113,6 +113,10 @@ export default {
     },
     methods:{
         loadData(){
+            this.maxOptionSemester = 1;
+            this.optionSemester = [];
+            this.maxOptionDept = 1;
+            this.optionDept = [];
             console.log("loadsomething")
             //获取学期信息
             axios.get("/semestatus/list").then(res=>{
@@ -197,27 +201,9 @@ export default {
             }
         },
 
-        searchClick(){
-            //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
-            console.log("搜索",this.input.selectSemester)
-            if(this.input.selectSemester===''){
-                this.$alert('请选择学期！', '提示', {
-                    confirmButtonText: '确定',
-                    callback: action => {
-                        this.$message({
-                            type: 'info',
-                            message: `信息: ${ action }`
-                        });
-                    }
-                });
-            }
-            //解析所选的学期
-            var semester_dict = this.optionSemester.find(x=>x.value===this.input.selectSemester);
-            var semester = semester_dict.label;
-            // if(this.selectionOfSearch ==='dept'){
-            //    // var dept_dict = this.optionDept.find(x=>x.value===this.input.selectDept);
-            //     //var deptName = dept_dict.label;
-            // }
+        loadCourseRank(semester){
+            this.input.selectDept = "";
+            this.deptShow = false;
             console.log("查看getPagebug",this.input.courseId,this.input.courseName)
             axios.post("/selectcourse/getPage",{
                 param:{
@@ -225,7 +211,7 @@ export default {
                     courseId:this.input.courseId,
                     courseName:this.input.courseName,
                     studentId:this.input.studentId,
-                    studentName:this.input.studentName
+                    studentName:this.input.studentName,
                 }
             }).then(res=>res.data).then(res=>{
                 console.log("getPage是否成功",res.total);
@@ -237,7 +223,8 @@ export default {
                         semester:semester,
                         courseId:this.input.courseId,
                         courseName:this.input.courseName,
-                        //deptName:deptName
+                        deptName:"不需要",
+                        isPage:"不需要"
                     }
                 }).then(res=>res.data).then(res=>{
                     if(res.code=="200"){
@@ -264,6 +251,89 @@ export default {
 
                 })
             })
+        },
+        loadDeptRank(semester){
+            this.courseShow = false;
+            this.input.courseName = "";
+            this.input.courseId = "";
+            var dept_dict = this.optionDept.find(x=>x.value===this.input.selectDept);
+            var deptName = dept_dict.label;
+            console.log("按照院系来排名");
+            axios.post("/selectcourse/getRank",{
+                param:{
+                    semester:semester,
+                    courseId:this.input.courseId,
+                    courseName:this.input.courseName,
+                    deptName:deptName,
+                    isPage:"不需要"
+                },
+
+            }).then(res=>res.data).then(res=>{
+                console.log("获得信息总数",res.total);
+                this.pagination.total = Math.ceil(res.total/this.pagination.pagesize);
+                axios.post("/selectcourse/getRank",{
+                    pagesize:this.pagination.pagesize,
+                    pagenum:this.pagination.pagenum,
+                    param:{
+                        semester:semester,
+                        courseId:this.input.courseId,
+                        courseName:this.input.courseName,
+                        deptName:deptName,
+                        isPage:"需要"
+                    }
+                }).then(res=>res.data).then(res=>{
+                    if(res.code=="200"){
+                        console.log("搜索排名",res.data);
+                        for(const item of res.data){
+                            item.scorePoint = this.ScoreTrans(item.semeFinalScore);
+                        }
+                        this.FromDbInfo = res.data;
+                        this.deptShow = true;
+                        if(this.FromDbInfo.length ===0){
+                            this.$message({
+                                type:'info',
+                                message:`暂无数据`,
+                            });
+                        }
+                        else{
+                            this.$message({
+                                type:'success',
+                                message:`查找成功`,
+                            });
+
+                        }
+                    }
+
+                })
+            })
+        },
+
+        searchClick(){
+            //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
+            console.log("搜索",this.input.selectSemester)
+            if(this.input.selectSemester===''){
+                this.$alert('请选择学期！', '提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                        this.$message({
+                            type: 'info',
+                            message: `信息: ${ action }`
+                        });
+                    }
+                });
+            }
+            //解析所选的学期
+            var semester_dict = this.optionSemester.find(x=>x.value===this.input.selectSemester);
+            var semester = semester_dict.label;
+            if(this.selectionOfSearch ==='course'){
+                console.log(this.selectionOfSearch)
+                this.loadCourseRank(semester);
+            }
+            else if(this.selectionOfSearch === 'dept'){
+                console.log(this.selectionOfSearch)
+                this.loadDeptRank(semester);
+            }
+
         },
     },
     created() {

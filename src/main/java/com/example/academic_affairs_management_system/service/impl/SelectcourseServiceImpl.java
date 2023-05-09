@@ -92,6 +92,11 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     }
 
     @Override
+    public List<Rank> getDeptRank(Integer pageNum, Integer pageSize,String semester,String deptName,String isPage){
+        Integer pageCurrent = (pageNum-1)*pageSize;
+        return selectcourseMapper.getDeptRank(pageCurrent,pageSize,semester,deptName,isPage);
+    }
+    @Override
     public Result updateScore(List<Student> LS) {
         String semester =  iSemestatusService.getnowsemester();
         for (Student S: LS) {

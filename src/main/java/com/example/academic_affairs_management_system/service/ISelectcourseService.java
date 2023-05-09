@@ -7,6 +7,7 @@ import com.example.academic_affairs_management_system.controller.dto.AdminPack.d
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.extension.service.IService;
+import io.swagger.models.auth.In;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public interface ISelectcourseService extends IService<Selectcourse> {
 
     public List<Score> getCourseScore(String semester, String courseId, String courseName);
 
+
     public List<Score> getPage(String semester,String studentId,String studentName,String courseId, String courseName);
 
     List<Student> select_stu(int pagenum, int pagesize, String semester, String courseid, String staffid, String classtime);
@@ -37,5 +39,6 @@ public interface ISelectcourseService extends IService<Selectcourse> {
 
     public List<Rank> getCourseRank(Integer pageNum, Integer pageSize, String semester, String courseId, String courseName);
 
+    public List<Rank> getDeptRank(Integer pageNum, Integer pageSize,String semester,String deptName,String isPage);
     public Result updateScore(List<Student> LS);
 }
