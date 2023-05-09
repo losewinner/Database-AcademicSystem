@@ -112,6 +112,12 @@
     </el-container>
     <el-dialog title="修改成绩" :visible.sync="dialogFormVisible">
         <el-form :model="form">
+            <el-form-item label="学生姓名" :label-width="formLabelWidth">
+                <el-input v-model="form.studentName" disabled = true ></el-input>
+            </el-form-item>
+            <el-form-item label="课程" :label-width="formLabelWidth">
+                <el-input v-model="form.courseName" disabled = true ></el-input>
+            </el-form-item>
             <el-form-item label="平时成绩" :label-width="formLabelWidth">
                 <el-input v-model="form.score" ></el-input>
             </el-form-item>
@@ -161,6 +167,8 @@ export default {
             dialogFormVisible: false,
             formLabelWidth: '120px',
             form:{
+                studentName:null,
+                courseName:null,
                 score:null,
                 testScore:null,
             },
@@ -247,10 +255,14 @@ export default {
             console.log(this.selectedRowIndexes);
         },
         editClick(row){
-            //编辑成绩，只能编辑四个成绩
+            //编辑成绩，只能编辑平时成绩，考试成绩
             console.log("修改成绩",row);
             this.dialogFormVisible = true;
             this.currentRow = row;
+            this.form.studentName = row.studentName;
+            this.form.courseName = row.courseName;
+            this.form.score = row.score;
+            this.form.testScore = row.testScore;
         },
         confirmEdit(){
             console.log(this.form.testScore,this.form.score);
