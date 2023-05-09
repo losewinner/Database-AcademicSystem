@@ -85,10 +85,10 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     }
 
     @Override
-    public List<Rank> getCourseRank(Integer pageNum, Integer pageSize, String semester, String courseId, String courseName){
+    public List<Rank> getCourseRank(Integer pageNum, Integer pageSize, String semester, String courseId, String courseName,String isPage){
 
         Integer pageCurrent = (pageNum-1)*pageSize;
-        return selectcourseMapper.getCourseRank(pageCurrent,pageSize,semester, courseId, courseName);
+        return selectcourseMapper.getCourseRank(pageCurrent,pageSize,semester, courseId, courseName, isPage);
     }
 
     @Override

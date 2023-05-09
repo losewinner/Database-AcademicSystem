@@ -175,6 +175,14 @@ export default {
                     return 0.0
             }
         },
+        rankTrans(fromDbInfo){
+            var i = 0;
+            for(const item of fromDbInfo){
+                item.rank = (this.pagination.pagenum-1)*this.pagination.pagesize+1;
+                item.rank +=i;
+                i++;
+            }
+        },
         handleCurrentChange(currentPage) {
             //分页有问题：为什么有问题呢？
             //是因为数据库也分页，然后它传来前端的时候，总数据只有一页的长度，所以totalpage会出问题
@@ -204,14 +212,15 @@ export default {
         loadCourseRank(semester){
             this.input.selectDept = "";
             this.deptShow = false;
+            this.input.selectDept;
             console.log("查看getPagebug",this.input.courseId,this.input.courseName)
-            axios.post("/selectcourse/getPage",{
+            axios.post("/selectcourse/getRank",{
                 param:{
                     semester:semester,
                     courseId:this.input.courseId,
                     courseName:this.input.courseName,
-                    studentId:this.input.studentId,
-                    studentName:this.input.studentName,
+                    deptName:this.input.selectDept,
+                    isPage:"需要"
                 }
             }).then(res=>res.data).then(res=>{
                 console.log("getPage是否成功",res.total);
@@ -223,8 +232,8 @@ export default {
                         semester:semester,
                         courseId:this.input.courseId,
                         courseName:this.input.courseName,
-                        deptName:"不需要",
-                        isPage:"不需要"
+                        deptName:this.input.selectDept,
+                        isPage:"需要"
                     }
                 }).then(res=>res.data).then(res=>{
                     if(res.code=="200"){
@@ -232,6 +241,7 @@ export default {
                         for(const item of res.data){
                             item.scorePoint = this.ScoreTrans(item.finalScore);
                         }
+                        this.rankTrans(res.data);
                         this.FromDbInfo = res.data;
                         this.courseShow = true;
                         if(this.FromDbInfo.length ===0){
@@ -287,6 +297,7 @@ export default {
                         for(const item of res.data){
                             item.scorePoint = this.ScoreTrans(item.semeFinalScore);
                         }
+                        this.rankTrans(res.data);
                         this.FromDbInfo = res.data;
                         this.deptShow = true;
                         if(this.FromDbInfo.length ===0){

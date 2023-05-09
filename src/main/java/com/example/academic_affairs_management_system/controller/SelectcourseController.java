@@ -198,7 +198,7 @@ public class SelectcourseController {
         if((courseId!=null ||courseName!=null)&&(courseId!="" || courseName!="")) {
             System.out.println("按照课程搜索");
             System.out.println("得到课程排名"+semester+courseId+courseName);
-            List<Rank> courseRank = iSelectcourseService.getCourseRank(pagenum, pagesize, semester, courseId, courseName);
+            List<Rank> courseRank = iSelectcourseService.getCourseRank(pagenum, pagesize, semester, courseId, courseName,isPage);
             return Result.success(courseRank,courseRank.size());
         }
         else if (deptName!=null) {

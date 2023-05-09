@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class Rank {
+    private int rank;
     private String semester;
     private String studentId;
     private String studentName;

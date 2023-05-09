@@ -78,6 +78,7 @@
             </if>
             ORDER BY finalScore DESC
         </where>
+        <if test="isPage=='需要'"></if>
         limit #{pageCurrent},#{pageSize}
 
     </select>

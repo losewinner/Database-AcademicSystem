@@ -37,7 +37,7 @@ public interface ISelectcourseService extends IService<Selectcourse> {
 
     public Result AdminDelScore(List<delScore> delList);
 
-    public List<Rank> getCourseRank(Integer pageNum, Integer pageSize, String semester, String courseId, String courseName);
+    public List<Rank> getCourseRank(Integer pageNum, Integer pageSize, String semester, String courseId, String courseName,String isPage);
 
     public List<Rank> getDeptRank(Integer pageNum, Integer pageSize,String semester,String deptName,String isPage);
     public Result updateScore(List<Student> LS);

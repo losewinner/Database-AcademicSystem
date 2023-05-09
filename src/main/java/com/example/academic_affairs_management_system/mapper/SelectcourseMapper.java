@@ -71,7 +71,7 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     boolean AdminDelScore(String semester,String studentId,String courseId,String staffId);
 
-    List<Rank> getCourseRank(Integer pageCurrent,Integer pageSize,String semester, String courseId, String courseName);
+    List<Rank> getCourseRank(Integer pageCurrent,Integer pageSize,String semester, String courseId, String courseName, String isPage);
 
     List<Rank> getDeptRank(Integer pageCurrent, Integer pageSize,String semester,String deptName,String isPage);
 
