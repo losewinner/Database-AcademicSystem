@@ -203,10 +203,10 @@ public class SelectcourseController {
         }
         else if (deptName!=null) {
             System.out.println("按照学院进行排名");
-            System.out.println("得到学院"+semester+deptName);
-            List<Rank> deptRank = iSelectcourseService.getDeptRank(pagenum,pagesize,semester,deptName,isPage);
-            System.out.println("得到学院"+deptRank);
-            return Result.success(deptRank,deptRank.size());
+            System.out.println("得到学院" + semester + deptName);
+            List<Rank> deptRank = iSelectcourseService.getDeptRank(pagenum, pagesize, semester, deptName, isPage);
+            System.out.println("得到学院" + deptRank);
+            return Result.success(deptRank, deptRank.size());
         }
         return Result.fail("获取失败");
     }
