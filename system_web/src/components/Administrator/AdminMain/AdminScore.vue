@@ -43,10 +43,10 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page="pagenum"
-                    :page-sizes="[10, 15, 25, 30]"
+                    :page-sizes="[7, 15, 25, 30]"
                     :page-size="pagesize"
                     layout="total, sizes, prev, pager, next, jumper"
-                    :total="totalpage" style="margin-top: 10px;margin-bottom: 10px">
+                    :total="total" style="margin-top: 10px;margin-bottom: 10px">
                 </el-pagination>
 
                 <el-container class="查找结果表格" style="margin-top: 20px">
@@ -198,6 +198,7 @@ export default {
             pagesize:10,
             pagenum:1,
             totalpage:0,
+            total:0,
             dialogFormVisible: false,
             formLabelWidth: '120px',
             form:{
@@ -485,6 +486,7 @@ export default {
             }).then(res=>res.data).then(res=>{
                 this.totalpage = Math.ceil(res.total/this.pagesize);
                 this.AllScore = res.data;
+                this.total = res.total;
                 console.log("所有成绩",this.AllScore);
                 axios.post("/selectcourse/getScore",{
                     pagesize:this.pagesize,
@@ -578,6 +580,8 @@ export default {
             }).then(res=>res.data).then(res=>{
                 console.log("页面大小",res.total);
                 this.totalpage = Math.ceil(res.total/this.pagesize);
+                this.total = res.total;
+                console.log("一共几页？",this.totalpage)
                 axios.get("/selectcourse/getAllScore?pagenum="+this.pagenum+"&pagesize="+this.pagesize).then(res=>res.data).then(res=>{
                     if(res.code=="200"){
                         console.log(res.data);
