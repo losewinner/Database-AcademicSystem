@@ -1,8 +1,11 @@
 package com.example.academic_affairs_management_system.mapper;
 
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.StudentManage;
 import com.example.academic_affairs_management_system.entity.Student;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,4 +18,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface StudentMapper extends BaseMapper<Student> {
 
+    public List<StudentManage> manageList(String keyword);
 }
