@@ -37,7 +37,6 @@ public class Student implements Serializable {
     @TableField("deptId")
     private String deptid;
 
-    private String password;
 
 
 }
