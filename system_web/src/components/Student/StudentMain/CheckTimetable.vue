@@ -29,7 +29,7 @@
                     <tbody>
                     <tr v-for="i in 12" :key="i">
                         <td>{{ i }}</td>
-                        <td v-for="j in 7" :key="(i - 1) * 7 + j" :id="getTdId(i, j)" v-bind:style="{ 'text-align': 'center' }">&nbsp;</td>
+                        <td v-for="j in 7" :key="(i - 1) * 7 + j" :id="getTdId(i, j)" style="width: 120px">&nbsp;</td>
                     </tr>
                     </tbody>
                 </table>
@@ -193,9 +193,7 @@ td {
     padding: 10px;
     text-align: center;
 }
-.origin{
-    background-color: white;
-}
+
 .course0 {
     background-color: royalblue;
 }
