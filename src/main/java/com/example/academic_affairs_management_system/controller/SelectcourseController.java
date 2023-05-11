@@ -213,11 +213,13 @@ public class SelectcourseController {
 
     @PostMapping("/updateScore")
     public Result updateScore(@RequestBody List<Student> LS){
-
         return Result.success(iSelectcourseService.updateScore(LS));
     }
 
-
+    @PostMapping("/uploadsign")
+    public Result uploadsign(@RequestBody List<Student> LS){
+        return Result.success(iSelectcourseService.uploadsign(LS));
+    }
 
 
 }

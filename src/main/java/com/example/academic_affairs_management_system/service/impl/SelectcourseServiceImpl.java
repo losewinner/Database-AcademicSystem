@@ -100,8 +100,16 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     public Result updateScore(List<Student> LS) {
         String semester =  iSemestatusService.getnowsemester();
         for (Student S: LS) {
-            System.out.println(S);
             if(!selectcourseMapper.updateScore(S,semester)) return Result.fail("更新失败");
+        }
+        return Result.success();
+    }
+
+    @Override
+    public Result uploadsign(List<Student> LS) {
+        String semester =  iSemestatusService.getnowsemester();
+        for (Student S:LS) {
+            if(!selectcourseMapper.uploadsign(S,semester))return Result.fail("更新失败");
         }
         return Result.success();
     }

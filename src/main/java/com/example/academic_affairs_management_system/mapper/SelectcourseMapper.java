@@ -80,4 +80,11 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
             "where semester=#{semester} and studentId=#{S.studentid} " +
             "and courseId=#{S.courseid} and staffId=#{S.staffid} and classTime=#{S.classtime}" )
     boolean updateScore(Student S,String semester);
+
+
+    @Update("Update selectcourse "+
+            "set score=score+10 "+
+            "where semester=#{semester} and studentId=#{S.studentid} " +
+            "and courseId=#{S.courseid} and staffId=#{S.staffid} and classTime=#{S.classtime}")
+    boolean uploadsign(Student S, String semester);
 }

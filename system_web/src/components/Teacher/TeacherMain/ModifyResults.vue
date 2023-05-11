@@ -43,6 +43,26 @@
         <el-button type="success" @click.native.prevent="modifyScores">提交成绩<i class="el-icon-edit"></i></el-button>
       </el-tab-pane>
       <el-tab-pane label="统计图表" name="second" >
+        <div>
+            <el-descriptions :column="4"  border>
+              <el-descriptions-item>
+                <template slot="label">课程</template>
+                {{this.couoption}}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">平均分</template>
+                {{this.avgscore}}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">最高分</template>
+                {{this.maxscore}}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">最低分</template>
+                {{this.minscore}}
+              </el-descriptions-item>
+            </el-descriptions>
+        </div>
         <div style="display: flex;align-items: center;justify-content: space-around;">
           <div class="echart" ref="mychart"  :style="myChartstyle"></div>
           <div class="echart" ref="mychart1" :style="myChartstyle"></div>
@@ -53,7 +73,6 @@
           <div>考试成绩</div>
           <div>综合成绩</div>
         </div>
-
       </el-tab-pane>
     </el-tabs>
 
@@ -85,7 +104,10 @@ export default {
       cla_options:new Map(),
       claoption:"",
       cla_id:new Map(),
-      ratio:0
+      ratio:0,
+      avgscore:0,
+      maxscore:0,
+      minscore:100,
     }
   },
   created() {
@@ -130,6 +152,9 @@ export default {
       })
     },
     select(){
+      this.avgscore=0
+      this.maxscore=0
+      this.minscore=100
       axios.get("http://localhost:8080/course/getratio?courseid="
           +this.cla_id.get(this.couoption)).then(res=>res.data).then(res=>{
         if(res.code=="200"){
@@ -152,6 +177,16 @@ export default {
         console.log(res)
         if(res.code=="200"){
           this.data=res.data
+          for (const re of res.data) {
+            let final=Math.round(re.testscore*(1-this.ratio/10)+re.score*this.ratio/10)
+            this.avgscore+=final
+            this.maxscore=Math.max(this.maxscore,final)
+            this.maxscore=Math.min(this.maxscore,final)
+          }
+          this.avgscore = this.avgscore/res.data.length
+          console.log("avg="+this.avgscore)
+          console.log("max="+this.maxscore)
+          console.log("min="+this.minscore)
           this.initEchart()
         }
       })
