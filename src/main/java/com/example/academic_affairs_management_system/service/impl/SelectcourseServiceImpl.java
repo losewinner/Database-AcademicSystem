@@ -4,6 +4,7 @@ import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
+import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuCourse;
 import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
@@ -62,6 +63,12 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     public List<StuScore> getStuPage(String semester, String studentId){
         //获得想要的对应的数据的总数
         return selectcourseMapper.getStuPage(semester,studentId);
+    }
+
+    @Override
+    public List<StuCourse> getAllStuCourse(String semester, String studentId){
+        //获得想要的对应的数据的总数
+        return selectcourseMapper.getAllStuCourse(semester,studentId);
     }
 
     @Override

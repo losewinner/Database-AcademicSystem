@@ -2,6 +2,7 @@ package com.example.academic_affairs_management_system.mapper;
 
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
+import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuCourse;
 import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
@@ -70,6 +71,8 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     List<Score> getStudentScore(String semester, String studentId,String studentName);
 
     public List<StuScore> getStuScore(Integer pageCurrent, Integer pageSize, String semester, String studentId);
+
+    public List<StuCourse> getAllStuCourse(String semester, String studentId);
 
     public List<Score> getScore(Integer pageCurrent,Integer pageSize,String semester, String studentId, String studentName, String courseId, String courseName);
 

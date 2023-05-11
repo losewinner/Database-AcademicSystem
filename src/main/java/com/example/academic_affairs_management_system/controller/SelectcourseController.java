@@ -8,6 +8,7 @@ import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
+import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuCourse;
 import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
@@ -136,7 +137,12 @@ public class SelectcourseController {
         String studentId = param.get("studentId").toString();
         List<StuScore> data = iSelectcourseService.getStuScore(pagenum,pagesize, semester,studentId);
         return Result.success(data,data.size());
+    }
 
+    @PostMapping("/getAllStuCourse")
+    public Result getAllStuCourse(@RequestParam String semester,@RequestParam String studentId){
+        List<StuCourse> data = iSelectcourseService.getAllStuCourse(semester,studentId);
+        return Result.success(data,data.size());
     }
 
     @PostMapping("/getScore")

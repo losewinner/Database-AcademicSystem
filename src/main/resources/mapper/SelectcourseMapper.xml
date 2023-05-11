@@ -5,6 +5,24 @@
         select * from selectcourse
     </select>
 
+    <select id="getAllStuCourse" resultType="com.example.academic_affairs_management_system.controller.dto.StudentPack.StuCourse">
+        select semester,
+        selectcourse.studentId,student.name as studentName,
+        selectcourse.staffId,student.deptId as deptId,deptName,
+        course.credit as courseCredit,
+        selectcourse.courseId,course.name as courseName,selectcourse.classtime as classTime
+        from selectcourse,course,student,dept
+        <where>
+            selectcourse.courseId = course.courseId
+            and selectcourse.studentId = student.studentId
+            and student.deptId = dept.deptId
+            and semester = #{semester}
+            <if test="studentId!=null and studentId!=''">
+                and selectcourse.studentId = #{studentId}
+            </if>
+        </where>
+    </select>
+
     <select id="getStuPage" resultType="com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore">
         select score,testScore,finalScore,credit as courseCredit
         from selectcourse,student,course
@@ -19,6 +37,7 @@
             </if>
         </where>
     </select>
+
     <select id="getStuScore" resultType="com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore">
         select semester,
         selectcourse.studentId,student.name as studentName,

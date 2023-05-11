@@ -8,7 +8,7 @@
                          :value="item.value">
               </el-option>
           </el-select>
-          <el-button @click="searchClick()" type="primary" icon="el-icon-search" style="height: 40px;margin-right: 10px">搜索
+          <el-button @click="searchClick()" type="primary" icon="el-icon-search" style="height: 40px;margin-right: 450px">搜索
           </el-button>
           <el-descriptions :column="1"  border >
               <el-descriptions-item>
@@ -21,23 +21,23 @@
 
         <el-table
           :data="FromDbInfo"
-          style="width: 70%"
+          style="width: 78%"
           max-height="auto"
           @selection-change="handleSelectionChange">
         <el-table-column
-            prop="courseId" label="课程号" width="150">
+            prop="courseId" label="课程号" width="200">
         </el-table-column>
         <el-table-column
-            prop="courseName" label="课程名字" width="150">
+            prop="courseName" label="课程名字" width="200">
         </el-table-column>
         <el-table-column
-            prop="courseCredit" label="学分" width="100">
+            prop="courseCredit" label="学分" width="200">
         </el-table-column>
         <el-table-column
-            prop="finalScore" label="综合成绩" width="150">
+            prop="finalScore" label="综合成绩" width="200">
         </el-table-column>
         <el-table-column
-            prop="scorePoint" label="绩点" width="150">
+            prop="scorePoint" label="绩点" width="200">
         </el-table-column>
       </el-table>
         <el-pagination
@@ -47,7 +47,7 @@
                 :page-sizes="[5, 10, 15, 20]"
                 :page-size="pagesize"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="total" style="width: 820px; margin-top: 10px;margin-bottom: 10px">
+                :total="total" style="width: 600px; margin-top: 10px;margin-bottom: 10px">
         </el-pagination>
     </el-container>
 
@@ -139,9 +139,6 @@ export default {
               param:{
                   semester:semester,
                   studentId:localStorage.getItem("userid"),
-                  studentName:'',
-                  courseId:'',
-                  courseName:''
               }
           }).then(res=>res.data).then(res=>{
               this.totalpage = Math.ceil(res.total/this.pagesize);
@@ -155,9 +152,6 @@ export default {
                   param:{
                       semester:semester,
                       studentId:localStorage.getItem("userid"),
-                      studentName:'',
-                      courseId:'',
-                      courseName:''
                   }
               }).then(res=>res.data).then(res=>{
                   if(res.code=="200"){
