@@ -52,13 +52,16 @@ export default {
                 console.log(res)
                 if(res.code==200){
                   sessionStorage.setItem("curuser",JSON.stringify(res.data.data));
-                  console.log("wtf",res.data.data.title);
-                  if(res.data.data.title === "管理员")
+                  console.log("wtf",res.data.data.identify);
+                  if(res.data.identify == 1)
                   {
                       this.$router.push("/Admin/home")
                   }
-                  else {
+                  else if(res.data.identify == 2){
                       this.$router.push("/Teacher/home");
+                  }
+                  else if(res.data.identify == 3){
+                      this.$router.push("/Student/home");
                   }
                   this.$message.success("登录成功！");
                 }

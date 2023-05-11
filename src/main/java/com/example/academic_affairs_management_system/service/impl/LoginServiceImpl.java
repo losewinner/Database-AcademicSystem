@@ -2,12 +2,13 @@ package com.example.academic_affairs_management_system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.academic_affairs_management_system.entity.Student;
 import com.example.academic_affairs_management_system.entity.Teacher;
 import com.example.academic_affairs_management_system.exception.ServiceException;
 import com.example.academic_affairs_management_system.common.Constants;
-import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Login;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.TeacherDto;
+import com.example.academic_affairs_management_system.controller.dto.StudentPack.StudentDto;
 import com.example.academic_affairs_management_system.mapper.LoginMapper;
 import com.example.academic_affairs_management_system.service.ILoginService;
 import com.example.academic_affairs_management_system.utils.TokenUtils;
@@ -22,9 +23,26 @@ import java.util.Map;
 public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements ILoginService {
 
     @Autowired TeacherServiceImpl teacherService;
+    @Autowired StudentServiceImpl studentService;
+
     @Override
-    public Student loginstu(String username, String password) {
-        return null;
+    public Map<String,Object> loginstu(String username, String password)
+    {
+        Login login = getlogin(username,password);
+        if(login!=null){
+            Map<String,Object>res=new HashMap<>();
+            Student student = studentService.getstuInfo(username);
+            StudentDto studentdto= new StudentDto();
+            BeanUtils.copyProperties(student, studentdto);
+            //设置token
+            String token = TokenUtils.generateToken(login.getId(),login.getPassword());
+            studentdto.setToken(token);
+            res.put("data",studentdto);
+            res.put("identify",login.getIdentify());
+            return res;
+        }else{
+            throw new ServiceException(Constants.CODE_600,"用户名或密码错误");
+        }
     }
 
 

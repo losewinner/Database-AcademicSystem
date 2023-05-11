@@ -2,6 +2,7 @@ package com.example.academic_affairs_management_system.mapper;
 
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
+import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -30,6 +31,8 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     public List<Score> getAllScore(int pageCurrent,int pageSize);
 
     public List<Score> getPage(String semester, String studentId, String studentName, String courseId, String courseName);
+
+    List<StuScore> getStuPage(String semester, String studentId);
 
     @Select("select student.studentid,student.name,score,testscore,classtime,courseid,staffid " +
             "from selectcourse,student "+
@@ -66,6 +69,8 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
             "AND student.name = #{studentName}")
     List<Score> getStudentScore(String semester, String studentId,String studentName);
 
+    public List<StuScore> getStuScore(Integer pageCurrent, Integer pageSize, String semester, String studentId);
+
     public List<Score> getScore(Integer pageCurrent,Integer pageSize,String semester, String studentId, String studentName, String courseId, String courseName);
 
 
@@ -82,9 +87,4 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     boolean updateScore(Student S,String semester);
 
 
-    @Update("Update selectcourse "+
-            "set score=score+10 "+
-            "where semester=#{semester} and studentId=#{S.studentid} " +
-            "and courseId=#{S.courseid} and staffId=#{S.staffid} and classTime=#{S.classtime}")
-    boolean uploadsign(Student S, String semester);
 }

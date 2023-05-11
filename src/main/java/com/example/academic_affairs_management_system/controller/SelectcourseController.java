@@ -8,6 +8,7 @@ import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
+import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
@@ -103,6 +104,18 @@ public class SelectcourseController {
         return Result.success(page,page.size());
     }
 
+    @PostMapping("/getStuPage")
+    public Result getStuPage(@RequestBody QueryPageParam queryPageParam){
+        /*
+         * 返回记录总数和综合成绩与绩点*/
+        HashMap param = queryPageParam.getParam();
+        String semester = param.get("semester").toString();
+        String studentId = param.get("studentId").toString();
+        List<StuScore> page =  iSelectcourseService.getStuPage(semester, studentId);
+        System.out.println("搜索记录后"+page);
+        return Result.success(page,page.size());
+    }
+
     @GetMapping("/getAllScore")
     public Result getAllScore(@RequestParam int pagenum,@RequestParam int pagesize){
         /*
@@ -110,6 +123,20 @@ public class SelectcourseController {
         * */
         List<Score> allScore = iSelectcourseService.getAllScore(pagenum,pagesize);
         return Result.success(allScore,allScore.size());
+    }
+
+    @PostMapping("/getStuScore")
+    public Result getStuScore(@RequestBody QueryPageParam queryPageParam){
+        /*
+         * 自由搜索【学期（必须），学号】，得到成绩列表
+         */
+        int pagenum = queryPageParam.getPagenum(),pagesize = queryPageParam.getPagesize();
+        HashMap param = queryPageParam.getParam();
+        String semester = param.get("semester").toString();
+        String studentId = param.get("studentId").toString();
+        List<StuScore> data = iSelectcourseService.getStuScore(pagenum,pagesize, semester,studentId);
+        return Result.success(data,data.size());
+
     }
 
     @PostMapping("/getScore")
@@ -213,13 +240,11 @@ public class SelectcourseController {
 
     @PostMapping("/updateScore")
     public Result updateScore(@RequestBody List<Student> LS){
+
         return Result.success(iSelectcourseService.updateScore(LS));
     }
 
-    @PostMapping("/uploadsign")
-    public Result uploadsign(@RequestBody List<Student> LS){
-        return Result.success(iSelectcourseService.uploadsign(LS));
-    }
+
 
 
 }

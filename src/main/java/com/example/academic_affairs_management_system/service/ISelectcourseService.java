@@ -4,6 +4,7 @@ import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
+import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -31,7 +32,11 @@ public interface ISelectcourseService extends IService<Selectcourse> {
 
     public List<Score> getPage(String semester,String studentId,String studentName,String courseId, String courseName);
 
+    public List<StuScore> getStuPage(String semester,String studentId);
+
     List<Student> select_stu(int pagenum, int pagesize, String semester, String courseid, String staffid, String classtime);
+
+    public List<StuScore> getStuScore(Integer pageNum, Integer pageSize, String semester, String studentId);
 
     public List<Score> getScore(Integer pageNum,Integer pageSize, String semester, String studentId, String studentName, String courseId, String courseName);
 
@@ -41,6 +46,4 @@ public interface ISelectcourseService extends IService<Selectcourse> {
 
     public List<Rank> getDeptRank(Integer pageNum, Integer pageSize,String semester,String deptName,String isPage);
     public Result updateScore(List<Student> LS);
-
-    public Result uploadsign(List<Student> ls);
 }

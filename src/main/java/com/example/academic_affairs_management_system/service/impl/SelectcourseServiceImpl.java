@@ -4,6 +4,7 @@ import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.Score;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
+import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.example.academic_affairs_management_system.mapper.SelectcourseMapper;
@@ -58,9 +59,22 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     }
 
     @Override
+    public List<StuScore> getStuPage(String semester, String studentId){
+        //获得想要的对应的数据的总数
+        return selectcourseMapper.getStuPage(semester,studentId);
+    }
+
+    @Override
     public List<Student> select_stu(int pagenum, int pagesize,String semester, String courseid, String staffid, String classtime) {
         pagenum = (pagenum-1)*pagesize;
         return  selectcourseMapper.select_stu(pagenum,pagesize,semester,courseid,staffid,classtime);
+    }
+
+
+    @Override
+    public List<StuScore> getStuScore(Integer pageNum, Integer pageSize, String semester, String studentId){
+        Integer pageCurrent = (pageNum-1)*pageSize;
+        return selectcourseMapper.getStuScore(pageCurrent,pageSize,semester, studentId);
     }
 
     @Override
@@ -100,16 +114,8 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     public Result updateScore(List<Student> LS) {
         String semester =  iSemestatusService.getnowsemester();
         for (Student S: LS) {
+            System.out.println(S);
             if(!selectcourseMapper.updateScore(S,semester)) return Result.fail("更新失败");
-        }
-        return Result.success();
-    }
-
-    @Override
-    public Result uploadsign(List<Student> LS) {
-        String semester =  iSemestatusService.getnowsemester();
-        for (Student S:LS) {
-            if(!selectcourseMapper.uploadsign(S,semester))return Result.fail("更新失败");
         }
         return Result.success();
     }
