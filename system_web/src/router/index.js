@@ -63,7 +63,7 @@ const routes = [
                 path:'Rank',name:'AdminRank',component:()=>import('../components/Administrator/AdminMain/AdminRank.vue')
             },
             {
-                path:'Unpass',name:'AdminUnpass',component:()=>import('../components/Administrator/AdminMain/AdminUnpass.vue')
+                path:'Manage',name:'AdminManage',component:()=>import('../components/Administrator/AdminMain/AdminManage.vue')
             }
         ]
     }

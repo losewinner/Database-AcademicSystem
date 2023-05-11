@@ -122,8 +122,8 @@
             <el-container class="第二页面，成绩分析" v-show="!ScoreOrAnalysis" style="display: flex;flex-direction: column">
                 <el-button type="primary" @click="ScoreOrAnalysis=!ScoreOrAnalysis" style="height: 30%;width: 7%;margin-top: 10px">返回<i class="el-icon-arrow-left el-icon--left"></i></el-button>
                 <el-container class = "饼图分析" style="width:100%;display: flex;flex-direction: column;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);margin-top:10px" >
-                    <el-container class="统计分数结果（平均分，最高分，最低分）" style = "margin-top: 20px;margin-right: 20px">
-                        <el-descriptions :column="4"  border>
+                    <el-container class="统计分数结果（平均分，最高分，最低分,挂科率）" style = "margin-top: 20px;margin-right: 20px">
+                        <el-descriptions :column="5"  border>
                             <el-descriptions-item>
                                 <template slot="label">课程</template>
                                 {{ScoreAnalysis.courseName}}
@@ -139,6 +139,10 @@
                             <el-descriptions-item>
                                 <template slot="label">最低分</template>
                                 {{ScoreAnalysis.lowestScore}}
+                            </el-descriptions-item>
+                            <el-descriptions-item>
+                                <template slot="label">挂科率</template>
+                                {{ScoreAnalysis.unpassRatio}}%
                             </el-descriptions-item>
                         </el-descriptions>
                     </el-container>
@@ -186,6 +190,7 @@ export default {
                 averageScore:"xxx",
                 highestScore:"xxx",
                 lowestScore:"xxx",
+                unpassRatio:"xxx"
             },
             AllScore:[],    //当只选了课程的时候，存放一下此课程的所有最终成绩之和
             ToDbInfo:[],
@@ -521,6 +526,8 @@ export default {
                                 this.ScoreAnalysis.highestScore = this.AllScore.reduce((max, dict) => dict.finalScore > max ? dict.finalScore : max, this.AllScore[0].finalScore);
 
                                 this.ScoreAnalysis.lowestScore = this.AllScore.reduce((min, dict) => dict.finalScore < min ? dict.finalScore : min, this.AllScore[0].finalScore);
+                                const passLine = 60;
+                                this.ScoreAnalysis.unpassRatio = parseFloat(this.AllScore.filter(item=>item.finalScore<passLine).length/this.AllScore.length)*100;
                                 console.log("分数分析",this.ScoreAnalysis);
                             }
                             else if(this.input.studentId!==''||this.input.studentName!==''||((this.input.courseId===''&&this.input.courseName==='')))
@@ -529,6 +536,7 @@ export default {
                                 this.ScoreAnalysis.lowestScore = "xxx";
                                 this.ScoreAnalysis.averageScore = "xxx";
                                 this.ScoreAnalysis.highestScore = "xxx";
+                                this.ScoreAnalysis.unpassRatio = "xxx";
                             }
                         }
                     }

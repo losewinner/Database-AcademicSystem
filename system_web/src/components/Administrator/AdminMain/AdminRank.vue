@@ -211,6 +211,17 @@ export default {
         },
 
         loadCourseRank(semester){
+            if(this.input.courseId===''&&this.input.courseName===''){
+                this.$alert('请选择学期和排名规则！', '提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                        this.$message({
+                            type: 'info',
+                            message: `信息: ${ action }`
+                        });
+                    }
+                });
+            }
             this.input.selectDept = "";
             this.deptShow = false;
             this.input.selectDept;
@@ -264,6 +275,17 @@ export default {
             })
         },
         loadDeptRank(semester){
+            if(this.input.selectDept===''){
+                this.$alert('请选择学期和排名规则！', '提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                        this.$message({
+                            type: 'info',
+                            message: `信息: ${ action }`
+                        });
+                    }
+                });
+            }
             this.courseShow = false;
             this.input.courseName = "";
             this.input.courseId = "";
@@ -323,8 +345,8 @@ export default {
         searchClick(){
             //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
             console.log("搜索",this.input.selectSemester)
-            if(this.input.selectSemester===''){
-                this.$alert('请选择学期！', '提示', {
+            if(this.input.selectSemester===''||this.selectionOfSearch===''){
+                this.$alert('请选择学期和排名规则！', '提示', {
                     confirmButtonText: '确定',
                     callback: action => {
                         this.$message({

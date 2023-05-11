@@ -30,13 +30,10 @@
                 <i class="el-icon-s-order"></i>
                 <span>统计排名</span>
             </el-menu-item>
-            <el-menu-item index="/Admin/Unpass">
-                <i class="el-icon-data-analysis"></i>
-                <span>统计挂科率</span>
-            </el-menu-item>
-
         </el-submenu>
-
+        <el-menu-item index="/Admin/Manage" v-show="!isCollapse">
+            <i class = "el-icon-s-tools"></i><span>数据管理</span>
+        </el-menu-item>
 
     </el-menu>
 
