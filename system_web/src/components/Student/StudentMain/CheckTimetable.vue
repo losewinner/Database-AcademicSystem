@@ -76,12 +76,32 @@ export default {
                 let [day, start, end] = this.parseClassTime(item.classTime); // 解析上课时间
                 let td = document.getElementById(this.getTdId(start, day)); // 获取对应的td单元格
                 console.log("td", td);
-                td.innerText = item.courseName; // 在单元格中显示课程名称
+                let str = item.courseName;
+                console.log("长度", str.length);
+                if(str.length<6)
+                {
+                    td.innerText = str; // 在单元格中显示课程名称
+                    str='';
+                }
+                else
+                {
+                    td.innerText = str.slice(0,6);
+                    str = str.slice(6);
+                }
                 td.classList.add("course"+this.colorNum); // 添加样式以区分课程单元格和普通单元格
                 td.style.border = "0px";
                 for(var i = start+1; i<=end ;i++)
                 {
                     let td = document.getElementById(this.getTdId(i, day)); // 获取对应的td单元格
+                    if(str.length>0) {
+                        if (str.length < 6) {
+                            td.innerText = str; // 在单元格中显示课程名称
+                            str = '';
+                        } else {
+                            td.innerText = str.slice(0, 6);
+                            str = str.slice(6);
+                        }
+                    }
                     td.classList.add("course"+this.colorNum); // 添加样式以区分课程单元格和普通单元格
                     td.style.border = "0px";
                 }
