@@ -5,6 +5,7 @@ import com.example.academic_affairs_management_system.entity.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.academic_affairs_management_system.mapper.StudentMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -18,5 +19,7 @@ import java.util.List;
 public interface IStudentService extends IService<Student> {
 
     public List<StudentManage> manageList(String keyword);
+
+    public boolean manageEditStu(StudentManage student);
 
 }

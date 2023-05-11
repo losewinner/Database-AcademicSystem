@@ -399,6 +399,7 @@ export default {
 
         },
         handleSelectionChange(val){
+            //找到所有选择的行的索引
             this.ToDbInfo = val;
             console.log("选择框",this.ToDbInfo);
             this.selectedRowIndexes = val.map(item => this.FromDbInfo.indexOf(item));

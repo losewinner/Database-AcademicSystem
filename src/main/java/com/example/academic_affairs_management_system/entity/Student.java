@@ -1,6 +1,8 @@
 package com.example.academic_affairs_management_system.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
@@ -28,7 +30,7 @@ public class Student implements Serializable {
 
     private String sex;
 
-    private LocalDateTime birth;
+    private LocalDate birth;
 
     private String home;
 

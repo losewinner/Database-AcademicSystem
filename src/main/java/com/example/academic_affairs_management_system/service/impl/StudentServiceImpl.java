@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,5 +27,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public List<StudentManage> manageList(String keyword){
         return studentMapper.manageList(keyword);
+    }
+
+    @Override
+    public boolean manageEditStu(StudentManage student){
+        return studentMapper.manageEditStu(student);
     }
 }
