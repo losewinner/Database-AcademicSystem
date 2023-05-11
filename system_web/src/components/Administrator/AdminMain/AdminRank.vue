@@ -107,7 +107,8 @@ export default {
           pagination:{
               pagenum:1,
               pagesize:10,
-              total:0,
+              totalpage:0,
+              total:0
           },
 
       }
@@ -236,7 +237,8 @@ export default {
                 }
             }).then(res=>res.data).then(res=>{
                 console.log("getPage是否成功",res.total);
-                this.pagination.total = Math.ceil(res.total/this.pagination.pagesize);
+                this.pagination.totalpage = Math.ceil(res.total/this.pagination.pagesize);
+                this.pagination.total = res.total;
                 axios.post("/selectcourse/getRank",{
                     pagesize:this.pagination.pagesize,
                     pagenum:this.pagination.pagenum,
@@ -303,7 +305,8 @@ export default {
 
             }).then(res=>res.data).then(res=>{
                 console.log("获得信息总数",res.total);
-                this.pagination.total = Math.ceil(res.total/this.pagination.pagesize);
+                this.pagination.totalpage = Math.ceil(res.total/this.pagination.pagesize);
+                this.pagination.total = res.total
                 axios.post("/selectcourse/getRank",{
                     pagesize:this.pagination.pagesize,
                     pagenum:this.pagination.pagenum,
