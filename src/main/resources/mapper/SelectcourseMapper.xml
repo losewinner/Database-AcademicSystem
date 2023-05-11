@@ -84,7 +84,7 @@
     </select>
 
     <select id="getPage" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Score">
-        select finalScore
+        select score,testScore,finalScore
         from selectcourse,student,course
         <where>
             selectcourse.courseId = course.courseId

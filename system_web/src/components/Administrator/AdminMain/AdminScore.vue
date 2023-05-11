@@ -1,142 +1,171 @@
 <template>
-<el-container style="display: flex;flex-direction: column;margin-top:15px">
-    <el-container class="上半部分" style="display: flex;flex-direction: row">
-        <el-container class="查找框集合" style="display: flex;flex-direction: column ; margin-right:100px ;width:40%">
-            <el-select v-model="input.selectSemester" placeholder="请选择学期" style="width:30%">
-                <el-option v-for="item in optionSemester"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                </el-option>
-            </el-select>
-            <el-container class="课程，课程号" style="margin-top: 20px;display: flex;flex-direction: row">
-                <el-input placeholder="请输入课程号" suffix-icon="el-icon-s-management" v-model="input.courseId" style="width:40% ;margin-right: 5px"></el-input>
-                <el-input placeholder="请输入课程名字" suffix-icon="el-icon-s-management" v-model="input.courseName" style="width:40% ;margin-right: 5px"></el-input>
+    <el-container class="整个页面">
+        <transition name = "el-zoom-in-center">
+            <el-container class = "第一页面，查找成绩" v-show="ScoreOrAnalysis" style="display: flex;flex-direction: column;margin-top:15px">
+                <el-container class="上半部分" style="display: flex;flex-direction: row">
+                    <el-container class="查找框集合" style="display: flex;flex-direction: column ; margin-right:10px ;width:60%">
+                        <el-select v-model="input.selectSemester" placeholder="请选择学期" style="width:30%">
+                            <el-option v-for="item in optionSemester"
+                                       :key="item.value"
+                                       :label="item.label"
+                                       :value="item.value">
+                            </el-option>
+                        </el-select>
+                        <el-container class = "搜索" style="margin-top: 10px;display: flex;flex-direction: row">
+                            <el-container class="课程，课程号" style="display: flex;flex-direction: row">
+                                <el-input placeholder="请输入课程号" suffix-icon="el-icon-s-management" v-model="input.courseId" style="width:70% ;margin-right: 5px"></el-input>
+                                <el-input placeholder="请输入课程名字" suffix-icon="el-icon-s-management" v-model="input.courseName" style="width:70% ;margin-right: 5px"></el-input>
+                            </el-container>
+                            <el-container class="学号，学生名" style="display: flex;flex-direction: row">
+                                <el-input placeholder="请输入学生号" suffix-icon="el-icon-user" v-model="input.studentId" style="width:70%;margin-right: 5px"></el-input>
+                                <el-input placeholder="请输入学生姓名" suffix-icon="el-icon-user" v-model="input.studentName" style="width:70% ;margin-right: 5px"></el-input>
+                            </el-container>
+                        </el-container>
+
+                        <el-container class="查找，删除按钮" style="margin-top: 10px;display: flex;flex-direction: row">
+                            <el-button @click="searchClick()" type="primary" icon="el-icon-search" style="margin-right: 10px">搜索</el-button>
+                            <el-popconfirm
+                                confirm-button-text='确认'
+                                cancel-button-text='取消'
+                                icon="el-icon-info"
+                                icon-color="red"
+                                title="是否删除选中数据？"
+                                @confirm="deleteSelect()">
+                                <el-button slot="reference" icon = "el-icon-delete" type="danger">删除</el-button>
+                            </el-popconfirm>
+                        </el-container>
+                    </el-container>
+
+                    <el-button :disabled="AnalysisExist" type="primary" @click="ScoreOrAnalysis=!ScoreOrAnalysis" style="height: 30%;">课程分数统计图<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+
+                </el-container>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pagenum"
+                    :page-sizes="[10, 15, 25, 30]"
+                    :page-size="pagesize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="totalpage" style="margin-top: 10px;margin-bottom: 10px">
+                </el-pagination>
+
+                <el-container class="查找结果表格" style="margin-top: 20px">
+                    <el-table
+                        ref = "ScoreInfo"
+                        :data="FromDbInfo"
+                        style="width: 70%"
+                        max-height="auto"
+                        @selection-change="handleSelectionChange">
+                        <el-table-column
+                            type="selection"
+                            width="55">
+                        </el-table-column>
+                        <el-table-column fixed="left"
+                                         prop="semester" label="学期" width="150" sortable>
+                        </el-table-column>
+                        <el-table-column
+                            prop="studentId" label="学号" width="130" sortable>
+                        </el-table-column>
+                        <el-table-column
+                            prop="studentName" label="学生姓名" width="120">
+                        </el-table-column>
+                        <el-table-column
+                            prop="courseId" label="课程号" width="150" sortable>
+                        </el-table-column>
+                        <el-table-column
+                            prop="courseName" label="课程名字" width="150">
+                        </el-table-column>
+                        <el-table-column
+                            prop="score" label="平时成绩" width="150" sortable>
+                        </el-table-column>
+                        <el-table-column
+                            prop="testScore" label="考试成绩" width="150" sortable>
+                        </el-table-column>
+                        <el-table-column
+                            prop="finalScore" label="综合成绩" width="150" sortable>
+                        </el-table-column>
+                        <el-table-column
+                            prop="scorePoint" label="绩点" width="150" sortable>
+                        </el-table-column>
+                        <el-table-column
+                            fixed="right" label="操作" width="170">
+                            <template slot-scope="scope">
+                                <el-button  @click="editClick(scope.row)" type="text" size="medium">编辑</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-container>
+                <el-dialog title="修改成绩" :visible.sync="dialogFormVisible">
+                    <el-form :model="form">
+                        <el-form-item label="学生姓名" :label-width="formLabelWidth">
+                            <el-input v-model="form.studentName" disabled = true ></el-input>
+                        </el-form-item>
+                        <el-form-item label="课程" :label-width="formLabelWidth">
+                            <el-input v-model="form.courseName" disabled = true ></el-input>
+                        </el-form-item>
+                        <el-form-item label="平时成绩" :label-width="formLabelWidth">
+                            <el-input v-model="form.score" ></el-input>
+                        </el-form-item>
+                        <el-form-item label="考试成绩" :label-width="formLabelWidth">
+                            <el-input v-model="form.testScore"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="dialogFormVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="confirmEdit">确 定</el-button>
+                    </div>
+                </el-dialog>
             </el-container>
-            <el-container class="学号，学生名" style="margin-top: 20px;display: flex;flex-direction: row">
-                <el-input placeholder="请输入学生号" suffix-icon="el-icon-user" v-model="input.studentId" style="width:40%;margin-right: 5px"></el-input>
-                <el-input placeholder="请输入学生姓名" suffix-icon="el-icon-user" v-model="input.studentName" style="width:40% ;margin-right: 5px"></el-input>
+        </transition>
+
+        <transition name="el-zoom-in-center">
+            <el-container class="第二页面，成绩分析" v-show="!ScoreOrAnalysis" style="display: flex;flex-direction: column">
+                <el-button type="primary" @click="ScoreOrAnalysis=!ScoreOrAnalysis" style="height: 30%;width: 7%;margin-top: 10px">返回<i class="el-icon-arrow-left el-icon--left"></i></el-button>
+                <el-container class = "饼图分析" style="width:100%;display: flex;flex-direction: column;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);margin-top:10px" >
+                    <el-container class="统计分数结果（平均分，最高分，最低分）" style = "margin-top: 20px;margin-right: 20px">
+                        <el-descriptions :column="4"  border>
+                            <el-descriptions-item>
+                                <template slot="label">课程</template>
+                                {{ScoreAnalysis.courseName}}
+                            </el-descriptions-item>
+                            <el-descriptions-item>
+                                <template slot="label" >平均分</template>
+                                {{ScoreAnalysis.averageScore}}
+                            </el-descriptions-item>
+                            <el-descriptions-item>
+                                <template slot="label">最高分</template>
+                                {{ScoreAnalysis.highestScore}}
+                            </el-descriptions-item>
+                            <el-descriptions-item>
+                                <template slot="label">最低分</template>
+                                {{ScoreAnalysis.lowestScore}}
+                            </el-descriptions-item>
+                        </el-descriptions>
+                    </el-container>
+                    <el-container style="display: flex;flex-direction: row">
+                        <el-container style="margin-right: 20px">
+                            <div style="width:450px;height:520px" id="final" ref="final"></div>
+                        </el-container>
+                        <el-container style="margin-right: 20px">
+                            <div style="width:450px;height:520px" id="test" ref="test"></div>
+                        </el-container>
+                        <el-container style="margin-right: 20px">
+                            <div style="width:450px;height:520px" id="daily" ref="daily"></div>
+                        </el-container>
+                    </el-container>
+
+                </el-container>
             </el-container>
 
-            <el-container class="查找，删除按钮" style="margin-top: 5px;display: flex;flex-direction: row">
-                <el-button @click="searchClick()" type="primary" icon="el-icon-search" style="margin-right: 10px">搜索</el-button>
-                <el-popconfirm
-                    confirm-button-text='确认'
-                    cancel-button-text='取消'
-                    icon="el-icon-info"
-                    icon-color="red"
-                    title="是否删除选中数据？"
-                    @confirm="deleteSelect()">
-                    <el-button slot="reference" icon = "el-icon-delete" type="danger">删除</el-button>
-                </el-popconfirm>
-            </el-container>
-        </el-container>
-        <el-container class="统计分数结果（平均分，最高分，最低分）" style = "margin-top: 20px">
-            <el-descriptions :column="4"  border>
-                <el-descriptions-item>
-                    <template slot="label">课程</template>
-                    {{ScoreAnalysis.courseName}}
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template slot="label">平均分</template>
-                    {{ScoreAnalysis.averageScore}}
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template slot="label">最高分</template>
-                    {{ScoreAnalysis.highestScore}}
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template slot="label">最低分</template>
-                    {{ScoreAnalysis.lowestScore}}
-                </el-descriptions-item>
-            </el-descriptions>
-        </el-container>
+        </transition>
     </el-container>
-    <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pagenum"
-        :page-sizes="[10, 15, 25, 30]"
-        :page-size="pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="totalpage" style="margin-top: 10px;margin-bottom: 10px">
-    </el-pagination>
-
-    <el-container class="查找结果表格" style="margin-top: 20px">
-
-        <el-table
-            ref = "ScoreInfo"
-            :data="FromDbInfo"
-            style="width: 70%"
-            max-height="auto"
-            @selection-change="handleSelectionChange">
-            <el-table-column
-                type="selection"
-                width="55">
-            </el-table-column>
-            <el-table-column fixed="left"
-                             prop="semester" label="学期" width="150" sortable>
-            </el-table-column>
-            <el-table-column
-                prop="studentId" label="学号" width="130" sortable>
-            </el-table-column>
-            <el-table-column
-                prop="studentName" label="学生姓名" width="120">
-            </el-table-column>
-            <el-table-column
-                prop="courseId" label="课程号" width="150" sortable>
-            </el-table-column>
-            <el-table-column
-                prop="courseName" label="课程名字" width="150">
-            </el-table-column>
-            <el-table-column
-                prop="score" label="平时成绩" width="150" sortable>
-            </el-table-column>
-            <el-table-column
-                prop="testScore" label="考试成绩" width="150" sortable>
-            </el-table-column>
-            <el-table-column
-                prop="finalScore" label="综合成绩" width="150" sortable>
-            </el-table-column>
-            <el-table-column
-                prop="scorePoint" label="绩点" width="150" sortable>
-            </el-table-column>
-            <el-table-column
-                fixed="right" label="操作" width="170">
-                <template slot-scope="scope">
-                    <el-button  @click="editClick(scope.row)" type="text" size="medium">编辑</el-button>
-
-                </template>
-            </el-table-column>
-        </el-table>
-    </el-container>
-    <el-dialog title="修改成绩" :visible.sync="dialogFormVisible">
-        <el-form :model="form">
-            <el-form-item label="学生姓名" :label-width="formLabelWidth">
-                <el-input v-model="form.studentName" disabled = true ></el-input>
-            </el-form-item>
-            <el-form-item label="课程" :label-width="formLabelWidth">
-                <el-input v-model="form.courseName" disabled = true ></el-input>
-            </el-form-item>
-            <el-form-item label="平时成绩" :label-width="formLabelWidth">
-                <el-input v-model="form.score" ></el-input>
-            </el-form-item>
-            <el-form-item label="考试成绩" :label-width="formLabelWidth">
-                <el-input v-model="form.testScore"></el-input>
-            </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="confirmEdit">确 定</el-button>
-        </div>
-    </el-dialog>
-</el-container>
 
 </template>
 
 
 <script>
 import axios from "axios"
+import * as echarts from "echarts";
 export default {
     name: "AdminScore",
     data(){
@@ -172,10 +201,126 @@ export default {
                 score:null,
                 testScore:null,
             },
-            currentRow:null
+            currentRow:null,
+            ScoreOrAnalysis:true,//表格页面和分析界面跳转切换
         }
     },
+
     methods:{
+        rank(score){
+            if(score>=90) return 5;
+            if(score>=85) return 4;
+            if(score>=75) return 3;
+            if(score>=66) return 2;
+            if(score>=60) return 1;
+            return 0;
+        },
+        creatEchartData(scoreData,divide){
+            let result = []
+            for(let i =0;i<scoreData.length;i++){
+                if(scoreData[i]!=0){
+                    result.push({
+                        value:scoreData[i],
+                        name:divide[i]
+                    })
+                }
+
+            }
+            return result;
+        },
+        initEchart(){
+            const divide=["0-60","60-65","66-74","75-84","85-89","90-100"]
+            let final = Array(6).fill(0);
+            let test = Array(6).fill(0);
+            let daily = Array(6).fill(0);
+            console.log("统计页面",this.AllScore)
+            //统计三种分数的每个区间的人数
+            for(const item of this.AllScore)
+            {
+                let finalscore = item.finalScore;
+                let testscore = item.testScore;
+                let dailyscore = item.score;
+                final[this.rank(finalscore)]++;
+                test[this.rank(testscore)]++;
+                daily[this.rank(dailyscore)]++;
+            }
+            //根据三种成绩的分布数组和divide数组构造data1，2，3字典
+            let finalData = []
+            let testData = []
+            let dailyData = []
+            finalData = this.creatEchartData(final,divide)
+            testData = this.creatEchartData(test,divide)
+            dailyData = this.creatEchartData(daily,divide)
+            const option1 ={
+                title: {
+                    text: '综合成绩',
+                    left: 'center',
+                    top: 'center'
+                },
+                series:[
+                    {
+                        type:'pie',
+                        data:finalData,
+                        label:{
+                            show:true,
+                            position:"inside",
+                            formatter: '{b}: {c}人',
+                            fontSize: 12,
+                            fontWeight: 'bold'
+                        },
+                        radius: ['30%', '60%']
+                    }
+                ],
+            };
+            const option2 ={
+                title: {
+                    text: '考试成绩',
+                    left: 'center',
+                    top: 'center'
+                },
+                series:[
+                    {
+                        type:'pie',
+                        data:testData,
+                        label:{
+                            show:true,
+                            position:"inside",
+                            formatter: '{b}: {c}人',
+                            fontSize: 12,
+                            fontWeight: 'bold'
+                        },
+                        radius: ['30%', '60%']
+                    }
+                ],
+            };
+            const option3 ={
+                title: {
+                    text: '平时成绩',
+                    left: 'center',
+                    top: 'center'
+                },
+                series:[
+                    {
+                        type:'pie',
+                        data:dailyData,
+                        label:{
+                            show:true,
+                            position:"inside",
+                            formatter: '{b}: {c}人',
+                            fontSize: 12,
+                            fontWeight: 'bold'
+                        },
+                        radius: ['30%', '60%']
+                    }
+                ],
+            };
+            const myChart1 = echarts.init(this.$refs.final);
+            myChart1.setOption(option1);
+            const myChart2 = echarts.init(this.$refs.test);
+            myChart2.setOption(option2);
+            const myChart3 = echarts.init(this.$refs.daily);
+            myChart3.setOption(option3);
+        },
         ScoreTrans(finalScore){
             switch (true) {
                 case finalScore>= 90:
@@ -368,6 +513,7 @@ export default {
                             if((this.input.courseId!==''||this.input.courseName!=='')
                                 &&(this.input.studentId===''&&this.input.studentName==='')){
                                 console.log("只搜索了课程");
+                                this.initEchart();
                                 this.ScoreAnalysis.courseName = this.FromDbInfo[0].courseName;
                                 const sum = this.AllScore.reduce((acc, cur) => acc + cur.finalScore, 0);
                                 this.ScoreAnalysis.averageScore = sum / this.AllScore.length;
@@ -447,7 +593,10 @@ export default {
     },
     created(){
         this.loadData();
-    }
+    },
+    mounted(){
+        this.initEchart();
+    },
 }
 </script>
 

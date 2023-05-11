@@ -5,8 +5,12 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/global.css';
 import axios from 'axios';
+import echarts from 'echarts';
+
+Vue.prototype.$echarts = echarts
 
 Vue.prototype.$axios = axios;
+
 Vue.config.productionTip = false;
 axios.defaults.baseURL = 'http://localhost:8080';
 Vue.use(ElementUI);
