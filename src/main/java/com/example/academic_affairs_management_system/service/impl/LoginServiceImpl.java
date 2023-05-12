@@ -16,8 +16,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.tomcat.util.buf.HexUtils.toHexString;
+
 
 @Service
 public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements ILoginService {
@@ -67,11 +72,24 @@ public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements
     }
 
     @Override
-    public Login getlogin(String username, String password){
+    public Login getlogin(String username, String password)  {
+        System.out.println(username+password);
         QueryWrapper<Login> queryWrapper = new QueryWrapper<Login>();
         queryWrapper.eq("id",username);
+        String encodepass = "";
         if(!password.isEmpty()){
-            queryWrapper.eq("password",password);
+            MessageDigest md5 = null;
+            try {
+                md5 = MessageDigest.getInstance("md5");
+                md5.update(password.getBytes(StandardCharsets.UTF_8));
+                byte[] md5Bytes = md5.digest();
+                encodepass=toHexString(md5Bytes);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            md5.update("456".getBytes());
+            System.out.println(encodepass);
+            queryWrapper.eq("password",encodepass);
         }
         try{
             return getOne(queryWrapper);
