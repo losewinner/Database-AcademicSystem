@@ -85,6 +85,18 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     }
 
     @Override
+    public List<StuCourse> getStuSelPage(String semester, String courseId, String courseName){
+        //获得想要的对应的数据的总数
+        return selectcourseMapper.getStuSelPage(semester,courseId,courseName);
+    }
+
+    @Override
+    public List<StuCourse> getStuSelCourse(Integer pageNum, Integer pageSize, String semester, String courseId, String courseName){
+        Integer pageCurrent = (pageNum-1)*pageSize;
+        return selectcourseMapper.getStuSelCourse(pageCurrent,pageSize,semester, courseId, courseName);
+    }
+
+    @Override
     public List<Score> getScore(Integer pageNum,Integer pageSize, String semester, String studentId, String studentName, String courseId, String courseName){
         Integer pageCurrent = (pageNum-1)*pageSize;
         return selectcourseMapper.getScore(pageCurrent,pageSize,semester, studentId, studentName, courseId, courseName);

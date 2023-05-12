@@ -14,7 +14,6 @@ public class StudentDto {
     private LocalDateTime birth;
     private String home;
     private String phone;
-    @TableField("deptId")
     private String deptid;
     private String token;
 }

@@ -68,6 +68,7 @@ export default {
         selectedRowIndexes:[],
         maxOptionValue:1,
         FromDbInfo:[],
+        ToDbInfo:[],
         AllScore:[],
         averageScore:0,
         pagesize:5,
@@ -187,15 +188,14 @@ export default {
               console.log("yeyeye",res.data);    //获取成功
               for(const item of res.data)
               {
-                  if(item.status===0)       //未能结课的学期不放进列表中
+                  if(item.status===3)       //未能结课的学期不放进列表中
                   {
-                      //continue;
+                      let newDict={};
+                      newDict['value'] = '选项'+that.maxOptionValue;
+                      newDict['label'] = item.semester;
+                      that.optionSemester.push(newDict);
+                      that.maxOptionValue+=1;
                   }
-                  let newDict={};
-                  newDict['value'] = '选项'+that.maxOptionValue;
-                  newDict['label'] = item.semester;
-                  that.optionSemester.push(newDict);
-                  that.maxOptionValue+=1;
               }
               console.log('wwwwwww',that.optionSemester);
           })

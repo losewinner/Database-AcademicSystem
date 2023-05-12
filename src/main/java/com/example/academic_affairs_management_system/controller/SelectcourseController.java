@@ -126,6 +126,19 @@ public class SelectcourseController {
         return Result.success(allScore,allScore.size());
     }
 
+    @PostMapping("/getStuSelPage")
+    public Result getStuSelPage(@RequestBody QueryPageParam queryPageParam){
+        /*
+         * 返回记录总数和综合成绩与绩点*/
+        HashMap param = queryPageParam.getParam();
+        String semester = param.get("semester").toString();
+        String courseId = param.get("courseId").toString();
+        String courseName = param.get("courseName").toString();
+        List<StuCourse> page =  iSelectcourseService.getStuSelPage(semester,courseId,courseName);
+        System.out.println("搜索记录后"+page);
+        return Result.success(page,page.size());
+    }
+
     @PostMapping("/getStuScore")
     public Result getStuScore(@RequestBody QueryPageParam queryPageParam){
         /*
@@ -136,6 +149,21 @@ public class SelectcourseController {
         String semester = param.get("semester").toString();
         String studentId = param.get("studentId").toString();
         List<StuScore> data = iSelectcourseService.getStuScore(pagenum,pagesize, semester,studentId);
+        return Result.success(data,data.size());
+    }
+
+    @PostMapping("/getStuSelCourse")
+    public Result getStuSelCourse(@RequestBody QueryPageParam queryPageParam){
+        /*
+         * 自由搜索【学期（必须），学号】，得到成绩列表
+         */
+        int pagenum = queryPageParam.getPagenum(),pagesize = queryPageParam.getPagesize();
+        HashMap param = queryPageParam.getParam();
+        String semester = param.get("semester").toString();
+        String courseId = param.get("courseId").toString();
+        String courseName = param.get("courseName").toString();
+        List<StuCourse> data = iSelectcourseService.getStuSelCourse(pagenum,pagesize,
+                semester,courseId,courseName);
         return Result.success(data,data.size());
     }
 

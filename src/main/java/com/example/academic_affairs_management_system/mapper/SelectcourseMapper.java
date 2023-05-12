@@ -72,6 +72,10 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     public List<StuScore> getStuScore(Integer pageCurrent, Integer pageSize, String semester, String studentId);
 
+    public List<StuCourse> getStuSelPage(String semester, String courseId, String courseName);
+
+    public List<StuCourse> getStuSelCourse(Integer pageCurrent, Integer pageSize, String semester, String courseId, String courseName);
+
     public List<StuCourse> getAllStuCourse(String semester, String studentId);
 
     public List<Score> getScore(Integer pageCurrent,Integer pageSize,String semester, String studentId, String studentName, String courseId, String courseName);

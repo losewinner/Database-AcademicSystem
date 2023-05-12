@@ -169,6 +169,10 @@ export default {
             axios.post("/selectcourse/getAllStuCourse?semester="+semester+"&studentId="+localStorage.getItem("userid")).then(res=>res.data).then(res=>{
                 console.log("？？？",res.data);
                 this.getClassTime(res.data);
+                    this.$message({
+                        type: 'success',
+                        message: `查找成功！`
+                    })
             })
         },
         loadData(){
@@ -182,10 +186,6 @@ export default {
                 console.log("yeyeye",res.data);    //获取成功
                 for(const item of res.data)
                 {
-                    if(item.status===0)       //未能结课的学期不放进列表中
-                    {
-                        //continue;
-                    }
                     let newDict={};
                     newDict['value'] = '选项'+that.maxOptionValue;
                     newDict['label'] = item.semester;

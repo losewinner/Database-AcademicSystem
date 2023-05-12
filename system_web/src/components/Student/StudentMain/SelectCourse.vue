@@ -21,11 +21,12 @@
         </el-container>
       </el-container>
     </el-container>
-      <el-container class="查找结果表格" style="margin-top: 30px">
+    <el-container class="查找结果表格" style="display:flex; flex-direction:column;margin-top: 30px">
       <el-table
           :data="FromDbInfoForSel"
-          style="width: 70%"
-          max-height="250">
+          style="width: 100%"
+          max-height="auto"
+          @selection-change="handleSelectionChangeForSel">
         <el-table-column fixed="left"
                          prop="semester" label="学期" width="150">
         </el-table-column>
@@ -35,41 +36,75 @@
         <el-table-column
             prop="courseName" label="课程名字" width="150">
         </el-table-column>
+          <el-table-column
+                  prop="courseCredit" label="学分" width="150">
+          </el-table-column>
+          <el-table-column
+                  prop="classTime" label="上课时间" width="200">
+          </el-table-column>
         <el-table-column
             prop="remnant" label="可选人数" width="100">
         </el-table-column>
         <el-table-column
-            prop="limit" label="开课人数" width="100">
+            prop="volume" label="开课人数" width="100">
         </el-table-column>
         <el-table-column
             fixed="right" label="操作" width="170">
           <template slot-scope="scope">
-            <el-button  @click="editClick(scope.row)" type="text" size="medium">选课</el-button>
+            <el-button  @click="selectCourse(scope.row)" type="text" size="medium">选课</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="pagenum"
+                :page-sizes="[5, 10, 15, 20]"
+                :page-size="pagesize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total" style="margin-top: 10px;margin-bottom: 10px">
+        </el-pagination>
     </el-container>
     </el-container>
+
     <el-container v-if="radio==2" style="display: flex;flex-direction: column;margin-top:0px">
-      <el-container class="查找结果表格" style="margin-top: 0px">
+        <el-container el-container style="height: 20px; margin-top:15px">
+            <el-select v-model="input.selectSemester" placeholder="请选择学期" style="width:30%; margin-right: 5px">
+                <el-option v-for="item in optionSemester"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
+                </el-option>
+            </el-select>
+            <el-container style="flex-direction: column;width: 200px">
+                <el-button @click="refreshClick()" type="primary" icon="el-icon-refresh" style="width: 120px">刷新</el-button>
+            </el-container>
+        </el-container>
+      <el-container class="查找结果表格" style="display:flex; flex-direction:column;margin-top: 30px">
         <el-table
-            :data="FromDbInfoForSel"
-            style="width: 70%"
-            max-height="250">
-          <el-table-column fixed="left"
-                           prop="semester" label="学期" width="150">
-          </el-table-column>
-          <el-table-column
-              prop="courseId" label="课程号" width="150">
-          </el-table-column>
-          <el-table-column
-              prop="courseName" label="课程名字" width="150">
-          </el-table-column>
+            :data="FromDbInfoForDel"
+            style="width: 100%"
+            max-height="auto">
+            <el-table-column fixed="left"
+                             prop="semester" label="学期" width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="courseId" label="课程号" width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="courseName" label="课程名字" width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="courseCredit" label="学分" width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="classTime" label="上课时间" width="200">
+            </el-table-column>
           <el-table-column
               fixed="right" label="操作" width="170">
             <template slot-scope="scope">
               <el-button
-                  @click.native.prevent="deleteRow(scope.$index, FromDbInfoForDel)"
+                  @click.native.prevent="dropCourse(scope.row)"
                   type="text"
                   size="medium" style="color:red">
                 退课
@@ -85,94 +120,268 @@
 
 
 <script>
-import axios from "axios"
+import axios from "axios";
+
 export default {
-  name: "AdminScore",
+  name: "SelectCourse",
   data(){
     //如果data里面什么都不写，页签跳转会出问题！
     return{
       radio:'1',
-      optionSemester:[{value:'选项1',label:'2023春季'}], //后端导入学期表，获得学期
+      optionSemester:[], //后端导入学期表，获得学期
       selectionOfSearch:'',
+        selectedRowIndexes:[],
+        pagesize:5,
+        pagenum:1,
+        totalpage:0,
+        total:0,
       maxOptionValue:1,
       input:{        //前端输入，通过前端此字典绑定，然后去后端查找
         courseId:'',
         courseName:'',
         selectSemester:'',
       },
-      FromDbInfoForSel:[{         //后端通过前端的输入查找到的信息放在这个字典数组中，
-        semester: '2023春季',
-        courseId: '12345',
-        courseName:'BB88',
-        limit:60,
-        remnant:10
-      }],
-      FromDbInfoForDel:[{         //后端通过前端的输入查找到的信息放在这个字典数组中，
-        semester: '2023春季',
-        courseId: '12345',
-        courseName:'BB88',
-      }],
-      ScoreAnalysis:{      //后端数据库制作三种分的视图，将三分记下来，放进这个字典中。
-        averageScore:50,
-        highestScore:100,
-        lowestScore:0.
-      }
+      FromDbInfoForSel:[],
+      FromDbInfoForDel:[],
+        allClassTime: [],
+      ToDbInfo:[],
     }
   },
   methods:{
-    deleteRow(index,rows){     //不仅前端移除，且数据库选课表中也要把这个学生的元组删去。
-      rows.splice(index,1);
-    },
-    editClick(row){
-      console.log(row)
-    },
-    searchClick(){
-      //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
-      console.log("wtf")
-      if(this.selectSemester===''){
-        this.$alert('请选择学期！', '提示', {
-          confirmButtonText: '确定',
-          callback: action => {
-            this.$message({
-              type: 'info',
-              message: `信息: ${ action }`
-            });
+      refreshClick(p=1){
+          //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
+          console.log("wtf",this.input.selectSemester)
+          if(this.input.selectSemester===''){
+              this.$alert('请选择学期！', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                      this.$message({
+                          type: 'info',
+                          message: `信息: ${ action }`
+                      });
+                  }
+              });
           }
-        });
-      }
+          //然后获取对应的数据
+          //解析所选的学期
+          var semester_dict = this.optionSemester.find(x=>x.value===this.input.selectSemester);
+          var semester = semester_dict.label;
+          //按照学生和课程的输入来选择
+          console.log("semester ",semester);
+          axios.post("/selectcourse/getAllStuCourse?semester="+semester+"&studentId="+localStorage.getItem("userid")).then(res=>res.data).then(res=>{
+              console.log("？？？",res.data);
+              this.FromDbInfoForDel = res.data;
+              if(p==1) {
+                  this.$message({
+                      type: 'success',
+                      message: `查找成功！`
+                  })
+              }
+          })
+      },
+      searchClick(){
+          this.refreshClick(0);  // 用于选课判断
+          //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
+          console.log("wtf",this.input.selectSemester)
+          if(this.input.selectSemester===''){
+              this.$alert('请选择学期！', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                      this.$message({
+                          type: 'info',
+                          message: `信息: ${ action }`
+                      });
+                  }
+              });
+          }
+          //然后获取对应的数据
+          //解析所选的学期
+          var semester_dict = this.optionSemester.find(x=>x.value===this.input.selectSemester);
+          var semester = semester_dict.label;
+          //按照学生和课程的输入来选择
+          console.log("semester ",semester);
+          axios.post("/selectcourse/getStuSelPage",{
+              param:{
+                  semester:semester,
+                  studentId:'',
+                  courseId:this.input.courseId,
+                  courseName:this.input.courseName
+              }
+          }).then(res=>res.data).then(res=>{
+              console.log("所有课程",res.data)
+              this.totalpage = Math.ceil(res.total/this.pagesize);
+              this.total=res.total;
+              axios.post("/selectcourse/getStuSelCourse",{
+                  pagesize:this.pagesize,
+                  pagenum:this.pagenum,
+                  param:{
+                      semester:semester,
+                      studentId:'',
+                      courseId :this.input.courseId,
+                      courseName: this.input.courseName
+                  }
+              }).then(res=>res.data).then(res=>{
+                  if(res.code=="200"){
+                      this.FromDbInfoForSel = res.data;
+                      console.log("选课",this.FromDbInfoForSel)
+                      this.$message({
+                          type: 'success',
+                          message: `查找成功！`,
+                      });
 
-      //先获取input的东西（v-model双向绑定自动获取了
-      console.log(this.input);
+                  }
+              })
+          })
+      },
+      loadData(){
+          //向数据库请求数据，涉及：学期表
+          this.maxOptionValue = 1;
+          this.optionSemester = [];
+          console.log("w");
+          //获取学期信息，放进optionSemester中
+          var that = this;
+          axios.get("/semestatus/list").then(res=>{
+              console.log("yeyeye",res.data);    //获取成功
+              for(const item of res.data)
+              {
 
-    },
-    loadData(){
-      //向数据库请求数据，涉及：学期表，学生表，选课表，教师表
-      console.log("w");
-      //获取学期信息，放进optionSemester中
-      //先尝试只获取学期表，
-      axios.get("http://127.0.0.1:8080/semestatus/list").then(res=>{
-        console.log("yeyeye",res.data);    //获取成功
-        for(const item of res.data)
-        {
-          if(item.status===0)       //未能结课的学期不放进列表中
+                  if(item.status===1)       //未能结课的学期才能选课退课
+                  {
+                      let newDict={};
+                      newDict['value'] = '选项'+that.maxOptionValue;
+                      newDict['label'] = item.semester;
+                      that.optionSemester.push(newDict);
+                      that.maxOptionValue+=1;
+                  }
+
+              }
+              console.log('wwwwwww',that.optionSemester);
+          })
+      },
+      parseClassTime(classTime) {
+          // 解析上课时间，返回[day, start, end]数组
+          let day = this.parseDay(classTime);
+          let [start, end] = classTime.slice(2).split("-");
+          return [day, parseInt(start), parseInt(end)];
+      },
+      parseDay(classTime) {
+          // 解析上课时间中的星期几，返回0-6表示周一至周日
+          let dayStr = classTime.match(/周(.)\d+-\d+/)[1];
+          let dayMap = new Map([
+              ["一", 1],
+              ["二", 2],
+              ["三", 3],
+              ["四", 4],
+              ["五", 5],
+              ["六", 6],
+              ["日", 7],
+          ]);
+          return dayMap.get(dayStr);
+      },
+      selectCourse(row){
+          console.log("sel", row);
+          if(row.remnant<=0)
           {
-            continue;
+              this.$message({
+                  type: 'error',
+                  message: `选课失败！课程容量不足！`
+              })
+              return;
           }
-          let newDict={};
-          newDict['value'] = '选项'+(this.maxOptionValue+1);
-          newDict['label'] = item.semester;
-          this.optionSemester.push(newDict);
-          this.maxOptionValue+=1;
-        }
-        console.log('wwwwwww',this.optionSemester);
-      })
+          for(const item of this.FromDbInfoForDel)
+          {
+              if(row.courseId==item.courseId&&row.courseName==item.courseName&&row.staffId==item.staffId)
+              {
+                  this.$message({
+                      type: 'error',
+                      message: `选课失败！已选同类型课程！`
+                  })
+                  return;
+              }
+          }
+          for(const item of this.FromDbInfoForDel)
+          {
+              let str0 = row.classTime;
+              let newList = str0.split(","); // 新选课时间
+              let str1 = item.classTime;
+              let oldList = str1.split(","); // 已选课时间
+              for(const i of newList)
+              {
+                  for(const j of oldList)
+                  {
+                      let [day0, start0, end0] = this.parseClassTime(i); // 解析上课时间
+                      let [day1, start1, end1] = this.parseClassTime(j);
+                      if(day0==day1)
+                      {
+                          if((start0<=start1&&start1<=end0) ||(start1<=start0&&start0<=end1))
+                          {
+                              this.$message({
+                                  type: 'error',
+                                  message: `选课失败！选课时间冲突！`
+                              })
+                              return;
+                          }
+                      }
+                  }
+              }
+          }
+          // 修改开课表中remnant-1，selectcourse表中新增数据
 
 
-    }
+          this.$message({
+              type: 'success',
+              message: `选课成功！`
+          })
+
+
+      },
+
+      dropCourse(row){
+          console.log("del", row);
+
+          // 修改开课表中remnant+1，selectcourse表中删除数据
+
+          this.$message({
+              type: 'success',
+              message: `退课成功！`
+          })
+      },
+
+      handleCurrentChange(currentPage) {
+          // 分页有问题：为什么有问题呢？
+          // 是因为数据库也分页，然后它传来前端的时候，总数据只有一页的长度，所以totalpage会出问题
+          // 修改当前页码，并重新查询数据
+          this.pagenum = currentPage;
+          if(this.selectSemester==='')
+          {
+              this.loadData();
+          }
+          else{
+              this.searchClick();
+          }
+
+      },
+      handleSizeChange(pageSize){
+          this.pagesize = pageSize;
+          if(this.selectSemester==='')
+          {
+              this.loadData();
+          }
+          else{
+              this.searchClick();
+          }
+      },
+      handleSelectionChangeForSel(val){
+          this.ToDbInfo = val;
+          console.log("选择框",this.ToDbInfo);
+          this.selectedRowIndexes = val.map(item => this.FromDbInfoForSel.indexOf(item));
+          this.selectedRowIndexes.sort((a,b)=>b-a)
+          console.log(this.selectedRowIndexes);
+      },
   },
-  created(){
-    this.loadData();
-  }
+    created(){
+        this.loadData();
+    }
 }
 </script>
 
