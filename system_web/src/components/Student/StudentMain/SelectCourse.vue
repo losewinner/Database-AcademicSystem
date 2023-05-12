@@ -289,7 +289,6 @@ export default {
               })
               return;
           }
-          /*
           for(const item of this.FromDbInfoForDel)
           {
               if(row.courseId==item.courseId&&row.courseName==item.courseName&&row.staffId==item.staffId)
@@ -328,44 +327,64 @@ export default {
                   }
               }
           }
-           */
           // 修改开课表中remnant-1，selectcourse表中新增数据
-          let num = -1;
-          axios.post("/selectcourse/changeNum?num="+num
+          // console.log("？？？？？", localStorage.getItem("userid"));
+          axios.post("/selectcourse/selectCourse?studentId="+localStorage.getItem("userid")
               +"&semester="+row.semester
               +"&courseId="+row.courseId
               +"&staffId="+row.staffId
               +"&classTime="+row.classTime
           ).then(res=>res.data).then(res=> {
               if (res.code == "200") {
-                  this.$message({
-                      type: 'success',
-                      message: `选课成功！`
+                  let num = -1;
+                  axios.post("/selectcourse/changeNum?num="+num
+                      +"&semester="+row.semester
+                      +"&courseId="+row.courseId
+                      +"&staffId="+row.staffId
+                      +"&classTime="+row.classTime
+                  ).then(res=>res.data).then(res=> {
+                      if (res.code == "200") {
+                          this.$message({
+                              type: 'success',
+                              message: `选课成功！`
+                          })
+                          this.searchClick(0);
+                      }
                   })
-                  this.searchClick(0);
               }
           })
+
       },
 
       dropCourse(row){
           console.log("del", row);
 
           // 修改开课表中remnant+1，selectcourse表中删除数据
-          let num = 1;
-          axios.post("/selectcourse/changeNum?num="+num
+          axios.post("/selectcourse/dropCourse?studentId="+row.studentId
               +"&semester="+row.semester
               +"&courseId="+row.courseId
               +"&staffId="+row.staffId
               +"&classTime="+row.classTime
           ).then(res=>res.data).then(res=> {
               if (res.code == "200") {
-                  this.$message({
-                      type: 'success',
-                      message: `退课成功！`
+                  let num = 1;
+                  axios.post("/selectcourse/changeNum?num="+num
+                      +"&semester="+row.semester
+                      +"&courseId="+row.courseId
+                      +"&staffId="+row.staffId
+                      +"&classTime="+row.classTime
+                  ).then(res=>res.data).then(res=> {
+                      if (res.code == "200") {
+                          this.$message({
+                              type: 'success',
+                              message: `退课成功！`
+                          })
+                          this.refreshClick(0);
+                      }
                   })
-                  this.refreshClick(0);
               }
           })
+
       },
 
       handleCurrentChange(currentPage) {

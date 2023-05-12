@@ -7,9 +7,7 @@ import com.example.academic_affairs_management_system.controller.dto.StudentPack
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -86,6 +84,20 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
             "and opencourse.staffId = #{staffId} " +
             "and opencourse.classTime = #{classTime}" )
     boolean changeNum(Integer num, String semester, String courseId, String staffId, String classTime);
+
+    @Delete("DELETE FROM selectcourse " +
+            "where " +
+            "selectcourse.studentId = #{studentId} " +
+            "and selectcourse.semester = #{semester} " +
+            "and selectcourse.courseId = #{courseId} " +
+            "and selectcourse.staffId = #{staffId} " +
+            "and selectcourse.classTime = #{classTime}" )
+    boolean dropCourse(String studentId, String semester, String courseId, String staffId, String classTime);
+
+    @Insert("INSERT INTO selectcourse (studentId, semester, courseId, staffId, classTime) " +
+            "VALUES " +
+            "(#{studentId}, #{semester}, #{courseId}, #{staffId}, #{classTime})" )
+    boolean selectCourse(String studentId, String semester, String courseId, String staffId, String classTime);
 
     public List<Score> getScore(Integer pageCurrent,Integer pageSize,String semester, String studentId, String studentName, String courseId, String courseName);
 

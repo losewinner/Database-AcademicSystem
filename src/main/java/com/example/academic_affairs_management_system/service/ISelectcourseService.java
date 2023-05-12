@@ -46,6 +46,10 @@ public interface ISelectcourseService extends IService<Selectcourse> {
 
     public Result changeNum(Integer num, String semester, String courseId, String staffId, String classTime);
 
+    public Result dropCourse(String studentId, String semester, String courseId, String staffId, String classTime);
+
+    public Result selectCourse(String studentId, String semester, String courseId, String staffId, String classTime);
+
     public List<Score> getScore(Integer pageNum,Integer pageSize, String semester, String studentId, String studentName, String courseId, String courseName);
 
     public Result AdminDelScore(List<delScore> delList);

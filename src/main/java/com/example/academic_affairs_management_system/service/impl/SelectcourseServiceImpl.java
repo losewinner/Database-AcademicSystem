@@ -103,6 +103,18 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
     }
 
     @Override
+    public Result dropCourse(String studentId, String semester, String courseId, String staffId, String classTime) {
+        if(!selectcourseMapper.dropCourse(studentId, semester, courseId, staffId, classTime)) return Result.fail("更新失败");
+        else return Result.success();
+    }
+
+    @Override
+    public Result selectCourse(String studentId, String semester, String courseId, String staffId, String classTime) {
+        if(!selectcourseMapper.selectCourse(studentId, semester, courseId, staffId, classTime)) return Result.fail("更新失败");
+        else return Result.success();
+    }
+
+    @Override
     public List<Score> getScore(Integer pageNum,Integer pageSize, String semester, String studentId, String studentName, String courseId, String courseName){
         Integer pageCurrent = (pageNum-1)*pageSize;
         return selectcourseMapper.getScore(pageCurrent,pageSize,semester, studentId, studentName, courseId, courseName);

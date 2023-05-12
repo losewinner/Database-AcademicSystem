@@ -156,24 +156,6 @@
             </where>
     </delete>
 
-<!--    <update id="changeNum">
-        UPDATE opencourse
-        SET remnant = remnant + #{num}
-        <where>
-            opencourse.semester = #{semester}
-            and opencourse.courseId = #{courseId}
-            and opencourse.staffId = #{staffId}
-            and opencourse.classTime = #{classTime}
-        </where>
-    </update>-->
-
-    <insert id="selectCourse">
-
-    </insert>
-
-    <delete id="dropCourse">
-
-    </delete>
 
     <select id="getCourseRank" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank">
         select semester,

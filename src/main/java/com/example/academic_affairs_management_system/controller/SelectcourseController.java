@@ -176,12 +176,24 @@ public class SelectcourseController {
     @PostMapping("/changeNum")
     public Result changeNum(@RequestParam Integer num,@RequestParam String semester,@RequestParam String courseId,
                             @RequestParam String staffId,@RequestParam String classTime){
-        System.out.println(num);
+        return Result.success(iSelectcourseService.changeNum(num, semester, courseId, staffId, classTime));
+    }
+
+    @PostMapping("/dropCourse")
+    public Result dropCourse(@RequestParam String studentId,@RequestParam String semester,@RequestParam String courseId,
+                            @RequestParam String staffId,@RequestParam String classTime){
+        return Result.success(iSelectcourseService.dropCourse(studentId, semester, courseId, staffId, classTime));
+    }
+
+    @PostMapping("/selectCourse")
+    public Result selectCourse(@RequestParam String studentId,@RequestParam String semester,@RequestParam String courseId,
+                             @RequestParam String staffId,@RequestParam String classTime){
+        System.out.println(studentId);
         System.out.println(semester);
         System.out.println(courseId);
         System.out.println(staffId);
         System.out.println(classTime);
-        return Result.success(iSelectcourseService.changeNum(num, semester, courseId, staffId, classTime));
+        return Result.success(iSelectcourseService.selectCourse(studentId, semester, courseId, staffId, classTime));
     }
 
     @PostMapping("/getScore")
@@ -285,11 +297,8 @@ public class SelectcourseController {
 
     @PostMapping("/updateScore")
     public Result updateScore(@RequestBody List<Student> LS){
-
         return Result.success(iSelectcourseService.updateScore(LS));
     }
-
-
 
 
 }
