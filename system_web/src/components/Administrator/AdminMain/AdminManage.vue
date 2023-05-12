@@ -6,6 +6,7 @@
 
               </el-container>
               <el-container class = "学生表" style="margin-top: 10px;width: 85%">
+
                   <el-table
                           :data="StudentInfo.filter(data => !search ||
                           data.studentName.toLowerCase().includes(search.toLowerCase()) ||
@@ -73,23 +74,25 @@
               <el-dialog title="修改成绩" :visible.sync="stuform.isVisible">
                   <el-form :model="stuform">
                       <el-form-item label="学号" :label-width="formLabelWidth">
-                          <el-input v-model="stuform.studentId" disabled= true></el-input>
+                          <el-input v-model="stuform.studentId" disabled= "true"></el-input>
                       </el-form-item>
                       <el-form-item label="学生姓名" :label-width="formLabelWidth">
                           <el-input v-model="stuform.studentName"></el-input>
                       </el-form-item>
                       <el-form-item label="性别" :label-width="formLabelWidth">
-                          <el-input v-model="stuform.sex"></el-input>
-                          <!--搞一个select框,不要用input-->
+                          <el-select v-model="stuform.sex" placeholder="请选择性别">
+                              <el-option v-for="item in optionSex"
+                                         :key="item.value"
+                                         :label="item.label"
+                                         :value="item.value">
+                              </el-option>
+                          </el-select>
                       </el-form-item>
-                      <el-form-item label="生日" :label-width="formLabelWidth">
+                      <el-form-item label="出生日期" :label-width="formLabelWidth">
                           <el-col :span="11">
-                              <el-date-picker type="date" placeholder="选择日期" v-model="stuform.date1" style="width: 100%;"></el-date-picker>
+                              <el-date-picker type="date" placeholder="选择日期" v-model="stuform.birth" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
                           </el-col>
                           <el-col class="line" :span="2">-</el-col>
-                          <el-col :span="11">
-                              <el-time-picker placeholder="选择时间" v-model="stuform.date2" style="width: 100%;"></el-time-picker>
-                          </el-col>
                       </el-form-item>
                       <el-form-item label="电话" :label-width="formLabelWidth">
                           <el-input v-model="stuform.phone"></el-input>
@@ -98,8 +101,13 @@
                           <el-input v-model="stuform.home" ></el-input>
                       </el-form-item>
                       <el-form-item label="所属学院" :label-width="formLabelWidth">
-                          <el-input v-model="stuform.deptName"  ></el-input>
-                          <!--搞一个selection框，不要用input-->
+                          <el-select v-model="stuform.deptName" placeholder="请选择">
+                              <el-option v-for="item in optionDept"
+                                         :key="item.value"
+                                         :label="item.label"
+                                         :value="item.value">
+                              </el-option>
+                          </el-select>
                       </el-form-item>
                   </el-form>
                   <div slot="footer" class="dialog-footer">
@@ -115,7 +123,6 @@
 
 <script>
 import axios from "axios";
-
 export default {
     name: "AdminManage",
     data(){
@@ -145,8 +152,7 @@ export default {
                 studentId: '',
                 studentName: '',
                 sex: '',
-                date1:'',
-                date2:'',
+                birth:'',
                 home: '',
                 phone:'',
                 deptName: '',
@@ -154,15 +160,47 @@ export default {
             },
             formLabelWidth:'80px',
             currentRow:null,
+            maxOptionDept:1,
+            optionDept:[], //后端导入院系表，获得院系名字
+            optionSex:[{
+                value:'选项1',
+                label:'男'
+            }, {
+                value: '选项2',
+                label: '女'
+            }]
         }
     },
     methods:{
+        loadData(){
+            this.loadStuData();
+            this.loadDeptData();
+        },
+        loadDeptData(){
+            console.log("加载院系信息");
+            this.maxOptionDept = 1;
+            this.optionDept = [];
+            //获取学院信息
+            axios.get("/dept/list").then(res=>{
+                console.log("院系",res.data);    //获取成功
+                for(const item of res.data)
+                {
+                    let newDict={};
+                    newDict['value'] = '选项'+this.maxOptionDept;
+                    newDict['label'] = item.deptname;
+                    this.optionDept.push(newDict);
+                    this.maxOptionDept+=1;
+                }
+                console.log("院系选择框",this.optionDept);
+            })
+
+        },
         loadStuData(){
             console.log("加载学生信息")
             axios.get("/student/manageList?keyword="+this.search).then(res=>res.data).then(res=>{
                 console.log(res.data);
                 this.StudentInfo = res.data;
-            })
+            });
         },
         stuEdit(row){
             //编辑学生表单
@@ -175,26 +213,41 @@ export default {
 
             this.stuform.home = this.currentRow.home
             this.stuform.phone = this.currentRow.phone
+            this.stuform.birth = this.currentRow.birth
             this.stuform.deptName = this.currentRow.deptName
 
-            const [dateString, timeString] = this.currentRow.birth.split(" ");
-            this.stuform.date1 = dateString
-            this.stuform.date2 = timeString
+
+
             console.log(this.stuform)
 
         },
         confirmEdit(){
             //等会看看能不能把这个表单提交改造成适应别的表单的提交
             this.stuform.isVisible = false;
+
+            //假如不改动deptName的话，下面这条就会出问题
+            //如果改了deptName，下面的第一个this。stuform。deptName就是对应的选项n
+            if(this.stuform.deptName.includes("选项")){
+                var dept_dict = this.optionDept.find(x=>x.value===this.stuform.deptName);
+                this.stuform.deptName = dept_dict.label;
+            }
+            if(this.stuform.sex.includes("选项")){
+                var sex_dict = this.optionSex.find(x=>x.value===this.stuform.sex);
+                this.stuform.sex = sex_dict.label;
+            }
+            console.log("进入确认过程",this.stuform);
             //利用this.stuform中的新更新的东西，传回到后端数据库
             axios.post("/student/manageEditStu",{
+                pagesize:0,
+                pagenum:10,
                 param:{
                     studentId:this.stuform.studentId,
                     studentName:this.stuform.studentName,
                     sex:this.stuform.sex,
-                    birth:this.stuform.date1+this.stuform.date2,
+                    birth:this.stuform.birth,
                     home:this.stuform.home,
-
+                    phone:this.stuform.phone,
+                    deptName:this.stuform.deptName
                 }
             }).then(res=>res.data).then(res=>{
                 console.log(res);
@@ -204,7 +257,7 @@ export default {
                         message: `更新成功！`,
                     });
                     //更新成功后需要刷新一下
-                    this.loadStuData();
+                    this.loadData();
                 }
                 else{
                     this.$message({
@@ -220,7 +273,7 @@ export default {
     },
 
     created() {
-        this.loadStuData();
+        this.loadData();
     },
 }
 </script>

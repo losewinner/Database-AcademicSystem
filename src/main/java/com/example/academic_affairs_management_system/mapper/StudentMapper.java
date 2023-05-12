@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -22,11 +23,12 @@ public interface StudentMapper extends BaseMapper<Student> {
     public List<StudentManage> manageList(String keyword);
 
     @Update("Update student set " +
-            "student.name = #{s.studentName}, " +
-            "sex = #{s.sex}, " +
-            "home = #{s.home}, " +
-            "phone = #{s.phone}, " +
-            "deptId = (select deptId from dept where deptName = #{s.deptName} " +
-            "where studentId = #{s.studentId}")
-    public boolean manageEditStu(StudentManage s);
+            "student.name = #{studentName}, " +
+            "sex = #{sex}, " +
+            "birth = #{birth}, "+
+            "home = #{home}, " +
+            "phone = #{phone}, " +
+            "deptId = (select deptId from dept where deptName = #{deptName}) " +
+            "where studentId = #{studentId}")
+    public boolean manageEditStu(String studentId, String studentName, String sex,LocalDate birth, String home, String phone, String deptName);
 }
