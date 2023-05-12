@@ -20,6 +20,5 @@ public interface IStudentService extends IService<Student> {
 
     public List<StudentManage> manageList(String keyword);
 
-    public boolean manageEditStu(StudentManage student);
 
 }

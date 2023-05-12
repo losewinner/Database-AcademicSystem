@@ -36,4 +36,6 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     public List<StudentManage> manageList(String keyword){
         return studentMapper.manageList(keyword);
     }
+
+
 }
