@@ -173,6 +173,17 @@ public class SelectcourseController {
         return Result.success(data,data.size());
     }
 
+    @PostMapping("/changeNum")
+    public Result changeNum(@RequestParam Integer num,@RequestParam String semester,@RequestParam String courseId,
+                            @RequestParam String staffId,@RequestParam String classTime){
+        System.out.println(num);
+        System.out.println(semester);
+        System.out.println(courseId);
+        System.out.println(staffId);
+        System.out.println(classTime);
+        return Result.success(iSelectcourseService.changeNum(num, semester, courseId, staffId, classTime));
+    }
+
     @PostMapping("/getScore")
     public Result getScore(@RequestBody QueryPageParam queryPageParam){
         /*

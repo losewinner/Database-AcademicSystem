@@ -179,7 +179,7 @@ export default {
               }
           })
       },
-      searchClick(){
+      searchClick(p=1){
           this.refreshClick(0);  // 用于选课判断
           //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
           console.log("wtf",this.input.selectSemester)
@@ -224,11 +224,12 @@ export default {
                   if(res.code=="200"){
                       this.FromDbInfoForSel = res.data;
                       console.log("选课",this.FromDbInfoForSel)
-                      this.$message({
-                          type: 'success',
-                          message: `查找成功！`,
-                      });
-
+                      if(p==1) {
+                          this.$message({
+                              type: 'success',
+                              message: `查找成功！`,
+                          });
+                      }
                   }
               })
           })
@@ -288,6 +289,7 @@ export default {
               })
               return;
           }
+          /*
           for(const item of this.FromDbInfoForDel)
           {
               if(row.courseId==item.courseId&&row.courseName==item.courseName&&row.staffId==item.staffId)
@@ -299,6 +301,7 @@ export default {
                   return;
               }
           }
+
           for(const item of this.FromDbInfoForDel)
           {
               let str0 = row.classTime;
@@ -325,25 +328,43 @@ export default {
                   }
               }
           }
+           */
           // 修改开课表中remnant-1，selectcourse表中新增数据
-
-
-          this.$message({
-              type: 'success',
-              message: `选课成功！`
+          let num = -1;
+          axios.post("/selectcourse/changeNum?num="+num
+              +"&semester="+row.semester
+              +"&courseId="+row.courseId
+              +"&staffId="+row.staffId
+              +"&classTime="+row.classTime
+          ).then(res=>res.data).then(res=> {
+              if (res.code == "200") {
+                  this.$message({
+                      type: 'success',
+                      message: `选课成功！`
+                  })
+                  this.searchClick(0);
+              }
           })
-
-
       },
 
       dropCourse(row){
           console.log("del", row);
 
           // 修改开课表中remnant+1，selectcourse表中删除数据
-
-          this.$message({
-              type: 'success',
-              message: `退课成功！`
+          let num = 1;
+          axios.post("/selectcourse/changeNum?num="+num
+              +"&semester="+row.semester
+              +"&courseId="+row.courseId
+              +"&staffId="+row.staffId
+              +"&classTime="+row.classTime
+          ).then(res=>res.data).then(res=> {
+              if (res.code == "200") {
+                  this.$message({
+                      type: 'success',
+                      message: `退课成功！`
+                  })
+                  this.refreshClick(0);
+              }
           })
       },
 

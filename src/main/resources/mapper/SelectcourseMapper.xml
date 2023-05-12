@@ -5,7 +5,6 @@
         select * from selectcourse
     </select>
 
-
     <select id="getAllStuCourse" resultType="com.example.academic_affairs_management_system.controller.dto.StudentPack.StuCourse">
         select selectcourse.semester,
         selectcourse.studentId,student.name as studentName,
@@ -155,6 +154,25 @@
                 AND selectcourse.staffId = #{staffId}
                 AND selectcourse.courseId = #{courseId}
             </where>
+    </delete>
+
+<!--    <update id="changeNum">
+        UPDATE opencourse
+        SET remnant = remnant + #{num}
+        <where>
+            opencourse.semester = #{semester}
+            and opencourse.courseId = #{courseId}
+            and opencourse.staffId = #{staffId}
+            and opencourse.classTime = #{classTime}
+        </where>
+    </update>-->
+
+    <insert id="selectCourse">
+
+    </insert>
+
+    <delete id="dropCourse">
+
     </delete>
 
     <select id="getCourseRank" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank">

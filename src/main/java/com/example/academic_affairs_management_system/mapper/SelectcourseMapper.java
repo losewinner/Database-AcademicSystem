@@ -78,6 +78,15 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     public List<StuCourse> getAllStuCourse(String semester, String studentId);
 
+    @Update("UPDATE opencourse " +
+            "SET remnant = remnant + #{num} " +
+            "where " +
+            "opencourse.semester = #{semester} " +
+            "and opencourse.courseId = #{courseId} " +
+            "and opencourse.staffId = #{staffId} " +
+            "and opencourse.classTime = #{classTime}" )
+    boolean changeNum(Integer num, String semester, String courseId, String staffId, String classTime);
+
     public List<Score> getScore(Integer pageCurrent,Integer pageSize,String semester, String studentId, String studentName, String courseId, String courseName);
 
 
