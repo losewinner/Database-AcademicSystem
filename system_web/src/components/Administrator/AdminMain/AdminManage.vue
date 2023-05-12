@@ -2,11 +2,10 @@
   <el-container class = "整个页面" style = "margin-top: 10px">
       <transition name = "el-zoom-in-center">
           <el-container class="学生" v-show="PageChange.StuPage" style="display: flex;flex-direction: column">
-              <el-container class="查找框" style="margin-top: 10px;display: flex;flex-direction: row;width: 40%;gap:20px">
-
+              <el-container class="学生框" style="margin-top: 10px;width: 200px">
+                  <i class="el-icon-user" style="width: 40px;font-size: 30px"></i><span style="font-size: 20px">学生信息</span>
               </el-container>
               <el-container class = "学生表" style="margin-top: 10px;width: 85%">
-
                   <el-table
                           :data="StudentInfo.filter(data => !search ||
                           data.studentName.toLowerCase().includes(search.toLowerCase()) ||
