@@ -2,6 +2,7 @@ package com.example.academic_affairs_management_system.controller;
 
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.api.R;
@@ -9,6 +10,7 @@ import com.example.academic_affairs_management_system.common.QueryPageParam;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.CourseDto;
 import com.example.academic_affairs_management_system.entity.Course;
+import com.example.academic_affairs_management_system.entity.Dept;
 import com.example.academic_affairs_management_system.mapper.CourseMapper;
 import com.example.academic_affairs_management_system.service.ICourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +80,23 @@ public class CourseController {
             courseMapper.deleteById(delEle);
         }
         return Result.success();
+    }
+
+    @PostMapping("/insertCourse")
+    public Result insertCourse(@RequestBody CourseDto course){
+        System.out.println("添加新课程"+course);
+        String courseId = course.getCourseId();
+        String courseName = course.getCourseName();
+        int credit =course.getCredit();
+        int creditHours =course.getCreditHours();
+        String deptName = course.getDeptName();
+        String deptId = iCourseService.getDeptId(deptName);
+        int ratio = course.getRatio();
+
+        boolean success = iCourseService.insertCourse(courseId,courseName,credit,creditHours,deptId,ratio);
+        if(success){
+            return Result.success();
+        }
+        return Result.fail("添加失败！");
     }
 }

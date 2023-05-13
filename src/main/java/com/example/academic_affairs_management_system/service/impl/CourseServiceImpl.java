@@ -33,4 +33,14 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     public List<CourseDto> getCourseDto() {
         return courseMapper.getCourseDto();
     }
+
+    @Override
+    public  boolean insertCourse(String courseId,String courseName,int credit,int creditHours,String deptId,int ratio){
+        return courseMapper.insertCourse(courseId,courseName,credit,creditHours,deptId,ratio);
+    }
+
+    @Override
+    public String getDeptId(String deptName){
+        return courseMapper.getDeptId(deptName);
+    }
 }

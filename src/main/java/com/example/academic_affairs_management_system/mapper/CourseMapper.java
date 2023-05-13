@@ -23,4 +23,9 @@ public interface CourseMapper extends BaseMapper<Course> {
     int getratio(String courseid);
 
     public List<CourseDto> getCourseDto();
+
+    public boolean insertCourse(String courseId,String courseName,int credit,int creditHours,String deptId,int ratio);
+
+    @Select("select deptId from dept where deptName = #{deptName}")
+    public String getDeptId(String deptName);
 }

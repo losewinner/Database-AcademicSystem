@@ -19,4 +19,8 @@ public interface ICourseService extends IService<Course> {
     int getratio(String courseid);
 
     public List<CourseDto> getCourseDto();
+
+    public boolean insertCourse(String courseId,String courseName,int credit,int creditHours,String deptId,int ratio);
+
+    public String getDeptId(String deptName);
 }

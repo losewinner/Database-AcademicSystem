@@ -125,9 +125,9 @@ export default {
                 console.log("获取学期成功",res.data);    //获取成功
                 for(const item of res.data)
                 {
-                    if(item.status===0)       //未能结课的学期不放进列表中
+                    if(item.status!==3)       //未能结课的学期不放进列表中
                     {
-                        //continue;
+                        continue;
                     }
                     let newDict={};
                     newDict['value'] = '选项'+this.maxOptionSemester;

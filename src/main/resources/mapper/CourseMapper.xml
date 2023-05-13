@@ -11,4 +11,9 @@
             course.deptId = dept.deptId
         </where>
     </select>
+
+    <insert id="insertCourse">
+        INSERT INTO course(courseId,name,credit,credit_hours,deptId,ratio)
+        values(#{courseId},#{courseName},#{credit},#{creditHours},#{deptId},#{ratio})
+    </insert>
 </mapper>

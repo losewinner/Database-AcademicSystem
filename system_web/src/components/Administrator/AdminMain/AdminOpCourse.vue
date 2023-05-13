@@ -23,7 +23,7 @@
                     style="margin-left: 30px"
                     type="info"
                     size="mini"
-                    @click="coursedNew">新增课程</el-button>
+                    @click="courseNew">新增课程</el-button>
                 <el-button
                     style="margin-left: 10px"
                     type="danger"
@@ -94,6 +94,38 @@
                     </el-form-item>
                     <el-form-item label="所属学院" :label-width="formLabelWidth">
                         <el-input v-model="courseForm.deptName" disabled="true"></el-input>
+                    </el-form-item>
+                    <el-form-item label="平时/考试占比" :label-width="100">
+                        <el-input v-model="courseForm.ratio" placeholder="1代表平时与考试占比1:9，以此类推" ></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="confirmEdit">确 定</el-button>
+                </div>
+            </el-dialog>
+            <el-dialog title="新增课程信息" :visible.sync="dialogAddNew">
+                <el-form :model="courseForm">
+                    <el-form-item label="课程号" :label-width="formLabelWidth">
+                        <el-input v-model="courseForm.courseId" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="课程名称" :label-width="formLabelWidth">
+                        <el-input v-model="courseForm.courseName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="学分" :label-width="formLabelWidth">
+                        <el-input v-model="courseForm.credit" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="学时" :label-width="formLabelWidth">
+                        <el-input v-model="courseForm.creditHours" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="所属学院" :label-width="formLabelWidth">
+                        <el-select v-model="courseForm.deptName" placeholder="请选择">
+                            <el-option v-for="item in optionDept"
+                                       :key="item.value"
+                                       :label="item.label"
+                                       :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="平时/考试占比" :label-width="100">
                         <el-input v-model="courseForm.ratio" placeholder="1代表平时与考试占比1:9，以此类推" ></el-input>
@@ -182,15 +214,18 @@ export default {
             },
             //表单
             dialogFormVisible:false,
+            dialogAddNew:false,
             formLabelWidth:'80px',
 
             //大页面可视
             selCourseIsV:true,
             selTeacherIsV:false,
             setCouPeoIsV:false,
-
+            message:['分配教师','设置班级情况','成功提交！学期状态改变'],
             //第一部分：选择开课列表
             openCouSemester:'',
+            maxOptionDept:1,
+            optionDept:[], //后端导入院系表，获得院系名字
             courseList:[],
             courseSelect:[],
             courseOpen:[],
@@ -223,6 +258,22 @@ export default {
                 console.log("学期信息",res.data);
                 //找到学期状态为0的，进行开课（除了学期状态3，其他状态都只能有一个！
                 this.openCouSemester = res.data.find(item=>item.status === 0).semester;
+            });
+            console.log("加载院系信息");
+            this.maxOptionDept = 1;
+            this.optionDept = [];
+            //获取学院信息
+            axios.get("/dept/list").then(res=>{
+                console.log("院系",res.data);    //获取成功
+                for(const item of res.data)
+                {
+                    let newDict={};
+                    newDict['value'] = '选项'+this.maxOptionDept;
+                    newDict['label'] = item.deptname;
+                    this.optionDept.push(newDict);
+                    this.maxOptionDept+=1;
+                }
+                console.log("院系选择框",this.optionDept);
             })
 
         },
@@ -231,6 +282,17 @@ export default {
             this.courseSelect = val;
             console.log("加入排课的课程",this.courseSelect)
 
+        },
+        courseNew(){
+            //添加新的课程：
+            console.log("添加新的课程");
+            this.courseForm.courseId = '',
+            this.courseForm.courseName = '',
+            this.courseForm.credit = '',
+            this.courseForm.creditHours = '',
+            this.courseForm.deptName = '',
+            this.courseForm.ratio = '',
+            this.dialogAddNew = true;
         },
         courseAdd(){
             //将课程添加进开课列表中
@@ -245,33 +307,70 @@ export default {
         },
         confirmEdit(){
             //等会看看能不能把这个表单提交改造成适应别的表单的提交
-            this.dialogFormVisible = false;
-            console.log("进入确认过程",this.courseForm);
-            //利用this.courseform中的新更新的东西，传回到后端数据库
-            axios.post("/course/updateCourse",{
-                courseId:this.courseForm.courseId,
-                courseName:this.courseForm.courseName,
-                credit:this.courseForm.credit,
-                creditHours:this.courseForm.creditHours,
-                ratio:this.courseForm.ratio,
-            }).then(res=>res.data).then(res=>{
-                console.log(res);
-                if(res.code == "200"){
-                    this.$message({
-                        type: 'success',
-                        message: `更新成功！`,
-                    });
-                    //更新成功后需要刷新一下
-                }
-                else{
-                    this.$message({
-                        type: 'danger',
-                        message: `更新失败！`,
+            if(this.dialogFormVisible === true)
+            {
+                this.dialogFormVisible = false;
+                console.log("进入确认过程",this.courseForm);
+                //利用this.courseform中的新更新的东西，传回到后端数据库
+                axios.post("/course/updateCourse",{
+                    courseId:this.courseForm.courseId,
+                    courseName:this.courseForm.courseName,
+                    credit:this.courseForm.credit,
+                    creditHours:this.courseForm.creditHours,
+                    ratio:this.courseForm.ratio,
+                }).then(res=>res.data).then(res=>{
+                    console.log(res);
+                    if(res.code == "200"){
+                        this.$message({
+                            type: 'success',
+                            message: `更新成功！`,
+                        });
+                        //更新成功后需要刷新一下
+                    }
+                    else{
+                        this.$message({
+                            type: 'danger',
+                            message: `更新失败！`,
 
-                    });
-                }
-                this.loadData();
-            })
+                        });
+                    }
+                    this.loadData();
+                })
+            }
+            else{
+                this.dialogAddNew = false;
+                console.log("进入确认过程",this.courseForm);
+                //利用this.courseform中的新更新的东西，传回到后端数据库
+                var dept_dict = this.optionDept.find(x=>x.value===this.courseForm.deptName);
+                this.courseForm.deptName = dept_dict.label;
+
+                axios.post("/course/insertCourse",{
+                    courseId:this.courseForm.courseId,
+                    courseName:this.courseForm.courseName,
+                    credit:this.courseForm.credit,
+                    creditHours:this.courseForm.creditHours,
+                    deptName:this.courseForm.deptName,
+                    ratio:this.courseForm.ratio,
+                }).then(res=>res.data).then(res=>{
+                    console.log(res);
+                    if(res.code == "200"){
+                        this.$message({
+                            type: 'success',
+                            message: `添加成功！`,
+                        });
+                        //更新成功后需要刷新一下
+                    }
+                    else{
+                        this.$message({
+                            type: 'danger',
+                            message: `添加失败！`,
+
+                        });
+                    }
+                    this.loadData();
+                })
+            }
+
 
         },
         coursedelete(){
@@ -305,24 +404,40 @@ export default {
 
         },
         next() {
-            this.step.active++;
-            //等于1的时候说明已经选择好要开的课了，
-            if (this.step.active == 1){
-                this.selCourseIsV = false;
-                this.setCouPeoIsV = false;
-                this.selTeacherIsV = true;
-            }//等于2的时候说明已经选择好老师了
-            else if(this.step.active == 2){
-                this.selCourseIsV = false;
-                this.selTeacherIsV = false;
-                this.setCouPeoIsV = true;
-            }//大于2的时候说明已经输入好开课相关信息了，弹出完成信息
-            else if(this.step.active >2){
-                this.selCourseIsV = false;
-                this.selTeacherIsV = false;
-                this.setCouPeoIsV = false;
-                this.step.submit = true;
-            }
+            this.$confirm('进入下一步操作不可逆, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: this.message[this.step.active]
+                });
+                this.step.active++;
+                //等于1的时候说明已经选择好要开的课了，
+                if (this.step.active == 1){
+                    this.selCourseIsV = false;
+                    this.setCouPeoIsV = false;
+                    this.selTeacherIsV = true;
+                }//等于2的时候说明已经选择好老师了
+                else if(this.step.active == 2){
+                    this.selCourseIsV = false;
+                    this.selTeacherIsV = false;
+                    this.setCouPeoIsV = true;
+                }//大于2的时候说明已经输入好开课相关信息了，弹出完成信息
+                else if(this.step.active >2){
+                    this.selCourseIsV = false;
+                    this.selTeacherIsV = false;
+                    this.setCouPeoIsV = false;
+                    this.step.submit = true;
+                }
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });
+            });
+
 
         },
     },
