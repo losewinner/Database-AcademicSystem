@@ -233,7 +233,7 @@ export default {
                     courseId:this.input.courseId,
                     courseName:this.input.courseName,
                     deptName:this.input.selectDept,
-                    isPage:"需要"
+                    isPage:"不需要"
                 }
             }).then(res=>res.data).then(res=>{
                 console.log("getPage是否成功",res.total);

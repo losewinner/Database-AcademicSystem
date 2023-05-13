@@ -64,6 +64,9 @@ const routes = [
             },
             {
                 path:'Manage',name:'AdminManage',component:()=>import('../components/Administrator/AdminMain/AdminManage.vue')
+            },
+            {
+                path:'OpenCourse',name:'AdminOpCourse',component:()=>import('../components/Administrator/AdminMain/AdminOpCourse.vue')
             }
         ]
     }

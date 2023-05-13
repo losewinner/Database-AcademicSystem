@@ -22,6 +22,10 @@
                 <i class="el-icon-info"></i>
                 <span >事务</span>
             </template>
+            <el-menu-item index="/Admin/OpenCourse">
+                <i class="el-icon-circle-plus"></i>
+                <span>开课</span>
+            </el-menu-item>
             <el-menu-item index="/Admin/Score">
                 <i class="el-icon-s-data"></i>
                 <span>统计分数</span>

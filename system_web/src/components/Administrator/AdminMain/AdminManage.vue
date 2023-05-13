@@ -70,7 +70,7 @@
                   </el-table>
               </el-container>
 
-              <el-dialog title="修改成绩" :visible.sync="stuform.isVisible">
+              <el-dialog title="修改学生信息" :visible.sync="stuform.isVisible">
                   <el-form :model="stuform">
                       <el-form-item label="学号" :label-width="formLabelWidth">
                           <el-input v-model="stuform.studentId" disabled= "true"></el-input>
@@ -214,9 +214,6 @@ export default {
             this.stuform.phone = this.currentRow.phone
             this.stuform.birth = this.currentRow.birth
             this.stuform.deptName = this.currentRow.deptName
-
-
-
             console.log(this.stuform)
 
         },

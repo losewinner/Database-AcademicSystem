@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.academic_affairs_management_system.mapper.CourseMapper">
 
+    <select id="getCourseDto" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.CourseDto">
+        select courseId,course.name as courseName,
+               credit,credit_hours as creditHours,
+               deptName,ratio
+        from course,dept
+        <where>
+            course.deptId = dept.deptId
+        </where>
+    </select>
 </mapper>
