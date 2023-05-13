@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.entity.Semestatus;
 import com.example.academic_affairs_management_system.service.ISemestatusService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,11 +31,12 @@ public class SemestatusController {
         return iSemestatusService.list();
     }
 
-    @GetMapping("setStatus")
+    @GetMapping("/setStatus")
     public Result setStatus(@RequestParam String semester,
-                            @RequestParam int status){
+                            @RequestParam String status){
+        int status1 = Integer.parseInt(status);
         UpdateWrapper<Semestatus> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("semester",semester).set("status",status);
+        updateWrapper.eq("semester",semester).set("status",status1 );
         boolean success = iSemestatusService.update(updateWrapper);
         if(success){
             return Result.success();
@@ -42,5 +44,15 @@ public class SemestatusController {
         else{
             return Result.fail("学期状态修改失败");
         }
+    }
+
+    @GetMapping("/addSemester")
+    public  Result addSemester(@RequestParam String semester,
+                               @RequestParam int status){
+        boolean success =  iSemestatusService.addSemester(semester,status);
+        if(success){
+            return Result.success();
+        }
+        return Result.fail("新增失败");
     }
 }

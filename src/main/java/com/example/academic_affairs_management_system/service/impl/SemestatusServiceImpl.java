@@ -23,4 +23,9 @@ public class SemestatusServiceImpl extends ServiceImpl<SemestatusMapper, Semesta
     public String getnowsemester() {
         return semestatusMapper.getnowsemester();
     }
+
+    @Override
+    public boolean addSemester(String semester,int status){
+        return semestatusMapper.addSemester(semester,status);
+    }
 }

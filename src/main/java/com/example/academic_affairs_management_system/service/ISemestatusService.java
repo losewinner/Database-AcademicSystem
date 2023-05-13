@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ISemestatusService extends IService<Semestatus> {
     public String getnowsemester();
+
+    public boolean addSemester(String semester,int status);
 }
