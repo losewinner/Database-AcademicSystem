@@ -72,7 +72,14 @@ export default {
             }
         },
         mounted() {
+            let course = this.FromDbInfo[0].courseName;
             this.FromDbInfo.forEach((item) => {
+                if(item.courseName != course)
+                {
+                    this.colorNum+=1;
+                    if(this.colorNum>9) this.colorNum=0;
+                    course=item.courseName;
+                }
                 let [day, start, end] = this.parseClassTime(item.classTime); // 解析上课时间
                 let td = document.getElementById(this.getTdId(start, day)); // 获取对应的td单元格
                 console.log("td", td);
@@ -105,8 +112,6 @@ export default {
                     td.classList.add("course"+this.colorNum); // 添加样式以区分课程单元格和普通单元格
                     td.style.border = "0px";
                 }
-                this.colorNum+=1;
-                if(this.colorNum>9) this.colorNum=0;
             });
         },
         parseClassTime(classTime) {

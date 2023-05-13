@@ -20,11 +20,11 @@
                 active-text-color="#ffd04b">
       <template #title>
         <i class="el-icon-info"></i>
-        <span >操作</span>
+        <span >学生事务</span>
       </template>
       <el-menu-item index="/Student/SelectCourse">
         <i class="el-icon-s-data"></i>
-        <span>选课</span>
+        <span>选课退课</span>
       </el-menu-item>
       <el-menu-item index="/Student/CheckTimetable">
         <i class="el-icon-s-order"></i>

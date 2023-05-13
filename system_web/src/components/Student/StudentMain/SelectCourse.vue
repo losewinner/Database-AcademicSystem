@@ -1,8 +1,8 @@
 <template>
   <el-container style="display: flex;flex-direction: column;margin-top:15px">
     <el-container el-container style="height: 20px; margin-top:5px">
-    <el-radio v-model="radio" label="1">选课</el-radio>
-    <el-radio v-model="radio" label="2">退课</el-radio>
+    <el-radio v-model="radio" label="1" @change="reload(1)">选课</el-radio>
+    <el-radio v-model="radio" label="2" @change="reload(2)">退课</el-radio>
     </el-container>
     <el-container v-if="radio==1" style="display: flex;flex-direction: column;margin-top:0px">
       <el-container style="display: flex;flex-direction: row">
@@ -43,10 +43,10 @@
                   prop="classTime" label="上课时间" width="200">
           </el-table-column>
         <el-table-column
-            prop="remnant" label="可选人数" width="100">
+            prop="remnant" label="剩余容量" width="100">
         </el-table-column>
         <el-table-column
-            prop="volume" label="开课人数" width="100">
+            prop="volume" label="课程容量" width="100">
         </el-table-column>
         <el-table-column
             fixed="right" label="操作" width="170">
@@ -66,7 +66,6 @@
         </el-pagination>
     </el-container>
     </el-container>
-
     <el-container v-if="radio==2" style="display: flex;flex-direction: column;margin-top:0px">
         <el-container el-container style="height: 20px; margin-top:15px">
             <el-select v-model="input.selectSemester" placeholder="请选择学期" style="width:30%; margin-right: 5px">
@@ -148,36 +147,51 @@ export default {
     }
   },
   methods:{
-      refreshClick(p=1){
-          //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
-          console.log("wtf",this.input.selectSemester)
-          if(this.input.selectSemester===''){
-              this.$alert('请选择学期！', '提示', {
-                  confirmButtonText: '确定',
-                  callback: action => {
-                      this.$message({
-                          type: 'info',
-                          message: `信息: ${ action }`
-                      });
-                  }
-              });
+      reload(radi) {
+          if(this.input.selectSemester==='') {
+              return;
           }
-          //然后获取对应的数据
-          //解析所选的学期
-          var semester_dict = this.optionSemester.find(x=>x.value===this.input.selectSemester);
+          var semester_dict = this.optionSemester.find(x => x.value === this.input.selectSemester);
           var semester = semester_dict.label;
-          //按照学生和课程的输入来选择
-          console.log("semester ",semester);
-          axios.post("/selectcourse/getAllStuCourse?semester="+semester+"&studentId="+localStorage.getItem("userid")).then(res=>res.data).then(res=>{
-              console.log("？？？",res.data);
-              this.FromDbInfoForDel = res.data;
-              if(p==1) {
-                  this.$message({
-                      type: 'success',
-                      message: `查找成功！`
+          if(radi===1) {
+              //按照学生和课程的输入来选择
+              console.log("semester ", semester);
+              axios.post("/selectcourse/getStuSelPage", {
+                  param: {
+                      semester: semester,
+                      studentId: '',
+                      courseId: this.input.courseId,
+                      courseName: this.input.courseName
+                  }
+              }).then(res => res.data).then(res => {
+                  console.log("所有课程", res.data)
+                  this.totalpage = Math.ceil(res.total / this.pagesize);
+                  this.total = res.total;
+                  axios.post("/selectcourse/getStuSelCourse", {
+                      pagesize: this.pagesize,
+                      pagenum: this.pagenum,
+                      param: {
+                          semester: semester,
+                          studentId: '',
+                          courseId: this.input.courseId,
+                          courseName: this.input.courseName
+                      }
+                  }).then(res => res.data).then(res => {
+                      if (res.code == "200") {
+                          this.FromDbInfoForSel = res.data;
+                          console.log("选课", this.FromDbInfoForSel)
+                      }
                   })
-              }
-          })
+              })
+          }
+          else{
+              //按照学生和课程的输入来选择
+              console.log("semester ",semester);
+              axios.post("/selectcourse/getAllStuCourse?semester="+semester+"&studentId="+localStorage.getItem("userid")).then(res=>res.data).then(res=>{
+                  console.log("？？？",res.data);
+                  this.FromDbInfoForDel = res.data;
+              })
+          }
       },
       searchClick(p=1){
           this.refreshClick(0);  // 用于选课判断
@@ -232,6 +246,37 @@ export default {
                       }
                   }
               })
+          })
+      },
+      refreshClick(p=1){
+          //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
+          console.log("wtf",this.input.selectSemester)
+          if(this.input.selectSemester===''){
+              this.$alert('请选择学期！', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                      this.$message({
+                          type: 'info',
+                          message: `信息: ${ action }`
+                      });
+                  }
+              });
+          }
+          //然后获取对应的数据
+          //解析所选的学期
+          var semester_dict = this.optionSemester.find(x=>x.value===this.input.selectSemester);
+          var semester = semester_dict.label;
+          //按照学生和课程的输入来选择
+          console.log("semester ",semester);
+          axios.post("/selectcourse/getAllStuCourse?semester="+semester+"&studentId="+localStorage.getItem("userid")).then(res=>res.data).then(res=>{
+              console.log("？？？",res.data);
+              this.FromDbInfoForDel = res.data;
+              if(p==1) {
+                  this.$message({
+                      type: 'success',
+                      message: `查找成功！`
+                  })
+              }
           })
       },
       loadData(){
@@ -336,7 +381,12 @@ export default {
               +"&classTime="+row.classTime
           ).then(res=>res.data).then(res=> {
               if (res.code == "200") {
-                  let num = -1;
+                  this.$message({
+                      type: 'success',
+                      message: `选课成功！`
+                  })
+                  this.searchClick(0);
+/*                  let num = -1;
                   axios.post("/selectcourse/changeNum?num="+num
                       +"&semester="+row.semester
                       +"&courseId="+row.courseId
@@ -350,15 +400,13 @@ export default {
                           })
                           this.searchClick(0);
                       }
-                  })
+                  })*/
               }
           })
 
       },
-
       dropCourse(row){
           console.log("del", row);
-
           // 修改开课表中remnant+1，selectcourse表中删除数据
           axios.post("/selectcourse/dropCourse?studentId="+row.studentId
               +"&semester="+row.semester
@@ -367,7 +415,12 @@ export default {
               +"&classTime="+row.classTime
           ).then(res=>res.data).then(res=> {
               if (res.code == "200") {
-                  let num = 1;
+                  this.$message({
+                      type: 'success',
+                      message: `退课成功！`
+                  })
+                  this.refreshClick(0);
+/*                  let num = 1;
                   axios.post("/selectcourse/changeNum?num="+num
                       +"&semester="+row.semester
                       +"&courseId="+row.courseId
@@ -381,12 +434,11 @@ export default {
                           })
                           this.refreshClick(0);
                       }
-                  })
+                  })*/
               }
           })
 
       },
-
       handleCurrentChange(currentPage) {
           // 分页有问题：为什么有问题呢？
           // 是因为数据库也分页，然后它传来前端的时候，总数据只有一页的长度，所以totalpage会出问题
