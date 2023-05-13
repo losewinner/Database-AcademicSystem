@@ -1,5 +1,6 @@
 package com.example.academic_affairs_management_system.service;
 
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.OpenCourseDto;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Course;
 import com.example.academic_affairs_management_system.entity.Opencourse;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,5 +18,9 @@ import java.util.List;
 public interface IOpencourseService extends IService<Opencourse> {
     List<Course> select_class(String staffid, String semester);
 
-    public boolean insertNewCourse(List<Opencourse> openCouList);
+    public boolean insertNewCourse(String semester,String courseId,String staffId,String classTime);
+
+    public boolean updateOpenCou(String semester,String courseId,String staffId,String classTime,int volume,int remnant);
+
+    public List<OpenCourseDto> getNowSemCourse(String semester);
 }

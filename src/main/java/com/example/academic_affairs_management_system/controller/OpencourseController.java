@@ -2,8 +2,10 @@ package com.example.academic_affairs_management_system.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.academic_affairs_management_system.common.QueryPageParam;
 import com.example.academic_affairs_management_system.common.Result;
+import com.example.academic_affairs_management_system.controller.dto.AdminPack.OpenCourseDto;
 import com.example.academic_affairs_management_system.controller.dto.AdminPack.delScore;
 import com.example.academic_affairs_management_system.entity.Opencourse;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
@@ -12,12 +14,12 @@ import com.example.academic_affairs_management_system.service.IOpencourseService
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
 import com.example.academic_affairs_management_system.service.ISemestatusService;
 import com.example.academic_affairs_management_system.service.impl.OpencourseServiceImpl;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -34,8 +36,10 @@ public class OpencourseController {
 
     @Autowired
     private IOpencourseService iOpencourseService;
+
     @Autowired
     private ISemestatusService isemestatusService;
+
     @GetMapping("/getclass")
     public Result select_class(@RequestParam String staffid){
         /**
@@ -51,24 +55,39 @@ public class OpencourseController {
     public Result insertNewCourse(@RequestBody QueryPageParam queryPageParam){
         HashMap param = queryPageParam.getParam();
         String semester = param.get("semester").toString();
+        System.out.println(semester);
         String courseId = param.get("courseId").toString();
+        String staffId = param.get("staffId").toString();
         String classTime = param.get("classTime").toString();
-        //把前端传回来的param里面的List类型的数据转换成为List<Teacher>类型的
-        List<LinkedHashMap<String, Object>> teacherlist = (List<LinkedHashMap<String, Object>>) param.get("teacherlist");
-        //一个一个插入
-        List<Opencourse> openCouList= new ArrayList<>();
-        for(LinkedHashMap<String,Object>map:teacherlist) {
-            Opencourse newcourse = new Opencourse();
-            newcourse.setSemester(semester);
-            newcourse.setCourseid(courseId);
-            newcourse.setClasstime(classTime);
-            newcourse.setStaffid(map.get("staffId").toString());
-            openCouList.add(newcourse);
-        }
-        boolean success = iOpencourseService.saveBatch(openCouList);
+        System.out.println(courseId);
+
+        boolean success = iOpencourseService.insertNewCourse(semester,courseId,staffId,classTime);
         if(success){
             return Result.success();
         }
-        return Result.fail("添加进开课表失败");
+        return Result.fail("部分失败");
+
+    }
+
+    @GetMapping("/getNowSemCourse")
+    public Result getNowSemCourse(@RequestParam String semester){
+        List<OpenCourseDto> openCourseList = iOpencourseService.getNowSemCourse(semester);
+        return Result.success(openCourseList,openCourseList.size());
+    }
+
+    @PostMapping("/updateOpenCou")
+    public Result updateOpenCou(@RequestBody QueryPageParam queryPageParam){
+        //修改开课表
+        HashMap param = queryPageParam.getParam();
+        String semester = param.get("semester").toString();
+        String courseId = param.get("courseId").toString();
+        String staffId = param.get("staffId").toString();
+        String classTime = param.get("classTime").toString();
+        int volume = Integer.parseInt(param.get("volume").toString());
+        int remnant = Integer.parseInt(param.get("remnant").toString());
+
+        boolean success = iOpencourseService.updateOpenCou(semester,courseId,staffId,classTime,volume,remnant);
+
+        return Result.success();
     }
 }

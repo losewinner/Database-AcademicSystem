@@ -404,7 +404,12 @@ export default {
                     this.selectedRowIndexes.forEach(index => {
                         this.FromDbInfo.splice(index, 1); // 根据排序后的索引删除数组中的元素
                     });
-                    this.searchClick();
+                    //更新成功后需要刷新一下
+                    if(this.input.selectSemester===''){
+                        this.loadData();
+                    }else{
+                        this.searchClick();
+                    }
                 }
             });
 

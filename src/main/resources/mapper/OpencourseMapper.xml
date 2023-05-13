@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.academic_affairs_management_system.mapper.OpencourseMapper">
+    <select id="getNowSemCourse" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.OpenCourseDto">
+        select semester,course.courseId as courseId,course.name as courseName,
+               teacher.staffId as staffId,teachername,
+               classTime,volume,remnant
+        from opencourse,teacher,course
+        <where>
+            opencourse.courseId = course.courseId
+        and opencourse.staffId = teacher.staffId
+        and opencourse.semester = #{semester}
+        </where>
+    </select>
+
+    <insert id="insertNewCourse">
+        INSERT INTO opencourse(semester,courseId,staffId,classTime)
+        values(#{semester},#{courseId},#{staffId},#{classTime})
+    </insert>
 
 </mapper>
