@@ -108,10 +108,6 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
 
     List<Rank> getDeptRank(Integer pageCurrent, Integer pageSize,String semester,String deptName,String isPage);
 
-    @Update("Update selectcourse " +
-            "set score=#{S.score},testScore=#{S.testscore} " +
-            "where semester=#{semester} and studentId=#{S.studentid} " +
-            "and courseId=#{S.courseid} and staffId=#{S.staffid} and classTime=#{S.classtime}" )
     boolean updateScore(Student S,String semester);
 
 

@@ -187,12 +187,18 @@ export default {
             this.maxscore=Math.max(this.maxscore,final)
             this.maxscore=Math.min(this.maxscore,final)
           }
+
           this.avgscore = this.avgscore/res.data.length
-          console.log("avg="+this.avgscore)
-          console.log("max="+this.maxscore)
-          console.log("min="+this.minscore)
+          // console.log("avg="+this.avgscore)
+          // console.log("max="+this.maxscore)
+          // console.log("min="+this.minscore)
           this.initEchart()
+          this.$message(res.msg)
         }
+        else{
+          this.$alert(res.msg)
+        }
+
       })
 
     },
@@ -201,8 +207,8 @@ export default {
       console.log("更新数据...")
       axios.post("http://localhost:8080/selectcourse/updateScore",this.data).then(res=>res.data).then(res=>{
         if(res.code=="200"){
-          console.log(res.msg);
           this.select()
+          this.$message(res.msg)
         }
         else{
           this.$alert(res.msg);

@@ -297,7 +297,7 @@ public class SelectcourseController {
 
     @PostMapping("/updateScore")
     public Result updateScore(@RequestBody List<Student> LS){
-        return Result.success(iSelectcourseService.updateScore(LS));
+        return iSelectcourseService.updateScore(LS);
     }
 
 

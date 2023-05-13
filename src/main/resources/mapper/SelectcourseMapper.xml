@@ -156,7 +156,6 @@
             </where>
     </delete>
 
-
     <select id="getCourseRank" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Rank">
         select semester,
                selectcourse.studentId,student.name as studentName,
@@ -181,7 +180,6 @@
 
 
     </select>
-
 
     <select id="getPage" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.Score">
         select score,testScore,finalScore
@@ -228,4 +226,22 @@
                 limit #{pageCurrent},#{pageSize}
             </if>
     </select>
+
+    <update id="updateScore" >
+        Update selectcourse
+        <choose>
+            <when test="S.testscore!=null and S.testscore!=''">
+                set score=#{S.score},testScore=#{S.testscore}
+            </when>
+            <otherwise>
+                set score=score+10
+            </otherwise>
+        </choose>
+        <where>
+        semester = #{semester}
+        and studentId = #{S.studentid} and courseId = #{S.courseid} and staffId = #{S.staffid} and classTime = #{S.classtime}
+        </where>
+
+
+    </update>
 </mapper>

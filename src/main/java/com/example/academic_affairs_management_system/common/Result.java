@@ -21,7 +21,7 @@ public class Result {
         return new Result(code,msg,total,data);
     }
     public static Result success(){
-        return result(Constants.CODE_200,"",0,null);
+        return result(Constants.CODE_200,"成功",0,null);
     }
     public static Result success(Object data){
         return result(Constants.CODE_200,"成功",0,data);

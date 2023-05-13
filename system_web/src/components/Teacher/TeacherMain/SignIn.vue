@@ -136,11 +136,12 @@ export default {
 
     },
     uploadsign(){
-      let res=[]
+      let ress=[]
       for (const re of this.data) {
         console.log(re.sign)
+        re.sign="0"
         if (re.sign=="1") {
-          res.push(re)
+          ress.push(re)
         }
         else if (re.sign!="0"){
           this.$alert("请补全"+re.studentid+re.name+"签到情况")
@@ -148,10 +149,8 @@ export default {
         }
         re.sign="0"
       }
-      console.log(res)
-      console.log("签到成功")
-      axios.post("http://localhost:8080/selectcourse/uploadsign",
-          res).then(res=>res.data).then(res=>{
+      axios.post("http://localhost:8080/selectcourse/updateScore", ress).then(res=>res.data).then(res=>{
+        console.log(res)
         if(res.code=="200"){
           this.$message(res.msg)
         }

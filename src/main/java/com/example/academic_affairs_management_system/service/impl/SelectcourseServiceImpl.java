@@ -152,6 +152,7 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
         String semester =  iSemestatusService.getnowsemester();
         for (Student S: LS) {
             System.out.println(S);
+            if (S.getScore() == null) System.out.println("isnull");
             if(!selectcourseMapper.updateScore(S,semester)) return Result.fail("更新失败");
         }
         return Result.success();
