@@ -12,7 +12,7 @@
             <el-button v-if="!step.submit" style="margin-top: 12px;margin-left: 10px" @click="next">下一步</el-button>
             <el-button v-else style="margin-top: 12px;margin-left: 10px" @click="next" type="success">提交</el-button>
         </el-container>
-        <el-container class = "选择开课页面" style="width:100%;margin-top: 10px;display: flex;flex-direction: column" v-show="selCourseIsV">
+        <el-container class = "选择开课页面" style="width:100%;margin-top: 10px;display: flex;flex-direction: column;" v-show="selCourseIsV">
             <el-container class = "表格上方" style="margin-top: 10px;display: flex;flex-direction: row;">
                 <el-button
                         style="margin-left: 5px"
@@ -29,54 +29,86 @@
                     type="danger"
                     size="mini"
                     @click="coursedelete">批量删除</el-button>
+                <el-button
+                    style="margin-left: 800px"
+                    size="mini"
+                    type="primary"
+                    @click="courseBack">退回选择</el-button>
             </el-container>
-            <el-container class = "课程列表" style="margin-top:15px;width:100%">
-                <el-table
+            <el-container class = "课程列表" style="margin-top:15px;width:100%;display: flex;flex-direction: row;">
+                <el-container class = "未开课列表" style="display: flex;flex-direction: column;width:50%;margin-left: 10px;">
+                    <span style="font-size: 20px;font-weight: bolder;margin-top: 10px;margin-left: 10px;color:rgba(155,8,60,0.6)">未选开课列表</span>
+                    <el-table
                         :data="courseList.filter(data => !courseSearch ||
                           data.courseId.toLowerCase().includes(courseSearch.toLowerCase()) ||
                           data.courseName.toLowerCase().includes(courseSearch.toLowerCase()) ||
                           data.deptName.toLowerCase().includes(courseSearch.toLowerCase()))"
                         style="width: 100%"
                         stripe
-                        max-height="440px"
-                        @selection-change="handleSelectionChange">
-                    <el-table-column
+                        max-height="400px"
+                        @selection-change="handleSelectionChangeLeft">
+                        <el-table-column
                             type="selection"
                             width="55">
-                    </el-table-column>
-                    <el-table-column fixed="left"
-                                     prop="courseId" label="课程号" width="150" >
-                    </el-table-column>
-                    <el-table-column
-                            prop="courseName" label="课程名称" width="150">
-                    </el-table-column>
-                    <el-table-column
-                            prop="credit" label="学分" width="100">
-                    </el-table-column>
-                    <el-table-column
-                            prop="creditHours" label="学时" width="100">
-                    </el-table-column>
-                    <el-table-column
-                            prop="deptName" label="所属学院" width="200">
-                    </el-table-column>
-                    <el-table-column
-                            prop="ratio" label="平时分数占比" width="150">
-                    </el-table-column>
-                    <el-table-column  width = "270">
-                        <template slot="header" slot-scope="{}">
-                            <el-input
+                        </el-table-column>
+                        <el-table-column fixed="left"
+                                         prop="courseId" label="课程号" width="100%" >
+                        </el-table-column>
+                        <el-table-column
+                            prop="courseName" label="课程名称" width="150%">
+                        </el-table-column>
+                        <el-table-column
+                            prop="credit" label="学分" width="100%">
+                        </el-table-column>
+                        <el-table-column  width = "150%">
+                            <template slot="header" slot-scope="{}">
+                                <el-input
                                     v-model="courseSearch"
                                     size="mini"
                                     placeholder="输入关键字搜索"/>
-                        </template>
-                        <template slot-scope="scope">
-                            <el-button
+                            </template>
+                            <template slot-scope="scope">
+                                <el-button
                                     size="mini"
                                     @click="courseEdit(scope.row)">编辑</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-container>
+                <el-container class = "已开课列表" style="display: flex;flex-direction: column;width:50%;margin-left: 10px;">
+                    <span style="font-size: 20px;font-weight: bolder;margin-top: 10px;margin-left: 10px;color:rgba(5,150,97,0.6)">开课列表</span>
+                    <el-table
+                        :data="courseOpen.filter(data => !courseSearch ||
+                          data.courseId.toLowerCase().includes(courseSearch.toLowerCase()) ||
+                          data.courseName.toLowerCase().includes(courseSearch.toLowerCase()) ||
+                          data.deptName.toLowerCase().includes(courseSearch.toLowerCase()))"
+                        style="width: 100%"
+                        stripe
+                        max-height="400px"
+                        @selection-change="handleSelectionChangeRight">
+                        <el-table-column
+                            type="selection"
+                            width="55">
+                        </el-table-column>
+                        <el-table-column fixed="left"
+                                         prop="courseId" label="课程号" width="100%" >
+                        </el-table-column>
+                        <el-table-column
+                            prop="courseName" label="课程名称" width="150%">
+                        </el-table-column>
+                        <el-table-column
+                            prop="credit" label="学分" width="100%">
+                        </el-table-column>
+                        <el-table-column  width = "150%">
+                            <template slot="header" slot-scope="{}">
+                                <el-input
+                                    v-model="courseSearch"
+                                    size="mini"
+                                    placeholder="输入关键字搜索"/>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-container>
             </el-container>
             <el-dialog title="修改课程信息" :visible.sync="dialogFormVisible">
                 <el-form :model="courseForm">
@@ -141,11 +173,6 @@
         <el-container class = "选择老师页面" style="width:100%;margin-top: 10px;display: flex;flex-direction: column" v-show="selTeacherIsV">
             <el-container class = "表格上方" style="margin-top: 10px;display: flex;flex-direction: row;">
                 <span style="font-size: 20px;font-weight: bolder;">开课列表</span>
-                <el-button
-                    style="margin-left: 835px"
-                    size="mini"
-                    type="danger"
-                    @click="courseRollback">移除选中项</el-button>
             </el-container>
             <el-container class = "开课列表" style="margin-top:15px;width:100%">
                 <el-table
@@ -155,12 +182,7 @@
                           data.deptName.toLowerCase().includes(courseSearch.toLowerCase()))"
                     style="width: 100%"
                     stripe
-                    max-height="440px"
-                    @selection-change="handleSelectionChange">
-                    <el-table-column
-                        type="selection"
-                        width="55">
-                    </el-table-column>
+                    max-height="440px">
                     <el-table-column fixed="left"
                                      prop="courseId" label="课程号" width="150" >
                     </el-table-column>
@@ -188,8 +210,8 @@
                         </template>
                         <template slot-scope="scope">
                             <el-button
-                                size="mini"
-                                @click="courseEdit(scope.row)">编辑</el-button>
+                                size="medium"
+                                @click="selectTea(scope.row)">指派老师</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -228,6 +250,7 @@ export default {
             optionDept:[], //后端导入院系表，获得院系名字
             courseList:[],
             courseSelect:[],
+            courseBackSele:[],
             courseOpen:[],
             courseSearch:'',
             courseForm:{
@@ -277,11 +300,26 @@ export default {
             })
 
         },
-        handleSelectionChange(val){
+        handleSelectionChangeLeft(val){
             //找到所有选择的行的索引
             this.courseSelect = val;
             console.log("加入排课的课程",this.courseSelect)
+        },
+        handleSelectionChangeRight(val){
+            //找到所有选择的行的索引
+            this.courseBackSele = val;
+            console.log("加入排课的课程",this.courseSelect)
+        },
 
+        selectTea(row){
+            console.log("派遣老师",row);
+
+        },
+
+        //第一页面，选择课程开课 ########################################################################################
+        courseBack(){
+            this.courseOpen = this.courseOpen.filter(course=>!this.courseBackSele.includes(course));
+            this.courseList = [...this.courseBackSele,...this.courseList];
         },
         courseNew(){
             //添加新的课程：
@@ -370,8 +408,6 @@ export default {
                     this.loadData();
                 })
             }
-
-
         },
         coursedelete(){
             //不仅前端移除，且数据库选课表中也要把这个课程的元组删去。
@@ -403,6 +439,7 @@ export default {
             });
 
         },
+        //########################################################################################
         next() {
             this.$confirm('进入下一步操作不可逆, 是否继续?', '提示', {
                 confirmButtonText: '确定',
