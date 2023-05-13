@@ -16,6 +16,6 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface SemestatusMapper extends BaseMapper<Semestatus> {
 
-    @Select("select max(semester) from semestatus where status = 1 or status = 2")
+    @Select("select max(semester) from semestatus where status = 2")
     public String getnowsemester();
 }

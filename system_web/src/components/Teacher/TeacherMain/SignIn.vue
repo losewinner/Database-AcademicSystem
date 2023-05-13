@@ -20,16 +20,20 @@
   <el-button type="primary" @click="select">搜索</el-button>
   <el-table :data="data"
             style="width: 47%">
+    <el-table-column
+        type="index"
+        width="50">
+    </el-table-column>
     <el-table-column prop="studentid" label="学号" width="120" sortable></el-table-column>
     <el-table-column prop="name" label="姓名" width="120" ></el-table-column>
     <el-table-column prop="signscore" label="已签到" width="120" >
       <template v-slot="scope">
-        <el-radio v-model="data[scope.$index].sign" label="1"></el-radio>
+        <el-radio v-model="data[scope.$index].sign" label="1">已签到</el-radio>
       </template>
     </el-table-column>
     <el-table-column prop="signscore" label="未签到" width="120" >
       <template v-slot="scope">
-        <el-radio v-model="data[scope.$index].sign" label="0"></el-radio>
+        <el-radio v-model="data[scope.$index].sign" label="0">未签到</el-radio>
       </template>
     </el-table-column>
   </el-table>
