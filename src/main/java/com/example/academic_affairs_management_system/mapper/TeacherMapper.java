@@ -4,6 +4,8 @@ import com.example.academic_affairs_management_system.entity.Teacher;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -14,5 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface TeacherMapper extends BaseMapper<Teacher> {
+
+    public List<Teacher> getTeaDepList(String deptName);
 
 }

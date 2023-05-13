@@ -201,7 +201,7 @@
                     <el-table-column
                         prop="ratio" label="平时分数占比" width="150">
                     </el-table-column>
-                    <el-table-column  width = "270">
+                    <el-table-column  width = "220">
                         <template slot="header" slot-scope="{}">
                             <el-input
                                 v-model="courseSearch"
@@ -217,6 +217,49 @@
                 </el-table>
 
             </el-container>
+
+            <el-dialog title="指派教师" :visible.sync="dialogSeleTea">
+                <el-button
+                    style="margin-left: 5px"
+                    size="mini"
+                    type="primary"
+                    @click="teacherAdd">指派所选教师</el-button>
+                <el-popconfirm
+                    confirm-button-text="确认提交"
+                    cancel-button-text="取消"
+                    icon="el-icon-info"
+                    icon-color="red"
+                    title="是否决定提交"
+                    style="margin-left: 10px"
+                    @confirm="confirmAddTea">
+                    <el-button slot="reference" icon = "el-icon-upload2" type="success" size="mini">提交</el-button>
+                </el-popconfirm>
+                <el-table :data="teacherList.filter(data => !teacherSearch ||
+                          data.staffid.toLowerCase().includes(teacherSearch.toLowerCase()) ||
+                          data.teachername.toLowerCase().includes(teacherSearch.toLowerCase()) ||
+                          data.title.toLowerCase().includes(teacherSearch.toLowerCase()))"
+                          style="width: 100%"
+                          stripe
+                          max-height="300px"
+                          @selection-change="handleSelectionChangeTea">
+                    <el-table-column
+                        type="selection"
+                        width="55">
+                    </el-table-column>
+                    <el-table-column property="staffid" label="工号" width="150"></el-table-column>
+                    <el-table-column property="teachername" label="教师姓名" width="200"></el-table-column>
+                    <el-table-column property="title" label="职称"></el-table-column>
+                    <el-table-column  width = "150">
+                        <template slot="header" slot-scope="{}">
+                            <el-input
+                                v-model="teacherSearch"
+                                size="mini"
+                                placeholder="输入关键字搜索"/>
+                        </template>
+                    </el-table-column>
+
+                </el-table>
+            </el-dialog>
         </el-container>
 
     </el-container>
@@ -237,12 +280,14 @@ export default {
             //表单
             dialogFormVisible:false,
             dialogAddNew:false,
+            dialogSeleTea:false,
             formLabelWidth:'80px',
 
             //大页面可视
             selCourseIsV:true,
             selTeacherIsV:false,
             setCouPeoIsV:false,
+            OpenCourseTableIsV:false,
             message:['分配教师','设置班级情况','成功提交！学期状态改变'],
             //第一部分：选择开课列表
             openCouSemester:'',
@@ -263,7 +308,11 @@ export default {
             },
             selectCourRowIndex:[],
             //第二部分：选择老师
-            tearcherList:[],//需要放在表单里展示，
+            teacherList:[],//需要放在表单里展示，
+            currentCourse:null,
+            teacherSearch:'',
+            teacherSelect:[],
+            teacherDeside:[],
         }
     },
     methods: {
@@ -281,6 +330,7 @@ export default {
                 console.log("学期信息",res.data);
                 //找到学期状态为0的，进行开课（除了学期状态3，其他状态都只能有一个！
                 this.openCouSemester = res.data.find(item=>item.status === 0).semester;
+                //当暂无学期状态为0的时候，选择学期状态为1的，展示开课表
             });
             console.log("加载院系信息");
             this.maxOptionDept = 1;
@@ -308,14 +358,63 @@ export default {
         handleSelectionChangeRight(val){
             //找到所有选择的行的索引
             this.courseBackSele = val;
-            console.log("加入排课的课程",this.courseSelect)
+            console.log("加入排课的课程",this.courseSelect);
+        },
+        handleSelectionChangeTea(val){
+            this.teacherSelect = val;
+            console.log("加入选择的老师",this.teacherSelect);
         },
 
+        //第二页面，选择老师，预填入classTime为暂无，因为classTime也是主键
         selectTea(row){
             console.log("派遣老师",row);
+            this.currentCourse = row;
+            //在这个时候对对应的教师表进行后端请求，根据课的学院来进行匹配
+            axios.get("/teacher/getTeaDepList?deptName="+row.deptName).then(res=>res.data).then(res=>{
+                console.log("当前的课程可指派老师",res.data)
+                this.teacherList = res.data;
+            })
+            this.dialogSeleTea = true;
 
         },
+        teacherAdd(){
+            //添加老师进开课表，开课表正式插入数据
+            //老师添加数组不共享，每个课程独立，所以只能选完就清空覆盖
+            this.teacherDeside =this.teacherSelect;
+            this.teacherList = this.teacherList.filter(teacher=>!this.teacherSelect.includes(teacher));
+            console.log("选择的老师",this.teacherDeside);
 
+        },
+        confirmAddTea(){
+            //把加入当前课程的老师的信息与此课号还有当前的学期一同插入开课表中
+            axios.post("/opencourse/insertNewCourse",{
+                param:{
+                    semester:this.openCouSemester,
+                    courseId:this.currentCourse.courseId,
+                    teacherlist:this.teacherDeside,
+                    classTime:"暂无"
+                }
+            }).then(res=>res.data).then(res=>{
+                if(res.code == "200")
+                {
+                    console.log("添加成功")
+                    this.$message({
+                        type: 'success',
+                        message: `添加成功！`,
+                    });
+                    this.dialogSeleTea = false;//关闭选择teacher的框
+                    this.courseOpen = this.courseOpen.filter(course=>course!==this.currentCourse);
+                }
+                else{
+                    this.$message({
+                        type: 'danger',
+                        message: `添加失败！`,
+
+                    });
+                }
+
+            })
+        },
         //第一页面，选择课程开课 ########################################################################################
         courseBack(){
             this.courseOpen = this.courseOpen.filter(course=>!this.courseBackSele.includes(course));
@@ -466,6 +565,7 @@ export default {
                     this.selCourseIsV = false;
                     this.selTeacherIsV = false;
                     this.setCouPeoIsV = false;
+                    this.OpenCourseTableIsV = true;
                     this.step.submit = true;
                 }
             }).catch(() => {

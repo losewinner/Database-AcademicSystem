@@ -2,4 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.academic_affairs_management_system.mapper.TeacherMapper">
 
+
+    <select id="getTeaDepList" resultType="com.example.academic_affairs_management_system.entity.Teacher">
+        select staffid,teachername,title
+        from teacher,dept
+        <where>
+            teacher.deptId = dept.deptId
+        and dept.deptName = #{deptName}
+        and teacher.title != "管理员"
+        </where>
+    </select>
 </mapper>

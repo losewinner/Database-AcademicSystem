@@ -17,4 +17,5 @@ import java.util.List;
 public interface IOpencourseService extends IService<Opencourse> {
     List<Course> select_class(String staffid, String semester);
 
+    public boolean insertNewCourse(List<Opencourse> openCouList);
 }

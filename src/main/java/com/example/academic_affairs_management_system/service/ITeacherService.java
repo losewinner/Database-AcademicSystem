@@ -4,6 +4,8 @@ package com.example.academic_affairs_management_system.service;
 import com.example.academic_affairs_management_system.entity.Teacher;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 
 /**
  * <p>
@@ -16,6 +18,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface ITeacherService extends IService<Teacher> {
     public Teacher getteacInfo(String staffid);
 
-
+    public List<Teacher> getTeaDepList(String deptName);
 
 }

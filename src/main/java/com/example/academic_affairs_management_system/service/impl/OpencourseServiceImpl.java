@@ -28,4 +28,9 @@ public class OpencourseServiceImpl extends ServiceImpl<OpencourseMapper, Opencou
     public List<Course> select_class(String staffid, String semester) {
         return opencourseMapper.select_class(staffid,semester);
     }
+
+    @Override
+    public boolean insertNewCourse(List<Opencourse> openCouList){
+        return opencourseMapper.insertNewCourse(openCouList);
+    }
 }

@@ -24,4 +24,5 @@ public interface OpencourseMapper extends BaseMapper<Opencourse> {
             "semester = #{semester} and staffid = #{staffid}")
     public List<Course> select_class(String staffid, String semester);
 
+    public boolean insertNewCourse(List<Opencourse> openCouList);
 }
