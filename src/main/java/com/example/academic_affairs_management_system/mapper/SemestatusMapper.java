@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * <p>
@@ -22,4 +23,9 @@ public interface SemestatusMapper extends BaseMapper<Semestatus> {
     @Insert("Insert into semestatus(semester,status) " +
             "values(#{semester},#{status}) ")
     public boolean addSemester(String semester,int status);
+
+    @Update("Update semestatus " +
+            "set status = #{status} " +
+            "where semester = #{semester} ")
+    public boolean setStatus(String semester,int status);
 }

@@ -164,6 +164,7 @@ export default {
             this.selectSemester = row;
         },
         confirmEditEdit(){
+            console.log("变更学期状态",this.semesterForm.status);
             axios.get("/semestatus/setStatus?semester="+this.semesterForm.semester+"&status="+this.semesterForm.status)
                 .then(res=>res.data).then(res=>{
                 if(res.code == "200"){
