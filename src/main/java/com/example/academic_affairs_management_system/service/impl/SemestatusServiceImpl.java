@@ -31,7 +31,7 @@ public class SemestatusServiceImpl extends ServiceImpl<SemestatusMapper, Semesta
     }
 
     @Override
-    public boolean setStatus(String semester,int status){
-        return semestatusMapper.setStatus(semester,status);
+    public boolean setnewStatus(String semester,int status){
+        return semestatusMapper.setnewStatus(semester,status);
     }
 }

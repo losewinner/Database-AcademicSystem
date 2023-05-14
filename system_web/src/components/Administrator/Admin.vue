@@ -162,6 +162,9 @@ export default {
         setStatus(row){
             this.dialogFormEditVisible = true;
             this.selectSemester = row;
+            console.log(this.selectSemester);
+            this.semesterForm.semester = this.selectSemester.semester;
+            this.semesterForm.status = this.selectSemester.status
         },
         confirmEditEdit(){
             console.log("变更学期状态",this.semesterForm.status);

@@ -34,10 +34,11 @@ public class SemestatusController {
     @GetMapping("/setStatus")
     public Result setStatus(@RequestParam String semester,
                             @RequestParam String status){
+        //想一个办法，让学期在变更的时候先进行判断
+        //0，1，2的状态在数据库里面只能最多各有一个
+        //3的状态是结束状态，可以有多个
         int status1 = Integer.parseInt(status);
-        UpdateWrapper<Semestatus> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("semester",semester).set("status",status1 );
-        boolean success = iSemestatusService.update(updateWrapper);
+        boolean success = iSemestatusService.setnewStatus(semester,status1);
         if(success){
             return Result.success();
         }

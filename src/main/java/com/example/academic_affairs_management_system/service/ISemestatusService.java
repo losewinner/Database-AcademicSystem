@@ -16,5 +16,5 @@ public interface ISemestatusService extends IService<Semestatus> {
 
     public boolean addSemester(String semester,int status);
 
-    public boolean setStatus(String semester,int status);
+    public boolean setnewStatus(String semester,int status);
 }
