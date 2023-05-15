@@ -61,7 +61,8 @@
                     <template slot-scope="scope">
                         <el-button
                             size="medium"
-                            @click="setStatus(scope.row)">编辑</el-button>
+                            type="success"
+                            @click="setStatus(scope.row)">变更学期状态</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -81,18 +82,18 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="编辑学期信息" :visible.sync="dialogFormEditVisible">
+        <el-dialog title="变更学期信息 (确定即提交)" :visible.sync="dialogFormEditVisible">
             <el-form :model="semesterForm">
                 <el-form-item label="学期" :label-width="formLabelWidth">
                     <el-input v-model="semesterForm.semester" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="学期状态" :label-width="formLabelWidth">
-                    <el-input v-model="semesterForm.status"></el-input>
+                    <el-input v-model="semesterForm.status" disabled></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormEditVisible = false">取 消</el-button>
-                <el-button type="primary" @click="confirmEditEdit">确 定</el-button>
+                <el-button type="success" icon = "el-icon-edit" @click="confirmEditEdit">确 定</el-button>
             </div>
         </el-dialog>
     </el-container>
@@ -123,6 +124,8 @@ export default {
             dialogFormAddVisible:false,
             dialogFormEditVisible:false,
             formLabelWidth:"80px",
+            canEdit:true,
+            offendSemester:'',
         }
     },
     methods:{
@@ -135,10 +138,24 @@ export default {
             })
         },
         semesterAdd(){
+            //查看有无还未开课的学期，如果有，则不予插入
+            for(const semester of this.semesterList){
+                if(semester.status === "学期未开始，等待开课"){
+                    this.$message({
+                        type: 'danger',
+                        message: `仍有未开课学期！`,
+                    });
+                    return;
+                }
+            }
             this.dialogFormAddVisible = true;
+
+
         },
         confirmAddEdit(){
             this.semesterForm.status = 0;
+            //查看有无还未开课的学期，如果有，则不予插入
+
             axios.get("/semestatus/addSemester?semester="+this.semesterForm.semester+"&status="+this.semesterForm.status)
                 .then(res=>res.data).then(res=>{
                 if(res.code == "200"){
@@ -169,26 +186,51 @@ export default {
         confirmEditEdit(){
             console.log("变更学期状态",this.semesterForm.status);
             //按照规则来，0，1，2这三个状态的学期，各只能有一个，
-
-            axios.get("/semestatus/setStatus?semester="+this.semesterForm.semester+"&status="+this.semesterForm.status)
-                .then(res=>res.data).then(res=>{
-                if(res.code == "200"){
-                    this.$message({
-                        type: 'success',
-                        message: `更新成功！`,
-                    });
-                    //更新成功后需要刷新一下
-                    this.dialogFormEditVisible = false;
-                    this.loadData();
+            var newstatus;
+            for(const item of this.semesterList){
+                newstatus = this.statusMessage.indexOf(this.semesterForm.status)+1;
+                console.log("新学期",newstatus)
+                console.log(this.statusMessage.indexOf(item.status))
+                console.log(item.status);
+                if(this.statusMessage.indexOf(item.status) === newstatus && newstatus!==3)
+                {
+                    //说明0，1，2有重复
+                    console.log("冲突学期状态",this.statusMessage.indexOf(item.status),item.semester)
+                    this.canEdit = false;
+                    this.offendSemester = item.semester
                 }
-                else{
-                    this.$message({
-                        type: 'danger',
-                        message: `更新失败！`,
+            }
+            if(this.canEdit)
+            {
+                //每次变更都加1，自动了， 不让管理员手动了，直到等于3停下。
+                axios.get("/semestatus/setStatus?semester="+this.semesterForm.semester+"&status="+newstatus)
+                    .then(res=>res.data).then(res=>{
+                    if(res.code == "200"){
+                        this.$message({
+                            type: 'success',
+                            message: `更新成功！`,
+                        });
+                        //更新成功后需要刷新一下
+                        this.dialogFormEditVisible = false;
+                        this.loadData();
+                    }
+                    else{
+                        this.$message({
+                            type: 'danger',
+                            message: `更新失败！`,
 
-                    });
-                }
-            })
+                        });
+                    }
+                })
+            }
+            else{
+                this.$message({
+                    type: 'danger',
+                    message: `变更失败，此学期与学期！`+this.offendSemester+`状态冲突！`,
+                });
+            }
+
+
         }
 
     },
