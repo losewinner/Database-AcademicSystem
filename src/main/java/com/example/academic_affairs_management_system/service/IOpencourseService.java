@@ -23,4 +23,6 @@ public interface IOpencourseService extends IService<Opencourse> {
     public boolean updateOpenCou(String semester,String courseId,String staffId,String classTime,int volume,int remnant);
 
     public List<OpenCourseDto> getNowSemCourse(String semester);
+
+    public List<Opencourse> getTeaClassTime(String semester,String staffId,String courseId);
 }

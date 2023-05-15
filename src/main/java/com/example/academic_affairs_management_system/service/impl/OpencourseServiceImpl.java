@@ -48,4 +48,9 @@ public class OpencourseServiceImpl extends ServiceImpl<OpencourseMapper, Opencou
     public boolean updateOpenCou(String semester,String courseId,String staffId,String classTime,int volume,int remnant){
         return opencourseMapper.updateOpenCou(semester,courseId,staffId,classTime,volume,remnant);
     }
+
+    @Override
+    public List<Opencourse> getTeaClassTime(String semester,String staffId,String courseId){
+        return opencourseMapper.getTeaClassTime(semester,staffId,courseId);
+    }
 }

@@ -331,7 +331,7 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button @click="dialogOpenCou = false">取 消</el-button>
                     <el-button type="primary" @click="confirmOpenCouEdit">确 定</el-button>
                 </div>
             </el-dialog>
@@ -450,6 +450,7 @@ export default {
                 volume:0,
                 remnant:0,
             },
+            canUpdate:true,
             canSubmit:false,
         }
     },
@@ -535,40 +536,107 @@ export default {
             this.openCouForm.volume = this.currentOpenCourse.volume,
             this.dialogOpenCou = true;
         },
+        parseClassTime(classTime) {
+            // 解析上课时间，返回[day, start, end]数组
+            let day = this.parseDay(classTime);
+            let [start, end] = classTime.slice(2).split("-");
+            return [day, parseInt(start), parseInt(end)];
+        },
+        parseDay(classTime) {
+            // 解析上课时间中的星期几，返回0-6表示周一至周日
+            let dayStr = classTime.match(/周(.)\d+-\d+/)[1];
+            let dayMap = new Map([
+                ["一", 1],
+                ["二", 2],
+                ["三", 3],
+                ["四", 4],
+                ["五", 5],
+                ["六", 6],
+                ["日", 7],
+            ]);
+            return dayMap.get(dayStr);
+        },
         confirmOpenCouEdit(){
-            axios.post("/opencourse/updateOpenCou",{
-                param:{
-                    semester:this.openCouSemester,
-                    courseId:this.openCouForm.courseId,
-                    staffId:this.openCouForm.staffId,
-                    classTime:this.openCouForm.classTime,
-                    volume:this.openCouForm.volume,
-                    remnant:this.openCouForm.volume, //这边没写错，一开始就是班级容量和剩余容量是一样的
+            //在提交前选课时间前，先查看是否有 在同一个学期下，开了不同课程的老师，他的时间有无冲突。
+            //写个ifelse判断，如果没问题，才运行下面的更新代码；否则提醒重新写时间
+            //从数据库中找所有同一个学期的同一个老师的所有课程
+            let newclassTime = this.openCouForm.classTime;
+            let newList =newclassTime.split(",");//解析出新的上课时间
+            console.log(newList)
+            axios.get("/opencourse/getTeaClassTime?semester="+this.openCouSemester+"&staffId="+this.openCouForm.staffId+
+            "&courseId="+this.openCouForm.courseId).then(res=>res.data).then(res=>{
+                console.log("此老师所教的所有课程的课程时间",res.data);
+                console.log(newclassTime)
+                //对新插入的时间与数据库中进行比较
+                for(const oldItem of res.data){
+                    let oldclassTime = oldItem.classtime;
+                    if(oldclassTime === "暂无")
+                    {
+                        continue;
+                    }
+                    let oldList = oldclassTime.split(",");
+                    console.log("旧上课时间",oldList);
+                    for(const i of newList){
+                        for(const j of oldList)
+                        {
+                            let [day0, start0, end0] = this.parseClassTime(i); // 解析上课时间
+                            let [day1, start1, end1] = this.parseClassTime(j);
+                            if(day0==day1)
+                            {
+                                if((start0<=start1&&start1<=end0) ||(start1<=start0&&start0<=end1))
+                                {
+                                    this.canUpdate = false;
+                                }
+                            }
+                        }
+                    }
                 }
-            }).then(res=>res.data).then(res=>{
-                if(res.code == "200"){
-                    console.log(res);
-                    if(res.code == "200"){
-                        this.$message({
-                            type: 'success',
-                            message: `更新成功！`,
-                        });
-                        //更新成功后需要刷新一下
-                        axios.get("/opencourse/getNowSemCourse?semester="+this.openCouSemester).then(res=>res.data).then(res=>{
-                            console.log("当前学期开课数据",res.data);
-                            this.openCourseList = res.data;
-                        })
-                        this.dialogOpenCou=false;
-                    }
-                    else{
-                        this.$message({
-                            type: 'danger',
-                            message: `更新失败！`,
+                if(this.canUpdate){
+                    axios.post("/opencourse/updateOpenCou",{
+                        param:{
+                            semester:this.openCouSemester,
+                            courseId:this.openCouForm.courseId,
+                            staffId:this.openCouForm.staffId,
+                            classTime:this.openCouForm.classTime,
+                            volume:this.openCouForm.volume,
+                            remnant:this.openCouForm.volume, //这边没写错，一开始就是班级容量和剩余容量是一样的
+                        }
+                    }).then(res=>res.data).then(res=>{
+                        if(res.code == "200"){
+                            console.log(res);
+                            if(res.code == "200"){
+                                this.$message({
+                                    type: 'success',
+                                    message: `更新成功！`,
+                                });
+                                //更新成功后需要刷新一下
+                                axios.get("/opencourse/getNowSemCourse?semester="+this.openCouSemester).then(res=>res.data).then(res=>{
+                                    console.log("当前学期开课数据",res.data);
+                                    this.openCourseList = res.data;
+                                })
+                                this.dialogOpenCou=false;
+                            }
+                            else{
+                                this.$message({
+                                    type: 'danger',
+                                    message: `更新失败！`,
 
-                        });
-                    }
+                                });
+                            }
+                        }
+                    })
+                }
+                else{
+                    this.$message({
+                        type: 'error',
+                        message: `开课失败！同一个老师开课时间冲突！`
+                    })
+                    this.canUpdate = true;
                 }
             })
+
+
+
         },
         submit() {
             //提交，提交后无法再修改了

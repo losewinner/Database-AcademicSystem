@@ -90,4 +90,15 @@ public class OpencourseController {
 
         return Result.success();
     }
+
+    @GetMapping("/getTeaClassTime")
+    public Result getTeaClassTime(@RequestParam String semester,
+                                  @RequestParam String staffId,
+                                  @RequestParam String courseId){
+        /*
+        * 得到同一个老师在同一个学期下的所有开课时间
+        * 传回给前端做对比*/
+        List<Opencourse>  TeaClassTimeList = iOpencourseService.getTeaClassTime(semester,staffId,courseId);
+        return Result.success(TeaClassTimeList,TeaClassTimeList.size());
+    }
 }
