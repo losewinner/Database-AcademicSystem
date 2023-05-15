@@ -340,6 +340,7 @@
             <el-container class = "表格上方" style="margin-top: 10px;display: flex;flex-direction: row;">
                 <span style="font-size: 20px;font-weight: bolder;">{{openCouSemester}}--开课列表</span>
             </el-container>
+            <span style="font-size: 20px;font-weight: bolder; margin-left: 300px;color:red" v-show = "ifCanOpen" >请先开始上一个学期！</span>
             <el-container class = "最终开课列表" style="margin-top:15px;width:100%">
                 <el-table
                     :data="openCourseList.filter(data => !openCourseSearch ||
@@ -407,6 +408,7 @@ export default {
 
             //大页面可视
             isStepV:false,
+            ifCanOpen:false,
             selCourseIsV:false,
             selTeacherIsV:false,
             setCouPeoIsV:false,
@@ -471,25 +473,33 @@ export default {
                 console.log("当前学期");
                 this.openCouSemester = res.data.find(item=>item.status === 0)?.semester;
                 //当暂无学期状态为0的时候，选择学期状态为1的，展示开课表
-
-                if(this.openCouSemester === undefined){
-                    this.openCouSemester = res.data.find(item=>item.status === 1).semester;
-                    if(typeof this.openCouSemester === 'undefined'){
-                        this.selCourseIsV = false;
-                    }else{
-                        this.selCourseIsV = false;
-                        this.isStepV = false;
-                        this.OpenCourseTableIsV = true;
-                        axios.get("/opencourse/getNowSemCourse?semester="+this.openCouSemester).then(res=>res.data).then(res=>{
-                            console.log("当前学期开课数据",res.data);
-                            this.openCourseList = res.data;
-                        })
-                    }
+                //加一个判断，如果状态又有1，又有0，则让管理员先去将那个状态为1的学期转化为2；只显示最后一个页面
+                this.openCouSemester1 = res.data.find(item=>item.status === 1)?.semester;
+                if(this.openCouSemester1!==undefined && this.openCouSemester !==undefined ){
+                    this.OpenCourseTableIsV = true;
+                    this.ifCanOpen=true;
                 }
                 else{
-                    this.isStepV = true;
-                    this.selCourseIsV = true;
+                    if(this.openCouSemester === undefined){
+                        this.openCouSemester = res.data.find(item=>item.status === 1).semester;
+                        if(typeof this.openCouSemester === 'undefined'){
+                            this.selCourseIsV = false;
+                        }else{
+                            this.selCourseIsV = false;
+                            this.isStepV = false;
+                            this.OpenCourseTableIsV = true;
+                            axios.get("/opencourse/getNowSemCourse?semester="+this.openCouSemester).then(res=>res.data).then(res=>{
+                                console.log("当前学期开课数据",res.data);
+                                this.openCourseList = res.data;
+                            })
+                        }
+                    }
+                    else{
+                        this.isStepV = true;
+                        this.selCourseIsV = true;
+                    }
                 }
+
             });
             console.log("加载院系信息");
             this.maxOptionDept = 1;

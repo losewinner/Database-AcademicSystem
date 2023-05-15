@@ -168,6 +168,8 @@ export default {
         },
         confirmEditEdit(){
             console.log("变更学期状态",this.semesterForm.status);
+            //按照规则来，0，1，2这三个状态的学期，各只能有一个，
+
             axios.get("/semestatus/setStatus?semester="+this.semesterForm.semester+"&status="+this.semesterForm.status)
                 .then(res=>res.data).then(res=>{
                 if(res.code == "200"){
