@@ -36,7 +36,7 @@
                         </el-container>
                     </el-container>
 
-                    <el-button :disabled="AnalysisExist" type="primary" @click="ScoreOrAnalysis=!ScoreOrAnalysis" style="height: 30%;">课程分数统计图<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+                    <el-button :disabled="!ScoreOrAnalysisButton" type="primary" @click="ScoreOrAnalysis=!ScoreOrAnalysis" style="height: 30%;">课程分数统计图<i class="el-icon-arrow-right el-icon--right"></i></el-button>
 
                 </el-container>
                 <el-pagination
@@ -219,6 +219,7 @@ export default {
             },
             currentRow:null,
             ScoreOrAnalysis:true,//表格页面和分析界面跳转切换
+            ScoreOrAnalysisButton:false
         }
     },
 
@@ -471,6 +472,7 @@ export default {
         },
         searchClick(){
             //搜之前做判断，如果学期没选，就不做搜索，提醒用户必须选择学期
+            this.AllScore = [];
             console.log("wtf",this.input.selectSemester)
             if(this.input.selectSemester===''){
                 this.$alert('请选择学期！', '提示', {
@@ -536,6 +538,7 @@ export default {
                                 &&(this.input.studentId===''&&this.input.studentName==='')){
                                 console.log("只搜索了课程");
                                 this.initEchart();
+                                this.ScoreOrAnalysisButton = true;
                                 this.ScoreAnalysis.courseName = this.FromDbInfo[0].courseName;
                                 this.ScoreAnalysis.coursePeo = this.AllScore.length;
                                 const sum = this.AllScore.reduce((acc, cur) => acc + cur.finalScore, 0);
@@ -552,6 +555,7 @@ export default {
                             }
                             else if(this.input.studentId!==''||this.input.studentName!==''||((this.input.courseId===''&&this.input.courseName==='')))
                             {
+                                this.ScoreOrAnalysisButton = false;
                                 this.ScoreAnalysis.courseName = "xxx";
                                 this.ScoreAnalysis.coursePeo = "xxx";
                                 this.ScoreAnalysis.lowestScore = "xxx";
