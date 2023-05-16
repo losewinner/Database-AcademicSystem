@@ -125,6 +125,7 @@ export default {
             dialogFormEditVisible:false,
             formLabelWidth:"80px",
             canEdit:true,
+            newStatus:'',
             offendSemester:'',
         }
     },
@@ -186,24 +187,33 @@ export default {
         confirmEditEdit(){
             console.log("变更学期状态",this.semesterForm.status);
             //按照规则来，0，1，2这三个状态的学期，各只能有一个，
-            var newstatus;
             for(const item of this.semesterList){
-                newstatus = this.statusMessage.indexOf(this.semesterForm.status)+1;
-                console.log("新学期",newstatus)
+                this.newstatus = this.statusMessage.indexOf(this.semesterForm.status)+1;
+                console.log("新学期",this.newstatus)
                 console.log(this.statusMessage.indexOf(item.status))
                 console.log(item.status);
-                if(this.statusMessage.indexOf(item.status) === newstatus && newstatus!==3)
+                if(this.statusMessage.indexOf(item.status) === this.newstatus && this.newstatus!==3)
                 {
                     //说明0，1，2有重复
                     console.log("冲突学期状态",this.statusMessage.indexOf(item.status),item.semester)
                     this.canEdit = false;
                     this.offendSemester = item.semester
                 }
+                else if(this.newstatus === 3){
+                    //说明学期要结束了，将学期中没有设置分数的全都置为0
+                    axios.get("/selectcourse/setNullScore?semester="+this.semesterForm.semester).then(res=>res.data).then(res=>{
+                        if(res.code == "200")
+                        {
+                            console.log("变更学期成功，学期已结束")
+                        }
+                    })
+                }
             }
             if(this.canEdit)
             {
+                console.log("canEdit",this.semesterForm.semester,this.newstatus);
                 //每次变更都加1，自动了， 不让管理员手动了，直到等于3停下。
-                axios.get("/semestatus/setStatus?semester="+this.semesterForm.semester+"&status="+newstatus)
+                axios.get("/semestatus/setStatus?semester="+this.semesterForm.semester+"&status="+this.newstatus)
                     .then(res=>res.data).then(res=>{
                     if(res.code == "200"){
                         this.$message({

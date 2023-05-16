@@ -111,4 +111,8 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     boolean updateScore(Student S,String semester);
 
 
+    @Update("Update selectcourse " +
+            "set score = IFNULL(score,0), testScore = IFNULL(testScore,0) " +
+            "where semester = #{semester} ")
+    public boolean setNullScore(String semester);
 }

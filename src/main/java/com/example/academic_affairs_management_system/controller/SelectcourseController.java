@@ -301,4 +301,14 @@ public class SelectcourseController {
     }
 
 
+    @GetMapping("/setNullScore")
+    public Result setNullScore(@RequestParam String semester){
+        boolean success = iSelectcourseService.setNullScore(semester);
+        if(success){
+            return  Result.success();
+        }
+        else{
+            return  Result.fail("变更学期结束时失败");
+        }
+    }
 }

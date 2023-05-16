@@ -25,7 +25,7 @@ public interface SemestatusMapper extends BaseMapper<Semestatus> {
     public boolean addSemester(String semester,int status);
 
     @Update("Update semestatus " +
-            "set status = #{status} " +
+            "set `status` = #{status} " +
             "where semester = #{semester} ")
     public boolean setnewStatus(String semester,int status);
 }
