@@ -12,6 +12,7 @@ import com.example.academic_affairs_management_system.controller.dto.StudentPack
 import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
+import com.example.academic_affairs_management_system.mapper.SelectcourseMapper;
 import com.example.academic_affairs_management_system.service.ISelectcourseService;
 
 import com.example.academic_affairs_management_system.service.ISemestatusService;
@@ -19,6 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.annotation.Resource;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -40,6 +45,9 @@ public class SelectcourseController {
 
     @Autowired
     private ISemestatusService iSemestatusService;
+
+    @Resource
+    private SelectcourseMapper selectcourseMapper;
 
     @GetMapping("/allstudent")
     public Result findPage(@RequestParam String semester,
@@ -303,12 +311,14 @@ public class SelectcourseController {
 
     @GetMapping("/setNullScore")
     public Result setNullScore(@RequestParam String semester){
-        boolean success = iSelectcourseService.setNullScore(semester);
-        if(success){
+        try {
+            selectcourseMapper.setNullScore(semester);
             return  Result.success();
-        }
-        else{
+            // 存储过程执行成功
+        } catch (Exception e) {
+            // 存储过程执行失败，处理异常
             return  Result.fail("变更学期结束时失败");
         }
+
     }
 }

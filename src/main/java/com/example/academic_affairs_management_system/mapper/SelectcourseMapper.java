@@ -9,7 +9,9 @@ import com.example.academic_affairs_management_system.entity.Opencourse;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.StatementType;
 
+import java.sql.Statement;
 import java.util.List;
 
 /**
@@ -112,9 +114,13 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
     boolean updateScore(Student S,String semester);
 
 
-    @Update("Update selectcourse " +
-            "set score = IFNULL(score,0), testScore = IFNULL(testScore,0) " +
-            "where semester = #{semester} ")
-    public boolean setNullScore(String semester);
+//    @Update("Update selectcourse " +
+//            "set score = IFNULL(score,0), testScore = IFNULL(testScore,0) " +
+//            "where semester = #{semester} ")
+//    public boolean setNullScore(String semester);
+
+    @Select("CALL updateNullToZero(#{semester})")
+    @Options(statementType = StatementType.CALLABLE)
+    public void setNullScore(String semester);
 
 }

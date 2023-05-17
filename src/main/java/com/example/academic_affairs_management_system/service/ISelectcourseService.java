@@ -59,5 +59,5 @@ public interface ISelectcourseService extends IService<Selectcourse> {
     public List<Rank> getDeptRank(Integer pageNum, Integer pageSize,String semester,String deptName,String isPage);
     public Result updateScore(List<Student> LS);
 
-    public boolean setNullScore(String semester);
+//    public boolean setNullScore(String semester);
 }

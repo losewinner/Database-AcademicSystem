@@ -158,8 +158,8 @@ public class SelectcourseServiceImpl extends ServiceImpl<SelectcourseMapper, Sel
         return Result.success();
     }
 
-    @Override
-    public boolean setNullScore(String semester){
-        return selectcourseMapper.setNullScore(semester);
-    }
+//    @Override
+//    public boolean setNullScore(String semester){
+//        return selectcourseMapper.setNullScore(semester);
+//    }
 }
