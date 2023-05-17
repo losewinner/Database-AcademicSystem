@@ -14,6 +14,7 @@ public class StuCourse {
     private String courseId;
     private String courseName;
     private String classTime;
+    private String address;
     private Integer status;
     private Integer courseCredit;
     private Integer volume;

@@ -6,18 +6,21 @@
     </select>
 
     <select id="getAllStuCourse" resultType="com.example.academic_affairs_management_system.controller.dto.StudentPack.StuCourse">
-        select selectcourse.semester,
+        select distinct selectcourse.semester,
         selectcourse.studentId,student.name as studentName,
         selectcourse.staffId,student.deptId as deptId,deptName,
-        course.credit as courseCredit,
-        selectcourse.courseId,course.name as courseName,selectcourse.classtime as classTime,
+        course.credit as courseCredit, opencourse.address,
+        selectcourse.courseId, course.name as courseName,selectcourse.classtime as classTime,
         status
-        from selectcourse,course,student,dept,semestatus
+        from selectcourse,course,student,dept,semestatus,opencourse
         <where>
             selectcourse.courseId = course.courseId
             and selectcourse.studentId = student.studentId
             and student.deptId = dept.deptId
             and selectcourse.semester = semestatus.semester
+            and opencourse.courseId = selectcourse.courseId
+            and opencourse.semester = selectcourse.semester
+            and opencourse.classtime = selectcourse.classtime
             and selectcourse.semester = #{semester}
             <if test="studentId!=null and studentId!=''">
                 and selectcourse.studentId = #{studentId}

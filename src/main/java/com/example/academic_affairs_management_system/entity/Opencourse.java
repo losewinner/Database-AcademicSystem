@@ -30,6 +30,8 @@ public class Opencourse implements Serializable {
     @TableField("classTime")
     private String classtime;
 
+    private String address;
+
     private Integer volume;
 
     private Integer remnant;

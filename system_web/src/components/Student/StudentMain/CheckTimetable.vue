@@ -145,7 +145,7 @@ export default {
                 let results = str.split(","); // 使用逗号拆分字符串，返回数组
                 for(const time of results)
                 {
-                    this.FromDbInfo.push({courseName:item.courseName,classTime:time});
+                    this.FromDbInfo.push({courseName:item.courseName+"@"+item.address,classTime:time});
                 }
             }
             console.log("！！！", this.FromDbInfo);
