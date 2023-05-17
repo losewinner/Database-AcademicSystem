@@ -187,13 +187,11 @@ export default {
             this.maxscore=Math.max(this.maxscore,final)
             this.maxscore=Math.min(this.maxscore,final)
           }
-
           this.avgscore = this.avgscore/res.data.length
           // console.log("avg="+this.avgscore)
           // console.log("max="+this.maxscore)
           // console.log("min="+this.minscore)
           this.initEchart()
-          this.$message(res.msg)
         }
         else{
           this.$alert(res.msg)
@@ -295,8 +293,6 @@ export default {
       myChart1.setOption(option2);
       myChart2.setOption(option3);
     }
-
-
   }
 }
 </script>

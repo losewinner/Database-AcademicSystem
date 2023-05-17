@@ -139,8 +139,9 @@ export default {
       let ress=[]
       for (const re of this.data) {
         console.log(re.sign)
-        re.sign="0"
         if (re.sign=="1") {
+          re.score = null
+          re.testscore = null
           ress.push(re)
         }
         else if (re.sign!="0"){
