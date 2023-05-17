@@ -7,9 +7,9 @@ import java.security.NoSuchAlgorithmException;
 
 public interface ILoginService extends IService<Login> {
 
-    Object loginstu(String username, String password);
-
     Login getlogin(String username, String password) throws NoSuchAlgorithmException;
 
-    Object logintea(String username, String password);
+    Object login(String username, String password);
+
+    boolean changepw(String username, String password, String newpassword);
 }

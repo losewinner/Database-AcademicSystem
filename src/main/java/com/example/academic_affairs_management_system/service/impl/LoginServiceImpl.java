@@ -30,51 +30,56 @@ public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements
     @Autowired TeacherServiceImpl teacherService;
     @Autowired StudentServiceImpl studentService;
 
+    @Autowired LoginMapper loginMapper;
+
     @Override
-    public Map<String,Object> loginstu(String username, String password)
-    {
+    public Map<String,Object> login(String username, String password) {
         Login login = getlogin(username,password);
         if(login!=null){
             Map<String,Object>res=new HashMap<>();
-            Student student = studentService.getstuInfo(username);
-            StudentDto studentdto= new StudentDto();
-            BeanUtils.copyProperties(student, studentdto);
-            //设置token
-            String token = TokenUtils.generateToken(login.getId(),login.getPassword());
-            studentdto.setToken(token);
-            res.put("data",studentdto);
-            res.put("identify",login.getIdentify());
-            return res;
-        }else{
-            throw new ServiceException(Constants.CODE_600,"用户名或密码错误");
-        }
-    }
-
-
-    @Override
-    public Map<String,Object> logintea(String username, String password) {
-        Login login = getlogin(username,password);
-        if(login!=null){
-            Map<String,Object>res=new HashMap<>();
-            Teacher teacher = teacherService.getteacInfo(username);
-            TeacherDto teacherdto= new TeacherDto();
-            BeanUtils.copyProperties(teacher, teacherdto);
-            //设置token
-            String token = TokenUtils.generateToken(login.getId(),login.getPassword());
-            teacherdto.setToken(token);
-            res.put("data",teacherdto);
-            res.put("identify",login.getIdentify());
+            if(login.getIdentify()==3){
+                Student student = studentService.getstuInfo(username);
+                StudentDto studentdto= new StudentDto();
+                BeanUtils.copyProperties(student, studentdto);
+                //设置token
+                String token = TokenUtils.generateToken(login.getId(),login.getPassword());
+                studentdto.setToken(token);
+                res.put("data",studentdto);
+                res.put("identify",login.getIdentify());
+            }
+            else{
+                Teacher teacher = teacherService.getteacInfo(username);
+                TeacherDto teacherdto= new TeacherDto();
+                BeanUtils.copyProperties(teacher, teacherdto);
+                //设置token
+                String token = TokenUtils.generateToken(login.getId(),login.getPassword());
+                teacherdto.setToken(token);
+                res.put("data",teacherdto);
+                res.put("identify",login.getIdentify());
+            }
             return res;
         }else{
             throw new ServiceException(Constants.CODE_500,"用户名或密码错误");
         }
+    }
 
+    @Override
+    public boolean changepw(String username, String password, String newpassword) {
+        Login login = getlogin(username,password);
+        System.out.println(login.getId());
+        if(login!=null){
+
+            return loginMapper.changepw(username,newpassword);
+        }
+        else{
+            throw new ServiceException(Constants.CODE_500,"用户名或密码错误");
+        }
     }
 
     @Override
     public Login getlogin(String username, String password)  {
         System.out.println(username+password);
-        QueryWrapper<Login> queryWrapper = new QueryWrapper<Login>();
+        QueryWrapper<Login> queryWrapper = new QueryWrapper();
         queryWrapper.eq("id",username);
         String encodepass = "";
         if(!password.isEmpty()){

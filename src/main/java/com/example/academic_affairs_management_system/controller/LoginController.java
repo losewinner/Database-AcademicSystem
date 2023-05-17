@@ -24,14 +24,22 @@ public class LoginController {
         if(username.isEmpty()||password.isEmpty()){
             return Result.fail("参数错误");
         }
-        if(username.length()==8){
-            return Result.success(iLoginService.loginstu(username,password));
-        }
         try{
-            return Result.success(iLoginService.logintea(username,password));
+            return Result.success(iLoginService.login(username,password));
         }catch (Exception e){
             return Result.fail("用户名或者密码错误");
         }
-
     }
+    @GetMapping("/changepw")
+    public Result changepw(@RequestParam String username,
+                           @RequestParam String password,
+                           @RequestParam String newpassword){
+        try{
+            iLoginService.changepw(username,password,newpassword);
+            return Result.success("修改成功");
+        }catch (Exception e){
+            return Result.fail("原密码错误");
+        }
+    }
+
 }

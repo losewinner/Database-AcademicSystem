@@ -1,6 +1,4 @@
 <template>
-
-
   <div class="wrapper">
     <div style="opacity:0.98;margin: 200px auto;background-color: #fff;width: 390px;height: 350px;padding: 20px;border-radius: 10px;
     box-shadow: gray 4px 4px 10px">
@@ -14,17 +12,43 @@
         </el-form-item>
         <div style="margin: 10px 0;display: flex;justify-content: space-around;">
           <el-button type="primary" size="small" autocomplete="off" style="width: 170px" @click="login">登录</el-button>
-          <el-button type="warning" size="small" autocomplete="off" style="width: 170px" >忘记密码</el-button>
+          <el-button type="warning" size="small" autocomplete="off" style="width: 170px" @click="changepassword">修改密码</el-button>
         </div>
       </el-form>
     </div>
+    <el-dialog title="确认修改" :visible.sync="dialogFormVisible">
+    <el-form label-width="100px">
+      <el-form-item label="学工号">
+        <el-input style="width: 200px" v-model="username"></el-input>
+      </el-form-item>
+      <el-form-item label="原密码">
+        <el-input style="width: 200px" v-model="oldpassword"></el-input>
+      </el-form-item>
+      <el-form-item label="新密码">
+        <el-input style="width: 200px" v-model="newpassword"></el-input>
+      </el-form-item>
+      <el-form-item label="确认密码">
+        <el-input style="width: 200px" v-model="newpasswordag"></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="cancel">取 消</el-button>
+      <el-button type="primary" @click="confirm">确 定</el-button>
+    </div>
+  </el-dialog>
   </div>
+
 </template>
 <script>
 export default {
     name: "Login",
     data(){
           return{
+            dialogFormVisible:false,
+            username:"",
+            newpassword:"",
+            oldpassword:"",
+            newpasswordag:"",
             user:{
               username:"",
               password:""
@@ -43,7 +67,7 @@ export default {
     },
     methods:{
         //登录
-        login(){
+      login(){
           this.$refs["userForm"].validate((valide)=>{
             if(valide){
               this.$axios.get("/login",{
@@ -73,6 +97,39 @@ export default {
             }
           })
         },
+      confirm(){
+        if(this.newpassword.length<3 || this.newpassword.length>16){
+          this.$message.error("密码长度应在 3 到 15 之间");
+        }
+        else if(this.newpassword!=this.newpasswordag){
+          this.$message.error("新密码与验证密码不匹配");
+        }
+        else{
+          this.$axios.get("/login/changepw?username="+this.username+"&password="+ this.oldpassword+"&newpassword="
+              +this.newpassword).then(res=>res.data).then(res=>{
+                console.log(res)
+            if(res.code=="200"){
+              this.$message.success("修改成功！")
+            } else{
+              this.$message.error("原密码错误,修改失败！");
+            }
+          })
+        }
+      },
+      cancel(){
+        this.dialogFormVisible=false
+        this.username=""
+        this.newpassword="";
+        this.oldpassword="";
+        this.newpasswordag="";
+      },
+      changepassword(){
+        this.dialogFormVisible=true;
+        this.username=""
+        this.newpassword="";
+        this.oldpassword="";
+        this.newpasswordag="";
+      }
     }
 }
 </script>
@@ -80,7 +137,7 @@ export default {
 <style scoped>
 .wrapper{
   height: 100vh;
-  //background: url("https://www.shu.edu.cn/2022banner/20230226-2.jpg");
+  background: url("https://www.shu.edu.cn/2022banner/20230226-2.jpg");
   background-size: 100% 100%;
   overflow: hidden;
 }
