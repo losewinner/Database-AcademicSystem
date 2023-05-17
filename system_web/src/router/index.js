@@ -71,6 +71,9 @@ const routes = [
             },
             {
                 path:'OpenCourse',name:'AdminOpCourse',component:()=>import('../components/Administrator/AdminMain/AdminOpCourse.vue')
+            },
+            {
+                path:'Reset',name:'AdminReset',component:()=>import('../components/Administrator/AdminMain/AdminReset.vue')
             }
         ]
     }

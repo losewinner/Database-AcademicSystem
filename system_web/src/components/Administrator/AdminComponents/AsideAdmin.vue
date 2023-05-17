@@ -38,7 +38,9 @@
         <el-menu-item index="/Admin/Manage" v-show="!isCollapse">
             <i class = "el-icon-s-tools"></i><span>数据管理</span>
         </el-menu-item>
-
+        <el-menu-item index="/Admin/Reset" v-show="!isCollapse">
+            <i class = "el-icon-user-solid"></i><span>登录重置</span>
+        </el-menu-item>
     </el-menu>
 
 </template>
