@@ -27,6 +27,11 @@ public class LoginController {
         if(username.length()==8){
             return Result.success(iLoginService.loginstu(username,password));
         }
-        return Result.success(iLoginService.logintea(username,password));
+        try{
+            return Result.success(iLoginService.logintea(username,password));
+        }catch (Exception e){
+            return Result.fail("用户名或者密码错误");
+        }
+
     }
 }

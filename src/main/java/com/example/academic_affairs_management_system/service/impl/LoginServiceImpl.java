@@ -66,7 +66,7 @@ public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements
             res.put("identify",login.getIdentify());
             return res;
         }else{
-            throw new ServiceException(Constants.CODE_600,"用户名或密码错误");
+            throw new ServiceException(Constants.CODE_500,"用户名或密码错误");
         }
 
     }
@@ -87,16 +87,10 @@ public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            md5.update("456".getBytes());
             System.out.println(encodepass);
             queryWrapper.eq("password",encodepass);
         }
-        try{
-            return getOne(queryWrapper);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ServiceException(Constants.CODE_500,"用户名或者密码错误");
-        }
+        return getOne(queryWrapper);
     }
 
 
