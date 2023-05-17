@@ -19,6 +19,7 @@ import java.util.List;
  */
 public interface IStudentService extends IService<Student> {
 
+
     public List<StudentManage> manageList(String keyword);
 
     public boolean manageEditStu(String studentId, String studentName, String sex,LocalDate birth,String home,String phone, String deptName);

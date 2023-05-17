@@ -98,5 +98,8 @@ public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements
         return getOne(queryWrapper);
     }
 
-
+    @Override
+    public boolean resetpw(String username,String newpassword){
+        return loginMapper.resetpw(username,newpassword);
+    }
 }

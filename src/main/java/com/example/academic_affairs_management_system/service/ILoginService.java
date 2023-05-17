@@ -12,4 +12,6 @@ public interface ILoginService extends IService<Login> {
     Object login(String username, String password);
 
     boolean changepw(String username, String password, String newpassword);
+
+    boolean resetpw(String username,String newpassword);
 }

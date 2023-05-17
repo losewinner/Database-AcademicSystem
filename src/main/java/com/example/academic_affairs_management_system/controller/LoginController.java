@@ -1,5 +1,6 @@
 package com.example.academic_affairs_management_system.controller;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.example.academic_affairs_management_system.common.Constants;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.service.ILoginService;
@@ -36,6 +37,17 @@ public class LoginController {
                            @RequestParam String newpassword){
         try{
             iLoginService.changepw(username,password,newpassword);
+            return Result.success("修改成功");
+        }catch (Exception e){
+            return Result.fail("原密码错误");
+        }
+    }
+
+    @GetMapping("/resetpw")
+    public Result resetpw(@RequestParam String username,
+                          @RequestParam String newpassword){
+        try{
+            iLoginService.resetpw(username,newpassword);
             return Result.success("修改成功");
         }catch (Exception e){
             return Result.fail("原密码错误");

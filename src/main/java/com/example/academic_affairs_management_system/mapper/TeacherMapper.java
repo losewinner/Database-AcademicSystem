@@ -3,6 +3,7 @@ package com.example.academic_affairs_management_system.mapper;
 import com.example.academic_affairs_management_system.entity.Teacher;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -18,5 +19,7 @@ import java.util.List;
 public interface TeacherMapper extends BaseMapper<Teacher> {
 
     public List<Teacher> getTeaDepList(String deptName);
+
+
 
 }

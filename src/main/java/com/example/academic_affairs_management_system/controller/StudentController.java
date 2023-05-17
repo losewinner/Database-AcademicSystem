@@ -1,6 +1,7 @@
 package com.example.academic_affairs_management_system.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.academic_affairs_management_system.common.QueryPageParam;
 import com.example.academic_affairs_management_system.common.Result;
 import com.example.academic_affairs_management_system.service.IStudentService;
@@ -62,5 +63,14 @@ public class StudentController {
         }
         return Result.fail("修改失败");
 
+    }
+
+    @GetMapping("/getStu")
+    public Result getStu(@RequestParam String studentId){
+        QueryWrapper queryWrapper = new QueryWrapper<Student>();
+        // System.out.println(studentId);
+        queryWrapper.eq("studentId",studentId);
+        Student student = iStudentService.getOne(queryWrapper);
+        return Result.success(student);
     }
 }

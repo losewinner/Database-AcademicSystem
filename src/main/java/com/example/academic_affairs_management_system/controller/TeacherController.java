@@ -36,4 +36,10 @@ public class TeacherController {
         return Result.success(teacherList,teacherList.size());
     }
 
+    @GetMapping("/getTea")
+    public Result getTea(@RequestParam String staffId){
+        Teacher teacher = iTeacherService.getteacInfo(staffId);
+        return Result.success(teacher);
+    }
+
 }

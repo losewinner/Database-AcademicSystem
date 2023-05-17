@@ -13,4 +13,9 @@ public interface LoginMapper extends BaseMapper<Login> {
             "set password= MD5(#{newpassword}) " +
             "where id=#{username} ")
     boolean changepw(String username, String newpassword);
+
+    @Update("Update login " +
+            "set password = MD5(#{newpassword}) " +
+            "where id=#{username} ")
+    boolean resetpw(String username,String newpassword);
 }

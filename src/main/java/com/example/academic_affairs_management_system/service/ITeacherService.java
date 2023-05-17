@@ -20,4 +20,5 @@ public interface ITeacherService extends IService<Teacher> {
 
     public List<Teacher> getTeaDepList(String deptName);
 
+
 }
