@@ -321,7 +321,7 @@ export default {
                     if(res.code=="200"){
                         console.log("搜索排名",res.data);
                         for(const item of res.data){
-                            item.scorePoint = this.ScoreTrans(item.semeFinalScore);
+                            item.scorePoint = item.semeFinalScore*4/100;
                         }
                         this.rankTrans(res.data);
                         this.FromDbInfo = res.data;
