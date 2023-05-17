@@ -25,6 +25,7 @@ public interface IStudentService extends IService<Student> {
 
     public boolean manageEditStu(String studentId, String studentName, String sex,LocalDate birth,String home,String phone, String deptName);
 
+
     public Result changeStuPassword(String studentId, String input);
 
     public Result changeStuHome(String studentId,String input);

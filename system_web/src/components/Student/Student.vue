@@ -106,6 +106,7 @@ export default {
         }
     },
     methods:{
+
         changePassword(){
             console.log("cpw")
             this.dialogVisiblePW = true

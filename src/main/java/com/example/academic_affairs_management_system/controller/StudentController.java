@@ -65,6 +65,7 @@ public class StudentController {
 
     }
 
+
     @PostMapping("/changeStuPassword")
     public Result changeStuPassword(@RequestParam String studentId,@RequestParam String input){
         return Result.success(iStudentService.changeStuPassword(studentId, input));

@@ -44,6 +44,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         return studentMapper.manageEditStu(studentId,studentName,sex,birth,home,phone,deptName);
     }
 
+
     @Override
     public Result changeStuPassword(String studentId,String input) {
         if(!studentMapper.changeStuPassword(studentId, input)) return Result.fail("更新失败");
