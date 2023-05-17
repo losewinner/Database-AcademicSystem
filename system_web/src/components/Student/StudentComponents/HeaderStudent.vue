@@ -5,13 +5,13 @@
     </div>
     <el-dropdown style="cursor: pointer">
       <div style="display: flex; flex-direction: row; align-items: center; justify-content: center" >
-        <span>欢迎！ 学生</span>
+        <span>{{ welcome }}</span>
         <i class="el-icon-setting" style="margin-right: 5px;"></i>
       </div>
       <el-dropdown-menu>
-        <span style="text-decoration: none" @click="logout">
+          <span style="text-decoration: none" @click="logout">
                     <el-dropdown-item>登出</el-dropdown-item>
-        </span>
+                </span>
       </el-dropdown-menu>
     </el-dropdown>
 
@@ -22,6 +22,11 @@
 <script>
 export default {
   name: "HeaderStudent",
+    data() {
+        return {
+            welcome: "欢迎！" + localStorage.getItem("userid")
+        }
+    },
   props:{
     collapseBthClass:String,
     collapse:function(){}

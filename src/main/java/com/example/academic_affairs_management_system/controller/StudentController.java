@@ -65,6 +65,21 @@ public class StudentController {
 
     }
 
+    @PostMapping("/changeStuPassword")
+    public Result changeStuPassword(@RequestParam String studentId,@RequestParam String input){
+        return Result.success(iStudentService.changeStuPassword(studentId, input));
+    }
+
+    @PostMapping("/changeStuHome")
+    public Result changeStuHome(@RequestParam String studentId,@RequestParam String input){
+        return Result.success(iStudentService.changeStuHome(studentId, input));
+    }
+
+    @PostMapping("/changeStuPhone")
+    public Result changeStuPhone(@RequestParam String studentId,@RequestParam String input){
+        return Result.success(iStudentService.changeStuPhone(studentId, input));
+    }
+
     @GetMapping("/getStu")
     public Result getStu(@RequestParam String studentId){
         QueryWrapper queryWrapper = new QueryWrapper<Student>();

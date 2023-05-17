@@ -30,5 +30,23 @@ public interface StudentMapper extends BaseMapper<Student> {
             "phone = #{phone}, " +
             "deptId = (select deptId from dept where deptName = #{deptName}) " +
             "where studentId = #{studentId}")
-    public boolean manageEditStu(String studentId, String studentName, String sex,LocalDate birth, String home, String phone, String deptName);
+    public boolean manageEditStu(String studentId, String studentName, String sex, LocalDate birth, String home, String phone, String deptName);
+
+    @Update("UPDATE login " +
+            "SET password = #{input} " +
+            "where " +
+            "id = #{studentId} ")
+    boolean changeStuPassword(String studentId,String input);
+
+    @Update("UPDATE student " +
+            "SET home = #{input} " +
+            "where " +
+            "studentId = #{studentId} ")
+    boolean changeStuHome(String studentId,String input);
+
+    @Update("UPDATE student " +
+            "SET phone = #{input} " +
+            "where " +
+            "studentId = #{studentId} ")
+    boolean changeStuPhone(String studentId,String input);
 }

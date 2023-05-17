@@ -88,7 +88,8 @@ export default {
           sum_s/=sum_n;
           console.log("calc_s",sum_s)
           console.log("calc_n",sum_n)
-          this.averageScore=this.ScoreTrans(sum_s);
+          this.averageScore = sum_s/100.0*4.0;
+          this.averageScore = Number(this.averageScore.toFixed(2));
       },
       ScoreTrans(finalScore){
           switch (true) {
