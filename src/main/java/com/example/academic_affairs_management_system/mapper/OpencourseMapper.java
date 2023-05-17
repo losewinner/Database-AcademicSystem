@@ -21,7 +21,8 @@ import java.util.List;
  */
 @Mapper
 public interface OpencourseMapper extends BaseMapper<Opencourse> {
-    @Select("select classtime,course.name as coursename,course.courseId from course,opencourse " +
+    @Select("select classtime,course.name as coursename,course.courseId,address " +
+            "from course,opencourse " +
             "where course.courseId=opencourse.courseId and " +
             "semester = #{semester} and staffid = #{staffid}")
     public List<Course> select_class(String staffid, String semester);

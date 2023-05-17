@@ -46,7 +46,6 @@ public class OpencourseController {
          * 查询某老师所有班
          */
         String semester = isemestatusService.getnowsemester();
-        
         return Result.success(iOpencourseService.select_class(staffid,semester));
     }
 

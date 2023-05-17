@@ -26,6 +26,10 @@ const routes = [
             },
             {
                 path: 'SignIn', name: 'SignIn', component: () => import('../components/Teacher/TeacherMain/SignIn.vue')
+            },
+
+            {
+                path: 'Timetable', name: 'Timetable', component: () => import('../components/Teacher/TeacherMain/Timetable.vue')
             }
         ]
     },

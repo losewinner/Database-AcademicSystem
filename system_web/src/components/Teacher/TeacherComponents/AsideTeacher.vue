@@ -21,6 +21,9 @@
         <el-menu-item index="/Teacher/SignIn" v-show="!isCollapse">签到管理</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
+    <el-menu-item index="/Teacher/Timetable" v-show="!isCollapse">
+      <i class="el-icon-s-home"></i><span>课表</span>
+    </el-menu-item>
 
 
 
