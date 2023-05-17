@@ -33,9 +33,9 @@ public class OpencourseServiceImpl extends ServiceImpl<OpencourseMapper, Opencou
     }
 
     @Override
-    public boolean insertNewCourse(String semester,String courseId,String staffId,String classTime){
+    public boolean insertNewCourse(String semester,String courseId,String staffId,String classTime,String address){
         System.out.println("新增开课");
-        return opencourseMapper.insertNewCourse(semester, courseId, staffId, classTime);
+        return opencourseMapper.insertNewCourse(semester, courseId, staffId, classTime,address);
 
     }
 
@@ -45,12 +45,17 @@ public class OpencourseServiceImpl extends ServiceImpl<OpencourseMapper, Opencou
     }
 
     @Override
-    public boolean updateOpenCou(String semester,String courseId,String staffId,String classTime,int volume,int remnant){
-        return opencourseMapper.updateOpenCou(semester,courseId,staffId,classTime,volume,remnant);
+    public boolean updateOpenCou(String semester,String courseId,String staffId,String classTime,String address,int volume,int remnant){
+        return opencourseMapper.updateOpenCou(semester,courseId,staffId,classTime,address,volume,remnant);
     }
 
     @Override
     public List<Opencourse> getTeaClassTime(String semester,String staffId,String courseId){
         return opencourseMapper.getTeaClassTime(semester,staffId,courseId);
+    }
+
+    @Override
+    public List<Opencourse> getTimeAddress(String semester,String classTime){
+        return opencourseMapper.getTimeAddress(semester,classTime);
     }
 }

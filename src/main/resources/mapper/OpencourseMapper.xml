@@ -4,7 +4,7 @@
     <select id="getNowSemCourse" resultType="com.example.academic_affairs_management_system.controller.dto.AdminPack.OpenCourseDto">
         select semester,course.courseId as courseId,course.name as courseName,
                teacher.staffId as staffId,teachername,
-               classTime,volume,remnant
+               classTime,address,volume,remnant
         from opencourse,teacher,course
         <where>
             opencourse.courseId = course.courseId
@@ -14,8 +14,8 @@
     </select>
 
     <insert id="insertNewCourse">
-        INSERT INTO opencourse(semester,courseId,staffId,classTime)
-        values(#{semester},#{courseId},#{staffId},#{classTime})
+        INSERT INTO opencourse(semester,courseId,staffId,classTime,address)
+        values(#{semester},#{courseId},#{staffId},#{classTime},#{address})
     </insert>
 
 </mapper>

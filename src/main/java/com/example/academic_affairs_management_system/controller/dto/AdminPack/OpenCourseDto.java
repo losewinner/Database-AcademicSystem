@@ -10,6 +10,7 @@ public class OpenCourseDto {
     private String staffId;
     private String teachername;
     private String classTime;
+    private String address;
     private int volume;
     private int remnant;
 }

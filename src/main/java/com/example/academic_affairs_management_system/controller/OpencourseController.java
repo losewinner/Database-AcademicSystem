@@ -18,6 +18,7 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,9 +59,10 @@ public class OpencourseController {
         String courseId = param.get("courseId").toString();
         String staffId = param.get("staffId").toString();
         String classTime = param.get("classTime").toString();
+        String address = param.get("address").toString();
         System.out.println(courseId);
 
-        boolean success = iOpencourseService.insertNewCourse(semester,courseId,staffId,classTime);
+        boolean success = iOpencourseService.insertNewCourse(semester,courseId,staffId,classTime,address);
         if(success){
             return Result.success();
         }
@@ -82,10 +84,11 @@ public class OpencourseController {
         String courseId = param.get("courseId").toString();
         String staffId = param.get("staffId").toString();
         String classTime = param.get("classTime").toString();
+        String address = param.get("address").toString();
         int volume = Integer.parseInt(param.get("volume").toString());
         int remnant = Integer.parseInt(param.get("remnant").toString());
 
-        boolean success = iOpencourseService.updateOpenCou(semester,courseId,staffId,classTime,volume,remnant);
+        boolean success = iOpencourseService.updateOpenCou(semester,courseId,staffId,classTime,address,volume,remnant);
 
         return Result.success();
     }
@@ -99,5 +102,15 @@ public class OpencourseController {
         * 传回给前端做对比*/
         List<Opencourse>  TeaClassTimeList = iOpencourseService.getTeaClassTime(semester,staffId,courseId);
         return Result.success(TeaClassTimeList,TeaClassTimeList.size());
+    }
+
+    @GetMapping("/getTimeAddress")
+    public Result getTimeAddress(@RequestParam String semester,
+                                 @RequestParam String classTime){
+        /*
+        得到同一个学期中，同一时间所有课的地点，
+         */
+        List<Opencourse> TimeAddress = iOpencourseService.getTimeAddress(semester,classTime);
+        return Result.success(TimeAddress, TimeAddress.size());
     }
 }

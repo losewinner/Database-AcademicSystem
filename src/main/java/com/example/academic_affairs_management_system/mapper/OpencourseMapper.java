@@ -24,20 +24,21 @@ public interface OpencourseMapper extends BaseMapper<Opencourse> {
     @Select("select classtime,course.name as coursename,course.courseId,address " +
             "from course,opencourse " +
             "where course.courseId=opencourse.courseId and " +
-            "semester = #{semester} and staffid = #{staffid}")
+            "semester = #{semester} and staffid = #{staffid} ")
     public List<Course> select_class(String staffid, String semester);
 
-    public boolean insertNewCourse(String semester,String courseId,String staffId,String classTime);
+    public boolean insertNewCourse(String semester,String courseId,String staffId,String classTime,String address);
 
     @Update("Update opencourse " +
             "set classTime = #{classTime}, " +
             "volume = #{volume}, " +
-            "remnant = #{remnant} " +
+            "remnant = #{remnant}, " +
+            "address = #{address} " +
             "where " +
             "semester = #{semester} " +
             "and courseId = #{courseId} " +
             "and staffId = #{staffId} ")
-    public boolean updateOpenCou(String semester,String courseId,String staffId,String classTime,int volume,int remnant);
+    public boolean updateOpenCou(String semester,String courseId,String staffId,String classTime,String address,int volume,int remnant);
 
     public List<OpenCourseDto> getNowSemCourse(String semester);
 
@@ -47,4 +48,10 @@ public interface OpencourseMapper extends BaseMapper<Opencourse> {
             "and staffId = #{staffId} " +
             "and courseId !=#{courseId} ")
     public List<Opencourse> getTeaClassTime(String semester,String staffId,String courseId);
+
+    @Select("select address " +
+            "from opencourse " +
+            "where semester = #{semester} " +
+            "and classTime = #{classTime} ")
+    public List<Opencourse> getTimeAddress(String semester,String classTime);
 }

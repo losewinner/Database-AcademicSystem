@@ -291,6 +291,9 @@
                         prop="classTime" label="上课时间" width="200">
                     </el-table-column>
                     <el-table-column
+                        prop="address" label="上课地点" width="150">
+                    </el-table-column>
+                    <el-table-column
                         prop="volume" label="班级容量" width="150">
                     </el-table-column>
                     <el-table-column  width = "220">
@@ -326,6 +329,20 @@
                     <el-form-item label="上课时间" :label-width="formLabelWidth">
                         <el-input v-model="openCouForm.classTime"></el-input>
                     </el-form-item>
+                    <el-form-item label="上课地点" :label-width="formLabelWidth">
+                        <el-input v-model="openCouForm.address"></el-input>
+                    </el-form-item>
+                    <el-form-item label="修改上课地点" :label-width="formLabelWidth">
+                        <el-select v-model="openCouForm.building" placeholder="楼栋" style="margin-right: 10px;width: 100px ">
+                            <el-option
+                                v-for="item in this.buildingOption"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                        <el-input v-model="openCouForm.floorRoom" placeholder="层室信息"></el-input>
+                    </el-form-item>
                     <el-form-item label="班级容量" :label-width="formLabelWidth">
                         <el-input v-model="openCouForm.volume" ></el-input>
                     </el-form-item>
@@ -347,7 +364,8 @@
                           data.courseId.toLowerCase().includes(openCourseSearch.toLowerCase()) ||
                           data.courseName.toLowerCase().includes(openCourseSearch.toLowerCase()) ||
                           data.staffId.toLowerCase().includes(openCourseSearch.toLowerCase())||
-                          data.teachername.toLowerCase().includes(openCourseSearch.toLowerCase()))"
+                          data.teachername.toLowerCase().includes(openCourseSearch.toLowerCase())||
+                          data.address.toLowerCase().includes(openCourseSearch.toLowerCase()))"
                     style="width: 100%"
                     stripe
                     max-height="440px">
@@ -365,6 +383,9 @@
                     </el-table-column>
                     <el-table-column
                         prop="classTime" label="上课时间" width="200">
+                    </el-table-column>
+                    <el-table-column
+                        prop="address" label="上课地点" width="200">
                     </el-table-column>
                     <el-table-column
                         prop="volume" label="班级容量" width="150">
@@ -449,10 +470,27 @@ export default {
                 staffId:'',
                 staffName:'',
                 classTime: '',
+                address:'',
+                building:'',
+                floorRoom:'',
                 volume:0,
                 remnant:0,
             },
-            canUpdate:true,
+            //搞个规范地点的
+            buildingOption:[
+                {value: '选项1',label: 'A楼'},{value: '选项2',label: 'B楼'},{value: '选项3',label: 'C楼'},{value: '选项4',label: 'D楼'},
+                {value: '选项5',label: 'E楼'},{value: '选项6',label: 'F楼'},{value: '选项7',label: 'G楼'},{value: '选项8',label: 'H楼'},
+                {value: '选项9',label: 'I楼'},{value: '选项10',label: 'J楼'},{value: '选项11',label: 'AJ'},{value: '选项12',label: 'BJ'},
+                {value: '选项13',label: 'CJ'},{value: '选项14',label: 'DJ'},{value: '选项15',label: 'EJ'},{value: '选项16',label: 'FJ'},
+                {value: '选项17',label: 'GJ'},{value: '选项18',label: '计'},{value: '选项19',label: '通'},{value: '选项20',label: '法'},
+                {value: '选项21',label: '生'},{value: '选项22',label: '新'},{value: '选项23',label: '悉'},{value: '选项24',label: '经管'},
+                {value: '选项25',label: '音'},{value: '选项26',label: '美'},{value: '选项27',label: '马'},{value: '选项28',label: '机自'},
+                {value: '选项29',label: '理'},{value: '选项30',label: '电影'},{value: '选项31',label: '中欧'},{value: '选项32',label: '环'},
+                {value: '选项33',label: '文'}
+            ],
+
+            canTimeUpdate:true,
+            canAddrUpdate:true,
             canSubmit:false,
         }
     },
@@ -535,15 +573,27 @@ export default {
         },
 
         //第三页面，对每一个此学期开课表中的课程填入班级容量，并进行classTime的最终修改。
+
         openCouEdit(row){
             console.log("编辑当前开课",row);
             this.currentOpenCourse = row;
-            this.openCouForm.courseId = this.currentOpenCourse.courseId,
-            this.openCouForm.courseName = this.currentOpenCourse.courseName,
-            this.openCouForm.staffId = this.currentOpenCourse.staffId,
-            this.openCouForm.staffName = this.currentOpenCourse.teachername,
-            this.openCouForm.classTime = this.currentOpenCourse.classTime,
-            this.openCouForm.volume = this.currentOpenCourse.volume,
+            this.openCouForm.courseId = this.currentOpenCourse.courseId;
+            this.openCouForm.courseName = this.currentOpenCourse.courseName;
+            this.openCouForm.staffId = this.currentOpenCourse.staffId;
+            this.openCouForm.staffName = this.currentOpenCourse.teachername;
+            this.openCouForm.classTime = this.currentOpenCourse.classTime;
+            this.openCouForm.volume = this.currentOpenCourse.volume;
+            this.openCouForm.address = this.currentOpenCourse.address;
+            if(this.openCouForm.address ==="-"){
+                this.openCouForm.building = '';
+                this.openCouForm.floorRoom = '';
+            }
+            else{
+                let [building,floorRoom] = this.parseAddress(this.openCouForm.address);
+                this.openCouForm.building = building;
+                this.openCouForm.floorRoom = floorRoom;
+            }
+
             this.dialogOpenCou = true;
         },
         parseClassTime(classTime) {
@@ -566,12 +616,33 @@ export default {
             ]);
             return dayMap.get(dayStr);
         },
+        parseAddress(address){
+            const matches = address.match(/(\D+)(\d+)/);
+            const letters = matches[1]; // 获取前面的字符串部分
+            const numbers = matches[2]; // 获取数字部分
+
+            console.log("前面的字符串:", letters);
+            console.log("数字部分:", numbers);
+            return [letters,numbers];
+        },
+
         confirmOpenCouEdit(){
             //在提交前选课时间前，先查看是否有 在同一个学期下，开了不同课程的老师，他的时间有无冲突。
             //写个ifelse判断，如果没问题，才运行下面的更新代码；否则提醒重新写时间
+
+            //在提交选课地址前，也要先查看是否有  在同一个学期下，同一时间的不同课程是否用的是同一个地点，
+            //写个ifelse判断，如果没问题，才更新，否则提醒重新写地址。
             //从数据库中找所有同一个学期的同一个老师的所有课程
             let newclassTime = this.openCouForm.classTime;
             let newList =newclassTime.split(",");//解析出新的上课时间
+
+            var build_dict = this.buildingOption.find(x=>x.value===this.openCouForm.building);
+            var build = build_dict.label;
+
+            this.openCouForm.building = build;
+            this.openCouForm.address = this.openCouForm.building+this.openCouForm.floorRoom
+
+            console.log("newaddress",this.openCouForm.address)
             console.log(newList)
             axios.get("/opencourse/getTeaClassTime?semester="+this.openCouSemester+"&staffId="+this.openCouForm.staffId+
             "&courseId="+this.openCouForm.courseId).then(res=>res.data).then(res=>{
@@ -595,24 +666,33 @@ export default {
                             {
                                 if((start0<=start1&&start1<=end0) ||(start1<=start0&&start0<=end1))
                                 {
-                                    this.canUpdate = false;
+                                    this.canTimeUpdate = false;
                                 }
                             }
                         }
                     }
                 }
-                if(this.canUpdate){
-                    axios.post("/opencourse/updateOpenCou",{
-                        param:{
-                            semester:this.openCouSemester,
-                            courseId:this.openCouForm.courseId,
-                            staffId:this.openCouForm.staffId,
-                            classTime:this.openCouForm.classTime,
-                            volume:this.openCouForm.volume,
-                            remnant:this.openCouForm.volume, //这边没写错，一开始就是班级容量和剩余容量是一样的
+                //还要再看插入的地点，同一时间，所有课程的地点，不能重复
+                axios.get("/opencourse/getTimeAddress?semester="+this.openCouSemester+
+                "&classTime="+this.openCouForm.classTime).then(res=>res.data).then(res=>{
+                    console.log("所有上课时间相同的课程的上课地点",res.data);
+                    for(const addr of res.data){
+                        if(addr.address === this.openCouForm.address){
+                            this.canAddrUpdate = false;
                         }
-                    }).then(res=>res.data).then(res=>{
-                        if(res.code == "200"){
+                    }
+                    if(this.canTimeUpdate&&this.canAddrUpdate){
+                        axios.post("/opencourse/updateOpenCou",{
+                            param:{
+                                semester:this.openCouSemester,
+                                courseId:this.openCouForm.courseId,
+                                staffId:this.openCouForm.staffId,
+                                classTime:this.openCouForm.classTime,
+                                address:this.openCouForm.address,
+                                volume:this.openCouForm.volume,
+                                remnant:this.openCouForm.volume, //这边没写错，一开始就是班级容量和剩余容量是一样的
+                            }
+                        }).then(res=>res.data).then(res=>{
                             console.log(res);
                             if(res.code == "200"){
                                 this.$message({
@@ -633,25 +713,43 @@ export default {
 
                                 });
                             }
+                        })
+                    }
+                    else{
+                        if(!this.canTimeUpdate){
+                            this.$message({
+                                type: 'error',
+                                message: `开课失败！或同一个老师开课时间冲突！`
+                            });
                         }
-                    })
-                }
-                else{
-                    this.$message({
-                        type: 'error',
-                        message: `开课失败！同一个老师开课时间冲突！`
-                    })
-                    this.canUpdate = true;
-                }
+                        else if(!this.canAddrUpdate)
+                        {
+                            this.$message({
+                                type: 'error',
+                                message: `开课失败！或同一时间上课地点冲突！`
+                            });
+                        }
+                        else{
+                            this.$message({
+                                type: 'error',
+                                message: `开课失败！上课地点与时间皆有冲突！`
+                            });
+                        }
+
+                        this.canAddrUpdate = true;
+                        this.canTimeUpdate = true;
+                    }
+                })
+
             })
 
-
+            this.dialogOpenCou = false;
 
         },
         submit() {
             //提交，提交后无法再修改了
             for(const item of this.openCourseList){
-                if(item.classTime === "暂无" || item.volume ===0 || item.remnant ===0 ){
+                if(item.classTime === "暂无" || item.volume ===0 || item.remnant ===0 || item.address ==="-" ){
                     this.canSubmit = false;
                     break;
                 }
@@ -719,7 +817,8 @@ export default {
                         semester: this.openCouSemester,
                         courseId: this.currentCourse.courseId,
                         staffId: item.staffid,
-                        classTime: "暂无"
+                        classTime: "暂无",
+                        address:"-"
                     }
                 }).then(res=>res.data).then(res=>{
                     if(res.code == "200")

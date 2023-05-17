@@ -5,6 +5,7 @@ import com.example.academic_affairs_management_system.controller.dto.AdminPack.S
 import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuCourse;
 import com.example.academic_affairs_management_system.controller.dto.StudentPack.StuScore;
 import com.example.academic_affairs_management_system.controller.dto.TeacherPack.Student;
+import com.example.academic_affairs_management_system.entity.Opencourse;
 import com.example.academic_affairs_management_system.entity.Selectcourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
@@ -115,4 +116,5 @@ public interface SelectcourseMapper extends BaseMapper<Selectcourse> {
             "set score = IFNULL(score,0), testScore = IFNULL(testScore,0) " +
             "where semester = #{semester} ")
     public boolean setNullScore(String semester);
+
 }

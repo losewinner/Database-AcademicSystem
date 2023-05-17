@@ -143,7 +143,7 @@ export default {
             for(const semester of this.semesterList){
                 if(semester.status === "学期未开始，等待开课"){
                     this.$message({
-                        type: 'danger',
+                        type:'error',
                         message: `仍有未开课学期！`,
                     });
                     return;
@@ -170,7 +170,7 @@ export default {
                 }
                 else{
                     this.$message({
-                        type: 'danger',
+                        type: 'error',
                         message: `添加失败！`,
 
                     });
@@ -187,6 +187,7 @@ export default {
         confirmEditEdit(){
             console.log("变更学期状态",this.semesterForm.status);
             //按照规则来，0，1，2这三个状态的学期，各只能有一个，
+            //0学期得让学期自己变
             for(const item of this.semesterList){
                 this.newstatus = this.statusMessage.indexOf(this.semesterForm.status)+1;
                 console.log("新学期",this.newstatus)
@@ -208,6 +209,15 @@ export default {
                         }
                     })
                 }
+                else if(this.newstatus === 1){
+                    //说明有学期要从未开课状态变成学生可以选课状态
+                    //不让它变换，让他去直接开课界面提交
+                    this.$message({
+                        type: 'danger',
+                        message: `请去开课界面开课！`,
+                    });
+                    this.canEdit = false;
+                }
             }
             if(this.canEdit)
             {
@@ -226,7 +236,7 @@ export default {
                     }
                     else{
                         this.$message({
-                            type: 'danger',
+                            type: 'error',
                             message: `更新失败！`,
 
                         });

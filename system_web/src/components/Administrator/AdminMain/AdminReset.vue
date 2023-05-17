@@ -17,7 +17,7 @@
                     style="width: 200px"
                     clearable>
             </el-input>
-            <el-button type="primary" style="margin-top: 15px;width: 100px" @click="searchTea" round>搜索</el-button>
+            <el-button type="primary" style="margin-top: 15px;width: 100px" @click="searchTea" round>搜索教师</el-button>
         </el-container>
 
         <el-container v-else-if="selectionOfSearch==='student'" class="学生部分" style="margin-top: 20px;display: flex;flex-direction: column" >
@@ -27,7 +27,7 @@
                     style="width: 200px"
                     clearable>
             </el-input>
-            <el-button type="primary" style="margin-top: 15px;width: 100px" @click="searchStu" round>搜索</el-button>
+            <el-button type="primary" style="margin-top: 15px;width: 100px" @click="searchStu" round>搜索学生</el-button>
         </el-container>
         <el-dialog title="重置密码" :visible.sync="dialogFormVisible">
             <el-form :model="form">
@@ -75,7 +75,7 @@ export default {
     methods:{
         searchTea(){
             axios.get("/teacher/getTea?staffId="+this.inputId).then(res=>res.data).then(res=>{
-                if(res.code == "200"){
+                if(res.code == "200"&&res.data!=null){
                     console.log("教师信息",res.data);
                     this.StaffInfo = res.data;
                     this.$message({
@@ -98,7 +98,7 @@ export default {
         },
         searchStu(){
             axios.get("/student/getStu?studentId="+this.inputId).then(res=>res.data).then(res=>{
-                if(res.code == "200"){
+                if(res.code == "200"&&res.data!=null){
                     console.log("学生信息",res.data);
                     this.StaffInfo = res.data;
                     this.$message({

@@ -18,11 +18,13 @@ import java.util.List;
 public interface IOpencourseService extends IService<Opencourse> {
     List<Course> select_class(String staffid, String semester);
 
-    public boolean insertNewCourse(String semester,String courseId,String staffId,String classTime);
+    public boolean insertNewCourse(String semester,String courseId,String staffId,String classTime,String address);
 
-    public boolean updateOpenCou(String semester,String courseId,String staffId,String classTime,int volume,int remnant);
+    public boolean updateOpenCou(String semester,String courseId,String staffId,String classTime,String address,int volume,int remnant);
 
     public List<OpenCourseDto> getNowSemCourse(String semester);
 
     public List<Opencourse> getTeaClassTime(String semester,String staffId,String courseId);
+
+    public List<Opencourse> getTimeAddress(String semester,String classTime);
 }
