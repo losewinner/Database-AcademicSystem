@@ -106,7 +106,10 @@ export default {
         }
     },
     methods:{
-
+        logout(){
+            this.$router.push("/login");
+            localStorage.removeItem("user");
+        },
         changePassword(){
             console.log("cpw")
             this.dialogVisiblePW = true
@@ -131,9 +134,9 @@ export default {
                 if (res.code == "200") {
                     this.$message({
                         type: 'success',
-                        message: `修改成功！`
+                        message: `修改成功！请重新登录！`
                     })
-
+                    this.logout()
                 }
             })
             this.input=""

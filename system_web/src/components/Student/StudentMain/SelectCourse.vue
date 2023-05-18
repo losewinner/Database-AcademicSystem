@@ -97,7 +97,7 @@
                     prop="courseCredit" label="学分" width="150">
             </el-table-column>
             <el-table-column
-                    prop="classTime" label="上课时间" width="200">
+                    prop="classTime" label="上课时间" width="400">
             </el-table-column>
           <el-table-column
               fixed="right" label="操作" width="170">
@@ -345,7 +345,6 @@ export default {
                   return;
               }
           }
-
           for(const item of this.FromDbInfoForDel)
           {
               let str0 = row.classTime;
@@ -372,6 +371,7 @@ export default {
                   }
               }
           }
+
           // 修改开课表中remnant-1，selectcourse表中新增数据
           // console.log("？？？？？", localStorage.getItem("userid"));
           axios.post("/selectcourse/selectCourse?studentId="+localStorage.getItem("userid")
@@ -415,12 +415,7 @@ export default {
               +"&classTime="+row.classTime
           ).then(res=>res.data).then(res=> {
               if (res.code == "200") {
-                  this.$message({
-                      type: 'success',
-                      message: `退课成功！`
-                  })
-                  this.refreshClick(0);
-/*                  let num = 1;
+                  let num = 1;
                   axios.post("/selectcourse/changeNum?num="+num
                       +"&semester="+row.semester
                       +"&courseId="+row.courseId
@@ -434,7 +429,7 @@ export default {
                           })
                           this.refreshClick(0);
                       }
-                  })*/
+                  })
               }
           })
 
