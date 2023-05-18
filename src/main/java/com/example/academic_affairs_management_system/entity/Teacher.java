@@ -30,7 +30,7 @@ public class Teacher implements Serializable {
 
     private String sex;
 
-    private LocalDateTime birth;
+    private LocalDate birth;
 
     private String title;
 
