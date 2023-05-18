@@ -186,16 +186,18 @@ export default {
         },
         confirmEditEdit(){
             console.log("变更学期状态",this.semesterForm.status);
-            //按照规则来，0，1，2这三个状态的学期，各只能有一个，
+            //按照规则来，0，1这两个状态的学期，各只能有一个，
+            //2的学期因为必须有一个，但是又不能同时存在多个，就会造成数据库冲突和状态锁死（数据库设定了至少得有一个为2的学期）
+            //但是前端又设置了不能有重复的2的学期，这就导致冲突了，所以下面改了，让管理员自己变
             //0学期得让学期自己变
             for(const item of this.semesterList){
                 this.newstatus = this.statusMessage.indexOf(this.semesterForm.status)+1;
                 console.log("新学期",this.newstatus)
                 console.log(this.statusMessage.indexOf(item.status))
                 console.log(item.status);
-                if(this.statusMessage.indexOf(item.status) === this.newstatus && this.newstatus!==3)
+                if(this.statusMessage.indexOf(item.status) === this.newstatus && (this.newstatus!==3||this.newstatus!==2))
                 {
-                    //说明0，1，2有重复
+                    //说明0，1有重复
                     console.log("冲突学期状态",this.statusMessage.indexOf(item.status),item.semester)
                     this.canEdit = false;
                     this.offendSemester = item.semester

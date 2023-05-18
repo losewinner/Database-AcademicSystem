@@ -316,7 +316,7 @@ public class SelectcourseController {
             return  Result.success();
             // 存储过程执行成功
         } catch (Exception e) {
-            // 存储过程执行失败，处理异常
+            // 存储过程执行失败，处理异常,返回给前端失败的信息
             return  Result.fail("变更学期结束时失败");
         }
 
