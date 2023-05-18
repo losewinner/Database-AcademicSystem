@@ -22,13 +22,13 @@
         <el-input style="width: 200px" v-model="username"></el-input>
       </el-form-item>
       <el-form-item label="原密码">
-        <el-input style="width: 200px" v-model="oldpassword"></el-input>
+        <el-input style="width: 200px" v-model="oldpassword" show-password></el-input>
       </el-form-item>
       <el-form-item label="新密码">
-        <el-input style="width: 200px" v-model="newpassword"></el-input>
+        <el-input style="width: 200px" v-model="newpassword" show-password></el-input>
       </el-form-item>
       <el-form-item label="确认密码">
-        <el-input style="width: 200px" v-model="newpasswordag"></el-input>
+        <el-input style="width: 200px" v-model="newpasswordag" show-password></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
