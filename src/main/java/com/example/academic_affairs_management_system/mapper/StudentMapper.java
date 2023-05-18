@@ -32,9 +32,8 @@ public interface StudentMapper extends BaseMapper<Student> {
             "where studentId = #{studentId}")
     public boolean manageEditStu(String studentId, String studentName, String sex, LocalDate birth, String home, String phone, String deptName);
 
-
     @Update("UPDATE login " +
-            "SET password = #{input} " +
+            "SET password = MD5(#{input}) " +
             "where " +
             "id = #{studentId} ")
     boolean changeStuPassword(String studentId,String input);
