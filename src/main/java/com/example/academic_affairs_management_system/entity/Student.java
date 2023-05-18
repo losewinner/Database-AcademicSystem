@@ -30,7 +30,7 @@ public class Student implements Serializable {
 
     private String sex;
 
-    private LocalDateTime birth;
+    private LocalDate birth;
 
     private String home;
 

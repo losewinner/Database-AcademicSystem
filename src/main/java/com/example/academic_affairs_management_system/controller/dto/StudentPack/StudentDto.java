@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -11,7 +12,7 @@ public class StudentDto {
     private String studentid;
     private String name;
     private String sex;
-    private LocalDateTime birth;
+    private LocalDate birth;
     private String home;
     private String phone;
     private String deptid;
