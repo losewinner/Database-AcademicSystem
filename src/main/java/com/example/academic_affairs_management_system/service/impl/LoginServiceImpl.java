@@ -54,6 +54,7 @@ public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements
                 //设置token
                 String token = TokenUtils.generateToken(login.getId(),login.getPassword());
                 teacherdto.setToken(token);
+                System.out.println(teacherdto.getBirth());
                 res.put("data",teacherdto);
                 res.put("identify",login.getIdentify());
             }

@@ -185,9 +185,9 @@ export default {
             let final=Math.round(re.testscore*(1-this.ratio/10)+re.score*this.ratio/10)
             this.avgscore+=final
             this.maxscore=Math.max(this.maxscore,final)
-            this.maxscore=Math.min(this.maxscore,final)
+            this.minscore=Math.min(this.minscore,final)
           }
-          this.avgscore = this.avgscore/res.data.length
+          this.avgscore = Math.round(this.avgscore/res.data.length)
           // console.log("avg="+this.avgscore)
           // console.log("max="+this.maxscore)
           // console.log("min="+this.minscore)
