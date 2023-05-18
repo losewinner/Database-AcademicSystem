@@ -486,7 +486,7 @@ export default {
                 {value: '选项21',label: '生'},{value: '选项22',label: '新'},{value: '选项23',label: '悉'},{value: '选项24',label: '经管'},
                 {value: '选项25',label: '音'},{value: '选项26',label: '美'},{value: '选项27',label: '马'},{value: '选项28',label: '机自'},
                 {value: '选项29',label: '理'},{value: '选项30',label: '电影'},{value: '选项31',label: '中欧'},{value: '选项32',label: '环'},
-                {value: '选项33',label: '文'}
+                {value: '选项33',label: '文'},{value: '选项34',label: '风雨操场'},{value: '选项35',label: 'J区运动场'}
             ],
 
             canTimeUpdate:true,
@@ -640,8 +640,12 @@ export default {
             var build = build_dict.label;
 
             this.openCouForm.building = build;
-            this.openCouForm.address = this.openCouForm.building+this.openCouForm.floorRoom
-
+            if(this.openCouForm.building ==="J区运动场"||this.openCouForm.building==="风雨操场"){
+                this.openCouForm.address = this.openCouForm.building;
+            }
+            else{
+                this.openCouForm.address = this.openCouForm.building+this.openCouForm.floorRoom
+            }
             console.log("newaddress",this.openCouForm.address)
             console.log(newList)
             axios.get("/opencourse/getTeaClassTime?semester="+this.openCouSemester+"&staffId="+this.openCouForm.staffId+
@@ -677,7 +681,8 @@ export default {
                 "&classTime="+this.openCouForm.classTime).then(res=>res.data).then(res=>{
                     console.log("所有上课时间相同的课程的上课地点",res.data);
                     for(const addr of res.data){
-                        if(addr.address === this.openCouForm.address){
+                        if(addr.address === this.openCouForm.address&&(this.openCouForm.address!=="风雨操场"||
+                        this.openCouForm.address!=="J区运动场")){
                             this.canAddrUpdate = false;
                         }
                     }
