@@ -519,7 +519,7 @@ export default {
                     if(res.code=="200"){
                     //换算成绩为绩点
                         for(const item of res.data){
-                            item.scorePoint = this.ScoreTrans(item.finalScore);
+                            item.scorePoint = this.ScoreTrans(item.finalScore).toFixed(1);
                         }
                         this.FromDbInfo = res.data;
                         console.log("查找成绩",this.FromDbInfo);
@@ -610,7 +610,7 @@ export default {
                         console.log(res.data);
                         //换算成绩为绩点
                         for(const item of res.data){
-                            item.scorePoint = this.ScoreTrans(item.finalScore);
+                            item.scorePoint = this.ScoreTrans(item.finalScore).toFixed(1);
                         }
                         this.FromDbInfo = res.data;
                         if(this.FromDbInfo.length===0) {

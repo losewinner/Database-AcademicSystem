@@ -61,10 +61,7 @@
                               <el-button
                                       size="mini"
                                       @click="stuEdit(scope.row)">编辑</el-button>
-                              <el-button
-                                      size="mini"
-                                      type="danger"
-                                      @click="stuDelete(scope.$index, scope.row)">删除</el-button>
+
                           </template>
                       </el-table-column>
                   </el-table>

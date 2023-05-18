@@ -253,7 +253,7 @@ export default {
                     if(res.code=="200"){
                         console.log("搜索排名",res.data);
                         for(const item of res.data){
-                            item.scorePoint = this.ScoreTrans(item.finalScore);
+                            item.scorePoint = this.ScoreTrans(item.finalScore).toFixed(1);
                         }
                         this.rankTrans(res.data);
                         this.FromDbInfo = res.data;
@@ -321,7 +321,7 @@ export default {
                     if(res.code=="200"){
                         console.log("搜索排名",res.data);
                         for(const item of res.data){
-                            item.scorePoint = item.semeFinalScore*4/100;
+                            item.scorePoint = (item.semeFinalScore*4/100).toFixed(2);
                         }
                         this.rankTrans(res.data);
                         this.FromDbInfo = res.data;
