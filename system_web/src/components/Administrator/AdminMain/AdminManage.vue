@@ -67,7 +67,7 @@
                   </el-table>
               </el-container>
 
-              <el-dialog title="修改成绩" :visible.sync="stuform.isVisible">
+              <el-dialog title="修改信息" :visible.sync="stuform.isVisible">
                   <el-form :model="stuform">
                       <el-form-item label="学号" :label-width="formLabelWidth">
                           <el-input v-model="stuform.studentId" disabled= "true"></el-input>

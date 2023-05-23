@@ -197,12 +197,15 @@ export default {
                 console.log(item.status);
                 if(this.statusMessage.indexOf(item.status) === this.newstatus && (this.newstatus!==3||this.newstatus!==2))
                 {
+                    console.log("第一个判断")
                     //说明0，1有重复
                     console.log("冲突学期状态",this.statusMessage.indexOf(item.status),item.semester)
                     this.canEdit = false;
                     this.offendSemester = item.semester
+                    break
                 }
                 else if(this.newstatus === 3){
+                    console.log("第二个判断")
                     //说明学期要结束了，将学期中没有设置分数的全都置为0
                     axios.get("/selectcourse/setNullScore?semester="+this.semesterForm.semester).then(res=>res.data).then(res=>{
                         if(res.code == "200")
@@ -210,8 +213,10 @@ export default {
                             console.log("变更学期成功，学期已结束")
                         }
                     })
+                    break
                 }
                 else if(this.newstatus === 1){
+                    console.log("第三个判断")
                     //说明有学期要从未开课状态变成学生可以选课状态
                     //不让它变换，让他去直接开课界面提交
                     this.$message({
@@ -219,8 +224,20 @@ export default {
                         message: `请去开课界面开课！`,
                     });
                     this.canEdit = false;
+                    break
+                }
+                else if(this.newstatus === 4){
+                    console.log("第四个判断")
+                    //学期状态已经到头，无法改变
+                    this.$message({
+                        type: 'error',
+                        message: `学期状态已终止，无法变更！`,
+                    });
+                    this.canEdit = false;
+                    break
                 }
             }
+            console.log("canEdit",this.canEdit)
             if(this.canEdit)
             {
                 console.log("canEdit",this.semesterForm.semester,this.newstatus);
@@ -248,10 +265,10 @@ export default {
             else{
                 this.$message({
                     type: 'danger',
-                    message: `变更失败，此学期与学期！`+this.offendSemester+`状态冲突！`,
+                    message: `变更失败`,
                 });
             }
-
+            this.canEdit = true
 
         }
 
